@@ -11,6 +11,7 @@ import {
     faSignOut,
 } from '@fortawesome/free-solid-svg-icons';
 
+import { Link } from 'react-router-dom';
 import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button';
@@ -22,6 +23,7 @@ import Menu from '~/components/Popper/Menu';
 import { InboxIcon, MessageIcon, UploadIcon } from '~/components/icons';
 import Image from '~/components/Image';
 import Search from '../Search';
+import routesConfig from '~/config/routes';
 
 const cx = classNames.bind(styles);
 
@@ -98,10 +100,12 @@ function Header() {
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
                 {/* Logo */}
-                <img src={images.logo} alt="TikTok" />
+                <Link to={routesConfig.home} className={cx('logo-link')}>
+                    <img src={images.logo} alt="TikTok" />
+                </Link>
 
                 {/* Search */}
-                <Search/>
+                <Search />
 
                 {/* Actions */}
                 <div className={cx('actions')}>

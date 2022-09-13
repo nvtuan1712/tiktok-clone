@@ -5,10 +5,15 @@
     --search-button-width: 52px;
 
     width: 100%;
+    z-index: 10;
     height: var(--default-layout-header-height);
     box-shadow: 0px 1px 1px rgb(0 0 0 / 12%);
     display: flex;
     justify-content: center;
+    background-color: var(--white);
+    position: fixed;
+    left: 0;
+    top: 0;
 }
 
 .inner {
@@ -19,6 +24,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 var(--default-layout-horizontal-spacer);
+}
+
+.logo-link {
+    display: flex;
 }
 
 //actions

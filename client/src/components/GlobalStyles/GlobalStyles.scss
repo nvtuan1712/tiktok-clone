@@ -31,6 +31,7 @@ body {
     text-rendering: optimizeSpeed;
     color: var(--text-color);
     overflow-y: overlay;
+    scroll-behavior: smooth;
 }
 
 //Scrollbar CSS

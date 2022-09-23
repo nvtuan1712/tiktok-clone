@@ -6,7 +6,7 @@
     font-weight: 700;
     font-family: var(--font-family);
     min-width: 100px;
-    padding: 9px 16px;
+    padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
     background: var(--white);
@@ -55,7 +55,7 @@
 
     &:hover {
         border-color: rgba(22, 24, 35, 0.2);
-        background-color: rgba(22, 24, 35, 0.03);
+        background-color: rgba(22, 24, 35, 0.03);   
     }
 }
 
@@ -84,7 +84,7 @@
     border-color: rgba(22, 24, 35, 0.12);
 
     &:hover {
-        text-decoration: underline;
+        text-decoration: none;
         border-color: rgba(22, 24, 35, 0.2);
         background-color: rgba(22, 24, 35, 0.03);
     }

@@ -80,3 +80,50 @@
 }
 
 
+//
+.link-text {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 22px;
+    display: block;
+}
+
+.upload {
+    min-width: 110px;
+    padding: 0 16px;
+    height: 36px;
+    border: 1px solid rgba(22, 24, 35, 0.12);
+    border-radius: 2px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 1);
+}
+
+.upload-icon {
+    height: 20px;
+    width: 20px;
+    margin-right: 8px;
+}
+
+.upload-text {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.btn-login {
+    margin-left: 16px;
+}
+
+

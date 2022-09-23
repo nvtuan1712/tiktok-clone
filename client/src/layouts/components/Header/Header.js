@@ -20,7 +20,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css'; // optional
 
 import Menu from '~/components/Popper/Menu/Menu';
-import { InboxIcon, MessageIcon, UploadIcon } from '~/components/Icons/Icons';
+import { InboxIcon, MessageIcon, UploadIcon, Add } from '~/components/Icons/Icons';
 import Image from '~/components/Image';
 import Search from '../Search';
 import config from '~/config';
@@ -59,7 +59,7 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
-    const currentUser = true;
+    const currentUser = false;
 
     //Handle logic
     const handleMenuChange = (menuItem) => {
@@ -130,8 +130,13 @@ function Header() {
                         </>
                     ) : (
                         <>
-                            <Button text>Upload</Button>
-                            <Button primary>Log in</Button>
+                            <Link to={config.routes.upload} className={cx('link-text')}>
+                                <div className={cx('upload')}>
+                                    <Add className={cx('upload-icon')} />
+                                    <span className={cx('upload-text')}>Tải lên</span>
+                                </div>
+                            </Link>
+                            <Button primary className={cx('btn-login')}>Đăng nhập</Button>
                         </>
                     )}
                     <Menu items={currentUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>

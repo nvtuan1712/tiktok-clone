@@ -9,8 +9,12 @@
     max-width: 100%;
     display: flex;
     margin-top: var(--default-layout-header-height);
+    justify-content: space-between;
+    flex: 1 1 auto;
+    align-self: center;
+    
 }
 
-.content {
-    flex: 1;
-}
+// .content {
+    
+// }

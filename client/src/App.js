@@ -1,9 +1,13 @@
-import { Fragment } from 'react';
+// import { Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes/routes';
 import  DefaultLayout  from '~/layouts';
+import DefaultLayoutv2 from './layouts/DefaultLayoutv2';
+import ModalKey from './components/ModalKey';
+import { Fragment } from 'react';
 
-function App() {
+function App({ children }) {
+
     return (
         <Router>
             <div className="App">
@@ -15,8 +19,10 @@ function App() {
 
                         if (route.layout) {
                             Layout = route.layout;
+                        } else if (route.layout === DefaultLayoutv2) {
+                            Layout = DefaultLayoutv2;
                         } else if (route.layout === null) {
-                            Layout = Fragment;
+                            Layout = <Fragment/>
                         }
 
                         const Page = route.component;
@@ -33,6 +39,7 @@ function App() {
                         );
                     })}
                 </Routes>
+                <ModalKey styles={{visibility: 'hidden'}}/>
             </div>
         </Router>
     );

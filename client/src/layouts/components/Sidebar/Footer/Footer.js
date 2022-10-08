@@ -91,8 +91,6 @@ function Footer() {
         },
     ];
 
-    console.log(linkArray);
-
     return (
         <div className={cx('wrapper')}>
             {linkArray.map((data, index) => {

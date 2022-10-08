@@ -8,7 +8,6 @@ import FooterItem from './FooterItem';
 const cx = classNames.bind(styles);
 
 function FooterLinkContainer({ index, data }) {
-    console.log(data);
 
     return (
         <div className={cx('container-footer-link')} key={index}>

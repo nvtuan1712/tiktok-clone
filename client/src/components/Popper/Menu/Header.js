@@ -6,7 +6,7 @@ import styles from './Menu.module.scss';
 
 const cx = classNames.bind(styles);
 
-function Header({ title, onBack }) {
+function HeaderLanguage({ title, onBack }) {
     return (
         <header className={cx('header')}>
             <button className={cx('back-btn')} onClick={onBack}>
@@ -17,9 +17,9 @@ function Header({ title, onBack }) {
     );
 }
 
-Header.propTypes = {
+HeaderLanguage.propTypes = {
     title: PropTypes.string.isRequired,
     onBack: PropTypes.func.isRequired,
 }
 
-export default Header;
+export default HeaderLanguage;

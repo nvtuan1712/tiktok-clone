@@ -6,6 +6,7 @@ const routes = {
     live: '/live',
     music: '/music',
     tag: '/tag',
+    video: '/video'
 }
 
 export default routes;

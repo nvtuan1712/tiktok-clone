@@ -11,12 +11,12 @@ import LoginSidebar from './LoginSidebar';
 
 const cx = classNames.bind(styles)
 
-function Sidebar() {
+function Sidebar({ className }) {
     const currentUser = false;
 
     return (
-        <aside className={cx('container')}>
-            <div className={cx('scroll-container')}>
+        <aside className={cx('container', className)}>
+            <div className={cx('scroll-container', className)}>
                 <div className={cx('wrapper')}>
                     <Menu>
                         <MenuItem title="Dành cho bạn" to={config.routes.home} icon={<HomeIcon />} activeIcon={<HomeActiveIcon />} />

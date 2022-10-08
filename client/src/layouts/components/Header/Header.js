@@ -24,13 +24,16 @@ import { InboxIcon, MessageIcon, UploadIcon, Add } from '~/components/Icons/Icon
 import Image from '~/components/Image';
 import Search from '../Search';
 import config from '~/config';
+import { useState } from 'react';
+// import Login from '../Login';
+import ModalLoginRegister from '../ModalLoginRegister';
 
 const cx = classNames.bind(styles);
 
 const MENU_ITEMS = [
     {
         icon: <FontAwesomeIcon icon={faGlobe} />,
-        title: 'English',
+        title: 'Ngôn ngữ',
         children: {
             title: 'Language',
             data: [
@@ -49,16 +52,17 @@ const MENU_ITEMS = [
     },
     {
         icon: <FontAwesomeIcon icon={faCircleQuestion} />,
-        title: 'Feedback and help',
+        title: 'Phản hồi và trợ giúp',
         to: '/feedback',
     },
     {
         icon: <FontAwesomeIcon icon={faKeyboard} />,
-        title: 'Keyboard shortcuts',
+        title: 'Phím tắt trên bàn phím',
+        show: true
     },
 ];
 
-function Header() {
+function Header({ className, children }) {
     const currentUser = false;
 
     //Handle logic
@@ -74,31 +78,41 @@ function Header() {
     const userMenu = [
         {
             icon: <FontAwesomeIcon icon={faUser} />,
-            title: 'View profile',
+            title: 'Xem hồ sơ',
             to: '/@hoaa',
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,
-            title: 'Get coins',
+            title: 'Nhận xu',
             to: '/coin',
         },
         {
             icon: <FontAwesomeIcon icon={faGear} />,
-            title: 'Settings',
+            title: 'Cài đặt',
             to: '/settings',
         },
         ...MENU_ITEMS,
         {
             icon: <FontAwesomeIcon icon={faSignOut} />,
-            title: 'Log out',
-            to: '/settings',
+            title: 'Đăng xuất',
             separate: true,
         },
     ];
 
+    //
+    const [showModal,setShowModal] = useState(false);
+
+    const renderModal = () => {
+        setShowModal(!showModal);
+    }
+
+    const hideModal = () => {
+        setShowModal(false);
+    }
+
     return (
         <header className={cx('wrapper')}>
-            <div className={cx('inner')}>
+            <div className={cx('inner', className)}>
                 {/* Logo */}
                 <Link to={config.routes.home} className={cx('logo-link')}>
                     <img src={images.logo} alt="TikTok" />
@@ -112,9 +126,11 @@ function Header() {
                     {currentUser ? (
                         <>
                             <Tippy delay={[0, 100]} content="Upload video" placement="bottom" offset={[0, 0]}>
-                                <button className={cx('action-btn')}>
-                                    <UploadIcon />
-                                </button>
+                                <Link to={config.routes.upload}>
+                                    <button className={cx('action-btn')}>
+                                        <UploadIcon />
+                                    </button>
+                                </Link>
                             </Tippy>
                             <Tippy delay={[0, 100]} content="Message" placement="bottom" offset={[0, 0]}>
                                 <button className={cx('action-btn')}>
@@ -136,7 +152,7 @@ function Header() {
                                     <span className={cx('upload-text')}>Tải lên</span>
                                 </div>
                             </Link>
-                            <Button primary className={cx('btn-login')}>Đăng nhập</Button>
+                            <Button primary className={cx('btn-login')} onClick={renderModal}>Đăng nhập</Button>
                         </>
                     )}
                     <Menu items={currentUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
@@ -154,6 +170,7 @@ function Header() {
                     </Menu>
                 </div>
             </div>
+            {showModal && <ModalLoginRegister onClick={hideModal}/>}
         </header>
     );
 }

@@ -1,5 +1,5 @@
 //Thư viện externor trước(thư viện bên ngoài)
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
@@ -27,7 +27,7 @@ function AccountItem() {
 
     return (
         <div>
-            <Tippy interactive delay={[800, 800]} offset={[-20, 0]}placement="bottom" render={renderPreview}>
+            <Tippy interactive  delay={[800, 800]} offset={[-20, 0]}placement="bottom" render={renderPreview}>
                 <div className={cx('account-item')}>
                     <img
                         className={cx('avatar')}

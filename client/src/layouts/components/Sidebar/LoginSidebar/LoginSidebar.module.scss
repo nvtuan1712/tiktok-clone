@@ -59,4 +59,8 @@
     box-sizing: border-box;
     margin-top: 20px;
     width: 100%;
+
+    &:hover {
+        background: rgba(254, 44, 85, 0.06);
+    }
 }

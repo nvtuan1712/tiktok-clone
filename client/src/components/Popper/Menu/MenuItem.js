@@ -11,15 +11,27 @@ function MenuItem({ data, onClick }) {
     });
 
     return (
-        <Button className={classes} leftIcon={data.icon} to={data.to} onClick={onClick}>
-            {data.title}
-        </Button>
+        <>
+            {data.isUser ? (
+                <>
+                    <Button className={classes} leftIcon={data.icon} to={data.to} onClick={onClick} isuser={data.isUser.toString()}>
+                        {data.title}
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <Button className={classes} leftIcon={data.icon} to={data.to} onClick={onClick}>
+                        {data.title}
+                    </Button>
+                </>
+            )}
+        </>
     );
 }
 
 MenuItem.propTypes = {
     data: PropTypes.object.isRequired,
     onClick: PropTypes.func,
-}
+};
 
 export default MenuItem;

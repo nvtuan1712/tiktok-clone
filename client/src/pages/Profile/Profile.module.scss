@@ -79,6 +79,37 @@
     align-items: flex-end;
 }
 
+.edit-container {
+    position: relative;
+    width: 136px;
+    height: 36px;
+    padding: 0px;
+    margin: 16px 0px 0px;   
+}
+
+.btn-edit {
+    padding: 0 16px;
+    height: 36px;
+    min-width: 136px;
+
+    span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        span {
+            white-space: nowrap;
+        }
+    }
+}
+
+.edit-profile-icon {
+    width: 20px;
+    height: 20px;
+    color: rgb(22, 24, 35);
+    margin-right: 6px;
+}
+
 .follow-container {
     font-weight: 600;
     font-size: 18px;

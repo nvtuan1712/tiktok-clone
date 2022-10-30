@@ -1,26 +1,27 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const app = express();
+const cors = require('cors');
 
-const UserModel = require('./models/User')
+const userRoute = require('./Router/UserRoute')
+const authRoute = require('./Router/AuthRoute')
+const connectDB = require('./Services/ConnectDBService');
 
+const port = 5000;
+//middleware apply cor add all request
+app.use(cors())
+//middleware get info from client by req.body
 app.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/tiktok", {
-    useNewUrlParser: true,
-})
+//connect database
+connectDB()
 
-app.get('/', async (req, res) => {
-    const user = new UserModel({ firstname: "Nguyễn", lastname: "Thu"})
+//middleware router
+app.use('/users', userRoute)
+app.use('/', authRoute)
 
-    try {
-        await user.save()
-        res.send('hello')
-    } catch (error) {
-        console.log(error);
-    }
-})
+//
 
-app.listen(3001, () => {
-    console.log("Server running on port 3001...");
+//
+app.listen(port, () => {
+    console.log(`Server running on port ${port}...`);
 })

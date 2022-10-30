@@ -2,17 +2,17 @@
 import classNames from 'classnames/bind';
 // import { useRef } from 'react';
 import Button from '~/components/Button';
-import { MoreAction, ShareProfile } from '~/components/Icons';
+import { MoreAction, ShareProfile, EditProfile } from '~/components/Icons';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from '../Profile.module.scss';
 import MenuMoreActions from './MenuMoreActions';
-import MenuShareProfile  from './MenuShareProfile';
+import MenuShareProfile from './MenuShareProfile';
 
 const cx = classNames.bind(styles);
 
 function ProfileHeader() {
-
+    const currentUser = true;
 
     return (
         <div className={cx('profile-content-header')}>
@@ -30,13 +30,24 @@ function ProfileHeader() {
                 <div className={cx('title-container')}>
                     <div className={cx('title-profile')}>Ig.nvy</div>
                     <h1 className={cx('title-sub')}>beososweet</h1>
-                    <div className={cx('follow-container')}>
-                        <div className={cx('follow-btn-wrapper')}>
-                            <Button primary className={cx('follow-btn')}>
-                                Follow
+                    {currentUser ? (
+                        <div className={cx('edit-container')}>
+                            <Button text className={cx('btn-edit')}>
+                                <span>
+                                    <EditProfile className={cx('edit-profile-icon')}/>
+                                    <span>Sửa hồ sơ</span>
+                                </span>
                             </Button>
                         </div>
-                    </div>
+                    ) : (
+                        <div className={cx('follow-container')}>
+                            <div className={cx('follow-btn-wrapper')}>
+                                <Button primary className={cx('follow-btn')}>
+                                    Follow
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
             <h2 className={cx('count-info')}>
@@ -56,14 +67,18 @@ function ProfileHeader() {
             <h2 className={cx('desc')}>🐥</h2>
             <MenuShareProfile>
                 <div className={cx('share-actions')}>
-                    <ShareProfile/>
+                    <ShareProfile />
                 </div>
             </MenuShareProfile>
-            <MenuMoreActions>
-                <div className={cx('more-actions')}>
-                    <MoreAction />
-                </div>
-            </MenuMoreActions>
+            {currentUser ? (
+                <></>
+            ) : (
+                <MenuMoreActions>
+                    <div className={cx('more-actions')}>
+                        <MoreAction />
+                    </div>
+                </MenuMoreActions>
+            )}
         </div>
     );
 }

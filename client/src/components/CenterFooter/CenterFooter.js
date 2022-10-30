@@ -7,9 +7,9 @@ import styles from './CenterFooter.module.scss';
 
 const cx = classNames.bind(styles);
 
-function UploadFooter() {
+function UploadFooter({ className }) {
     return (
-        <div className={cx('center-footer')}>
+        <div className={cx('center-footer', className)}>
             <div className={cx('footer-container')}>
                 <div className={cx('footer-content-wrapper')}>
                     <div className={cx('tiktok-logo')}>

@@ -1191,3 +1191,100 @@ export const ArrowDownVideo = ({ width = '2.6rem', height = '2.6rem', className 
         ></path>
     </svg>
 );
+
+export const EditProfile = ({ width = '2.0rem', height = '2.0rem', className }) => (
+    <svg
+        className={className}
+        width={width}
+        height={height}
+        fill="none"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="M15.393 2.226a.842.842 0 00-1.17.02L8.142 8.33a.842.842 0 00-.247.595v2.34c0 .464.377.841.842.841h2.183a.842.842 0 00.596-.246l6.237-6.238a.843.843 0 00-.02-1.211l-2.34-2.184zM9.58 9.273l5.26-5.26 1.107 1.033-5.374 5.375h-.993V9.273zM9.58 2c.232 0 .42.189.42.421v.842a.421.421 0 01-.42.421H4.526a.842.842 0 00-.842.842v10.948c0 .465.377.842.842.842h10.947a.842.842 0 00.842-.842V10.42c0-.232.189-.421.421-.421h.842c.233 0 .422.188.422.421v5.053A2.526 2.526 0 0115.473 18H4.526A2.526 2.526 0 012 15.474V4.526A2.526 2.526 0 014.526 2H9.58z"
+            clipRule="evenodd"
+        ></path>
+    </svg>
+);
+
+export const ArrowReport = ({ width = '2.0rem', height = '2.0rem', className }) => (
+    <svg
+        className={className}
+        width={width}
+        height={height}
+        viewBox="0 0 48 48"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M43.4142 22.5858L27.1213 6.29289C26.7308 5.90237 26.0976 5.90237 25.7071 6.29289L24.2929 7.70711C23.9024 8.09763 23.9024 8.7308 24.2929 9.12132L39.1716 24L24.2929 38.8787C23.9024 39.2692 23.9024 39.9024 24.2929 40.2929L25.7071 41.7071C26.0976 42.0976 26.7308 42.0976 27.1213 41.7071L43.4142 25.4142C44.1953 24.6332 44.1953 23.3668 43.4142 22.5858Z"
+        ></path>
+    </svg>
+);
+
+export const ArrowBack = ({ width = '2.0rem', height = '2.0rem', className }) => (
+    <svg
+        className={className}
+        width={width}
+        height={height}
+        viewBox="0 0 48 48"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M4.58579 22.5858L20.8787 6.29289C21.2692 5.90237 21.9024 5.90237 22.2929 6.29289L23.7071 7.70711C24.0976 8.09763 24.0976 8.7308 23.7071 9.12132L8.82843 24L23.7071 38.8787C24.0976 39.2692 24.0976 39.9024 23.7071 40.2929L22.2929 41.7071C21.9024 42.0976 21.2692 42.0976 20.8787 41.7071L4.58579 25.4142C3.80474 24.6332 3.80474 23.3668 4.58579 22.5858Z"
+        ></path>
+    </svg>
+);
+
+export const PassIcon = ({ width = '2.0rem', height = '2.0rem', className }) => (
+    <svg
+        className={className}
+        width={width}
+        height={height}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 20 20"
+    >
+        <g
+            stroke="#161823"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="1.5"
+            opacity="0.5"
+        >
+            <path d="M2.8 7.8c2.1 1 4.5 1.6 7 1.6s4.9-.6 7-1.6M9.8 9.8v3M5.1 9.2l-1.5 2.6M14.6 9.2l1.5 2.6"></path>
+        </g>
+    </svg>
+);
+
+export const PassIconShow = ({ width = '2.0rem', height = '2.0rem', className }) => (
+    <svg
+        className={className}
+        width={width}
+        height={height}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 20 20"
+    >
+        <g
+            stroke="#161823"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="1.5"
+            opacity="0.5"
+        >
+            <path d="M9.8 4.8c3 0 5.3 1.7 7 5-1.7 3.3-4 5-7 5s-5.3-1.7-7-5c1.6-3.4 4-5 7-5z"></path>
+            <path d="M9.8 11.8a2 2 0 100-4 2 2 0 000 4z"></path>
+        </g>
+    </svg>
+);

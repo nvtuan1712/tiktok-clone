@@ -16,7 +16,7 @@ function RecommendItem() {
     return (
         <div className={cx('container')}>
             {/* avatar profile */}
-            <Link to={config.routes.profile} className={cx('avatar-anchor')}>
+            <Link to={config.routes.profile} className={cx('avatar-anchor')} id='is-user'>
                 <div className={cx('avatar-container')}>
                     <span className={cx('avatar-style')}>
                         <img

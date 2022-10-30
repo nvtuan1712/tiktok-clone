@@ -17,7 +17,6 @@ function ModalKey({ onClick, styles }) {
         const content = document.querySelector('#content-container')
         modal.style.visibility = 'hidden';
         content.style.visibility = 'hidden';
-        console.log(modal);
     };
 
     return (

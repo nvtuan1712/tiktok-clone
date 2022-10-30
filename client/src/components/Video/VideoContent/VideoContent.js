@@ -1,8 +1,10 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import classNames from 'classnames/bind';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Music } from '~/components/Icons';
+import { Comment, Heart, Music } from '~/components/Icons';
 import config from '~/config';
+import ItemComment from './ItemComment';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './VideoContent.module.scss';
@@ -13,6 +15,9 @@ function VideoContent() {
     return (
         <div className={cx('container')}>
             <VideoInfo />
+            <MainContent />
+            <CommentList />
+            <BottomComment/>
         </div>
     );
 }
@@ -25,7 +30,7 @@ function VideoInfo() {
                 <div className={cx('avatar-container')}>
                     <span className={cx('avatar-span')}>
                         <img
-                            src="https://p16-sign-sg.tiktokcdn.com/aweme/100x100/tos-alisg-avt-0068/9d98723d8d7b16fb8b488a768db94591.jpeg?x-expires=1665324000&x-signature=FJxzUgYVhWnDTjRp1ggM6RTDs0w%3D"
+                            src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/3a88c702f5c75f4dbb8a568c002f7e1a~c5_100x100.jpeg?x-expires=1666443600&x-signature=xWvfWgbzXAZLY0OjxLhVMiGqHYw%3D"
                             alt=""
                             loading="lazy"
                         />
@@ -37,7 +42,7 @@ function VideoInfo() {
                 <br></br>
                 <span className={cx('span-other-info')}>
                     styledaudau
-                    <span style={{margin: '0px 4px'}}> . </span>    
+                    <span style={{ margin: '0px 4px' }}> . </span>
                     <span>9-29</span>
                 </span>
             </Link>
@@ -48,23 +53,89 @@ function VideoInfo() {
 
 //Main video container
 function MainContent() {
-    return <div className={cx('content-container')}>
-        <div className={cx('video-desc')}>
-            <span className={cx('span-text')}>biến hình hoàn hảo</span>
-            <Link className={cx('common-link')} to={config.routes.tag}>
-                <strong>#xuhuongtiktok</strong>
-            </Link>
-            <Link className={cx('common-link')} to={config.routes.tag}>
-                <strong>#gái xinh</strong>
-            </Link>
+    const currentURL = window.location.href
+
+
+    return (
+        <div className={cx('content-container')}>
+            {/*  */}
+            <div className={cx('video-desc')}>
+                <span className={cx('span-text')}>biến hình hoàn hảo</span>
+                <Link className={cx('common-link')} to={config.routes.tag}>
+                    <strong>#xuhuongtiktok</strong>
+                </Link>
+                <Link className={cx('common-link')} to={config.routes.tag}>
+                    <strong>#gái xinh</strong>
+                </Link>
+            </div>
+            {/*  */}
             <h4 className={cx('h4-link')}>
                 <Link to={config.routes.music}>
-                    <Music/>
+                    <Music />
                     nhạc nền - styledaudau
                 </Link>
             </h4>
+            {/*  */}
+            <div className={cx('div-container')}>
+                <div className={cx('center-row')}>
+                    <div className={cx('center-row1')}>
+                        <button className={cx('action-item')}>
+                            <span className={cx('span-icon')}>
+                                <Heart />
+                            </span>
+                            <strong className={cx('strong-text')}>701.9k</strong>
+                        </button>
+                        <button className={cx('action-item')} disabled>
+                            <span className={cx('span-icon')}>
+                                <Comment />
+                            </span>
+                            <strong className={cx('strong-text')}>2718</strong>
+                        </button>
+                    </div>
+                </div>
+                <div className={cx('coppylink-container')}>
+                <p className={cx('coppylink-text')}>
+                    {currentURL}
+                </p>
+                <button className={cx('button-coppylink')}>Sao chép liên kết</button>
+            </div>
+            </div>
         </div>
-    </div>
+    );
+}
+
+//Comment list container
+function CommentList() {
+    return (
+        <div className={cx('comment-list-container')}>
+            <ItemComment />
+        </div>
+    )
+}
+
+//Bottom comment contauiner
+function BottomComment() {
+    const input = useRef();
+    const commentBtn = useRef();
+    
+    const handleChangeColor = () => {
+        if(input.current.value !== '') {
+            commentBtn.current.classList.add(cx('active'))
+        }else{
+            commentBtn.current.classList.remove(cx('active'))
+        }
+    }
+
+    return (
+        <div className={cx('bottom-comment-container')}>
+            <div className={cx('comment-container')}>
+                <div className={cx('comment-layout-container')}>
+                    <input ref={input} type="text" className={cx('comment-input')} placeholder='Thêm bình luận...' onChange={handleChangeColor}/>
+                </div>
+                <div  ref={commentBtn} className={cx('comment-post-button')}>Đăng</div>
+            </div>
+        </div>
+    )
 }
 
 export default VideoContent;

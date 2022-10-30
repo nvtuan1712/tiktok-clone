@@ -10,13 +10,14 @@ import styles from './TagMainVideo.module.scss';
 const cx = classNames.bind(styles);
 
 function ItemVideo({ onClick }) {
+    // const history = window.history.replaceState(null, null, '/@hoa/video')
     return (
         <>
             <div className={cx('item-container')}>
                 <div className={cx('item-video')}>
                     <div style={{ paddingTop: '132.653%' }}>
                         <div className={cx('video-wrapper')}>
-                            <Link to='#' onClick={onClick}>
+                            <Link to={config.routes.video} onClick={onClick}>
                                 <canvas width="75.38461538461539" height="100" className={cx('video-canvas')}></canvas>
                                 <div className={cx('player-container')}>
                                     <div className={cx('player-wrapper')}>

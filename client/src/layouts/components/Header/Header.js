@@ -24,9 +24,7 @@ import { InboxIcon, MessageIcon, UploadIcon, Add } from '~/components/Icons/Icon
 import Image from '~/components/Image';
 import Search from '../Search';
 import config from '~/config';
-import { useState } from 'react';
-// import Login from '../Login';
-import ModalLoginRegister from '../ModalLoginRegister';
+// import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -63,7 +61,7 @@ const MENU_ITEMS = [
 ];
 
 function Header({ className, children }) {
-    const currentUser = false;
+    const currentUser = true;
 
     //Handle logic
     const handleMenuChange = (menuItem) => {
@@ -79,7 +77,8 @@ function Header({ className, children }) {
         {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'Xem hồ sơ',
-            to: '/@hoaa',
+            to: '/@nickname',
+            isUser: true
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,
@@ -98,17 +97,6 @@ function Header({ className, children }) {
             separate: true,
         },
     ];
-
-    //
-    const [showModal,setShowModal] = useState(false);
-
-    const renderModal = () => {
-        setShowModal(!showModal);
-    }
-
-    const hideModal = () => {
-        setShowModal(false);
-    }
 
     return (
         <header className={cx('wrapper')}>
@@ -152,7 +140,7 @@ function Header({ className, children }) {
                                     <span className={cx('upload-text')}>Tải lên</span>
                                 </div>
                             </Link>
-                            <Button primary className={cx('btn-login')} onClick={renderModal}>Đăng nhập</Button>
+                            <Button primary className={cx('btn-login')}>Đăng nhập</Button>
                         </>
                     )}
                     <Menu items={currentUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
@@ -170,7 +158,6 @@ function Header({ className, children }) {
                     </Menu>
                 </div>
             </div>
-            {showModal && <ModalLoginRegister onClick={hideModal}/>}
         </header>
     );
 }

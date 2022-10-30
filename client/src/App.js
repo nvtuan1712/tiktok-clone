@@ -1,7 +1,7 @@
 // import { Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes/routes';
-import  DefaultLayout  from '~/layouts';
+import  DefaultLayout, { DefaultLayoutv3 }  from '~/layouts';
 import DefaultLayoutv2 from './layouts/DefaultLayoutv2';
 import ModalKey from './components/ModalKey';
 import { Fragment } from 'react';
@@ -21,6 +21,8 @@ function App({ children }) {
                             Layout = route.layout;
                         } else if (route.layout === DefaultLayoutv2) {
                             Layout = DefaultLayoutv2;
+                        } else if (route.layout === DefaultLayoutv3) {
+                            Layout = DefaultLayoutv3;
                         } else if (route.layout === null) {
                             Layout = <Fragment/>
                         }

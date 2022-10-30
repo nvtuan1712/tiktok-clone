@@ -18,6 +18,7 @@ function Home() {
         <div className={cx('main-container')}>
             <div>
                 <RecommendItem />
+                <RecommendItem />
             </div>
         </div>
     );

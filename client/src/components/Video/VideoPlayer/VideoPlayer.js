@@ -1,10 +1,12 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import classNames from 'classnames/bind';
+import { useState } from 'react';
 // import { useState, useEffect, useRef, forwardRef } from 'react';
 import { ArrowDownVideo, ArrowUpVideo, CloseVideo, LogoVideo, VideoReport } from '~/components/Icons';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './VideoPlayer.module.scss';
+import ModalReport from '~/components/ModalReport'
 
 const cx = classNames.bind(styles);
 
@@ -60,14 +62,14 @@ function VideoWrapper() {
         <div className={cx('video-wrapper')}>
             <div className={cx('video-container')}>
                 <img
-                    src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-p-0037/8717b5b1ce3f4c9f8ae120b4ee2c1305~tplv-efzqqlc8t1-1:720:720.jpeg?x-expires=1665046800&x-signature=y9k%2Bx96OS4zQhYvMACQ0nxdMLTA%3D"
+                    src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-p-0037-aiso/e7655c6fce764d9e89c4cd2939dae1a3~tplv-f5insbecw7-1:720:720.jpeg?x-expires=1666292400&x-signature=yN3fR55MwC6vsrZzHHZqtnapiow%3D"
                     alt=""
                     loading="lazy"
                     className={cx('video-img')}
                 />
                 <div className={cx('basic-player-wrapper')}>
                     <video
-                        src="https://v16-webapp.tiktok.com/9d53ccbadc6ea4c37f3bf0d0ffc841e2/633ef6d6/video/tos/alisg/tos-alisg-pve-0037/431a36f45e6f484988cea6975ac63bcc/?a=1988&ch=0&cr=0&dr=0&lr=tiktok_m&cd=0%7C0%7C1%7C0&cv=1&br=3008&bt=1504&cs=0&ds=3&ft=eXd.6Hk_Myq8Z2ue3he2Nwhhml7Gb&mime_type=video_mp4&qs=0&rc=NTo0ZmY2OjNpNTY4ZjtlPEBpajtlaGU6ZnlrZTMzODgzNEBfYC0zMS4uXjQxNi82NTYxYSNtMGJrcjRfaXJgLS1kLy1zcw%3D%3D&l=202210060939390102450432130CBD4D81&btag=80000"
+                        src="https://v16-webapp.tiktok.com/b2df61fef4c2fb43564cdece725600e2/6351a311/video/tos/useast2a/tos-useast2a-pve-0037-aiso/3af773a1a6d4431bb66af6ed2baadd9d/?a=1988&ch=0&cr=0&dr=0&lr=tiktok&cd=0%7C0%7C1%7C0&cv=1&br=3026&bt=1513&cs=0&ds=3&ft=WgGbvNM6VQ9wU6nvj1W.CIpxatk3hdxwiMFYhkl8eC_O&mime_type=video_mp4&qs=0&rc=aTNoPGloZDlpZTk6NDc3PEBpajNldzg6ZnVoZzMzZjgzM0A0NjA0Ni8wXmMxMl9hMWJiYSNyYzAtcjRfMTFgLS1kL2Nzcw%3D%3D&l=202210201335350102452421970205E666&btag=80000"
                         loop
                         // id='video'
                         // ref={videoRef}
@@ -209,11 +211,24 @@ function ArrowDown() {
 
 //report
 function Report() {
+    const [showReport, setShowReport] = useState(false)
+
+    const showModalReport = () => {
+        setShowReport(!showReport)
+    }
+
+    const hideModalReport = () => {
+        setShowReport(!showReport)
+    }
+
     return (
-        <div className={cx('btn-report')}>
-            <VideoReport className={cx('style')}/>
-            Báo cáo
-        </div>
+        <>
+            <div className={cx('btn-report')} onClick={showModalReport}>
+                <VideoReport className={cx('style')}/>
+                Báo cáo
+            </div>
+            {showReport ? <ModalReport onClick={hideModalReport}/> : <></>}
+        </>
     )
 }
 

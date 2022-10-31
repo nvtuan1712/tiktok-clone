@@ -19,6 +19,7 @@ import Register from '~/pages/Register';
 import LoginPhoneAndEmail from '~/pages/LoginPhoneAndEmail';
 import RegisterPhoneAndEmail from '~/pages/RegisterPhoneAndEmail';
 import ForgetPassword from '~/pages/ForgetPassword';
+import DashBoard from '~/pages/DashBoard'
 
 //Public routes
 const publicRoutes = [
@@ -36,6 +37,7 @@ const publicRoutes = [
     { path: config.routes.registerPhoneAndEmail, component: RegisterPhoneAndEmail, layout: DefaultLayoutv3 },
     { path: config.routes.forgetPassword, component: ForgetPassword, layout: DefaultLayoutv3 },
     { path: config.routes.upload, component: Upload, layout: HeaderOnly },
+    { path: config.routes.dashboard, component: DashBoard, layout: null },
 ];
 
 const privateRoutes = [];

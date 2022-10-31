@@ -6,7 +6,7 @@ const userRoute = require('./Router/UserRoute')
 const authRoute = require('./Router/AuthRoute')
 const connectDB = require('./Services/ConnectDBService');
 
-const port = 5000;
+require('dotenv').config()
 //middleware apply cor add all request
 app.use(cors())
 //middleware get info from client by req.body
@@ -17,11 +17,11 @@ connectDB()
 
 //middleware router
 app.use('/users', userRoute)
-app.use('/', authRoute)
+app.use('/api/', authRoute)
 
 //
 
 //
-app.listen(port, () => {
-    console.log(`Server running on port ${port}...`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server running on port ${process.env.PORT}...`);
 })

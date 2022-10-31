@@ -1,10 +1,12 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import classNames from 'classnames/bind';
+import jwt_decode from 'jwt-decode';
 import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowBack, PassIcon, PassIconShow } from '~/components/Icons';
 import config from '~/config';
 import axios from 'axios';
+
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './LoginPhoneAndEmail.module.scss';
@@ -87,12 +89,13 @@ function LoginByEmail({ onClick }) {
         }
     };
 
+    const [changeColor, setChangeColor] = useState(true);
+
     const handleRemoveDis = () => {
-        const smBtn = document.getElementById('submitBtn');
         if (inputEmail.current.value !== '' && inputPass.current.value !== '') {
-            smBtn.removeAttribute('disabled');
+            setChangeColor(false);
         } else {
-            smBtn.setAttribute('disabled', 'disabled');
+            setChangeColor(true);
         }
     };
 
@@ -122,12 +125,14 @@ function LoginByEmail({ onClick }) {
                 </div>
             </div>
             {showErrorPass && <span style={{ color: 'red', fontSize: '14px' }}>{textErrorPass}</span>}
-            <SubmitInfo email1={inputEmail} password1={inputPass} />
+            <SubmitInfo email1={inputEmail} password1={inputPass} change={changeColor} />
         </>
     );
 }
 
-function SubmitInfo({ email1, password1 }) {
+function SubmitInfo({ email1, password1, change }) {
+    const [showError, setShowError] = useState(false)
+
     const handleLogin = async (e) => {
         try {
             e.preventDefault();
@@ -135,13 +140,40 @@ function SubmitInfo({ email1, password1 }) {
             const email = email1.current.value;
             const password = password1.current.value;
 
+            //get list user để check
+            const configHeader = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                },
+            }
+            const response1 = await axios.get('http://localhost:5000/users', configHeader);
+            response1.data.forEach((data) => {
+                if(data.email !== email) {
+                    setShowError(!showError)
+                } else {
+                    setShowError(!showError)
+                }
+            })
+
             //gửi value từ form client đến server
-            const respone = await axios.post('http://localhost:5000/login/phone-or-email', {
+            const respone = await axios.post('http://localhost:5000/api/login/phone-or-email', {
                 email: email,
                 password: password,
             });
 
             if (respone.status === 200) {
+                const accessToken = respone.data.accessToken;
+                //decode lay ra thong tin payload
+                const payloadDecoded = jwt_decode(accessToken);
+
+                if (payloadDecoded.role === 'user') {
+                    // window.location.href = config.routes.home;
+                } else {
+                    window.location.href = config.routes.dashboard;
+                }
+
+                //save accessToken to client
+                localStorage.setItem('accessToken', accessToken);
             }
         } catch (error) {
             console.log(error);
@@ -149,9 +181,12 @@ function SubmitInfo({ email1, password1 }) {
     };
 
     return (
-        <button className={cx('style-button')} onClick={handleLogin} id="submitBtn" disabled>
-            Đăng nhập
-        </button>
+        <>
+            {showError ? <p>Sai tải khoản hoặc mật khẩu</p> : <></>}
+            <button className={cx('style-button')} onClick={handleLogin} disabled={change} id="submitBtn">
+                Đăng nhập
+            </button>
+        </>
     );
 }
 

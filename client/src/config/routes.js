@@ -11,7 +11,8 @@ const routes = {
     loginPhoneAndEmail: '/login/phone-or-email',
     register: '/register',
     registerPhoneAndEmail: '/register/phone-or-email',
-    forgetPassword: '/login/forget-password'
+    forgetPassword: '/login/forget-password',
+    dashboard: '/admin/dashboard'
 }
 
 export default routes;

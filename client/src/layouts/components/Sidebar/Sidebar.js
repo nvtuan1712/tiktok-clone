@@ -8,12 +8,20 @@ import FollowingAccounts from './FollowingAccounts';
 import Discovery from './Discovery';
 import Footer from './Footer';
 import LoginSidebar from './LoginSidebar';
+import { useEffect, useState } from 'react';
 // import { useState } from 'react';
 
 const cx = classNames.bind(styles)
 
 function Sidebar({ className }) {
-    const currentUser = false;
+    const [current, setCurrent] = useState(false)
+    const accessToken = localStorage.getItem('accessToken')
+
+    useEffect(() => {
+        if(accessToken) {
+            setCurrent(!current)
+        }
+    },[])
 
     return (
         <>
@@ -26,7 +34,7 @@ function Sidebar({ className }) {
                             <MenuItem title="LIVE" to={config.routes.live} icon={<LiveIcon />} activeIcon={<LiveActiveIcon />} />
                         </Menu>
                         <SuggestedAccounts label='Tài khoản được đề xuất'/>
-                        {currentUser ? <FollowingAccounts/> : <LoginSidebar />}
+                        {current ? <FollowingAccounts/> : <LoginSidebar />}
                         <Discovery label='Khám phá'/>
                         <Footer />
                     </div>

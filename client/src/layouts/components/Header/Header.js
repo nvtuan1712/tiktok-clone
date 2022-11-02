@@ -24,6 +24,7 @@ import { InboxIcon, MessageIcon, UploadIcon, Add } from '~/components/Icons/Icon
 import Image from '~/components/Image';
 import Search from '../Search';
 import config from '~/config';
+import { useState, useEffect } from 'react';
 // import { useState } from 'react';
 
 const cx = classNames.bind(styles);
@@ -61,7 +62,15 @@ const MENU_ITEMS = [
 ];
 
 function Header({ className, children }) {
-    const currentUser = true;
+    const [current, setCurrent] = useState(false)
+    const accessToken = localStorage.getItem('accessToken')
+
+    useEffect(() => {
+        if(accessToken) {
+            setCurrent(true)
+        }
+    },[accessToken])
+
 
     //Handle logic
     const handleMenuChange = (menuItem) => {
@@ -111,7 +120,7 @@ function Header({ className, children }) {
 
                 {/* Actions */}
                 <div className={cx('actions')}>
-                    {currentUser ? (
+                    {current ? (
                         <>
                             <Tippy delay={[0, 100]} content="Upload video" placement="bottom" offset={[0, 0]}>
                                 <Link to={config.routes.upload}>
@@ -143,8 +152,8 @@ function Header({ className, children }) {
                             <Button primary className={cx('btn-login')}>Đăng nhập</Button>
                         </>
                     )}
-                    <Menu items={currentUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
-                        {currentUser ? (
+                    <Menu items={ current === false ? userMenu : MENU_ITEMS } setState={setCurrent} state={current} onChange={handleMenuChange}>
+                        {current ? (
                             <Image
                                 className={cx('user-avatar')}
                                 alt="Avatar User"

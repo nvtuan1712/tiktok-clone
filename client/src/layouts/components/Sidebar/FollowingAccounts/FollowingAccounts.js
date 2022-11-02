@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
-function FollowingAccounts({ label }) {
+function FollowingAccounts() {
     const currentUser = true;
 
     const [followingAccounts, setFollowingAccount] = useState([]);
@@ -15,7 +15,7 @@ function FollowingAccounts({ label }) {
         <>
             {currentUser ? (
                 <div className={cx('wrapper')}>
-                    <p className={cx('label')}>{label}</p>
+                    <p className={cx('label')}>Các tài khoản đang follow</p>
                     {followingAccounts.length > 0 ? (
                         <>
                             <FollowingAccountItem />
@@ -38,7 +38,7 @@ function FollowingAccounts({ label }) {
 }
 
 FollowingAccounts.propTypes = {
-    label: PropTypes.string.isRequired,
+    
 };
 
 export default FollowingAccounts;

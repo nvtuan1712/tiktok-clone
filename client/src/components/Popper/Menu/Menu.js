@@ -6,23 +6,24 @@ import { Wrapper as PopperWrapper } from '~/components/Popper';
 import MenuItem from './MenuItem';
 import HeaderLanguage from './Header';
 import { useState } from 'react';
+import config from '~/config';
 // import { useRef } from 'react';
 
 const cx = classNames.bind(styles);
 
 const defaultFn = () => {};
 
-function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn }) {
+function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn, setState, state }) {
     const [history, setHistory] = useState([{ data: items }]);
     const current = history[history.length - 1];
 
-    const currentUser = true;
 
     //Hàm xử lý render ra các item của menu phần header
     const renderItem = () => {
         return current.data.map((item, index) => {
             const isParent = !!item.children;
             const isShow = !!item.show;
+            const isSeparate = !!item.separate;
 
             return (
                 <MenuItem
@@ -41,6 +42,13 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
                             content.style.visibility = 'visible';
                             modal.style.visibility = 'visible';
                         } else {
+                        }
+
+                        if(isSeparate) {
+                            localStorage.removeItem('accessToken')
+                            localStorage.removeItem('idAccount')
+                            window.location.href = config.routes.home
+                            setState(false)
                         }
                     }}
                 ></MenuItem>
@@ -71,7 +79,7 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
             <Tippy
                 interactive
                 delay={[0, 800]}
-                offset={currentUser ? [12, 12] : [12, 7]}
+                offset={state ? [12, 12] : [12, 7]}
                 hideOnClick={hideOnClick}
                 placement="bottom-end"
                 render={renderResult}

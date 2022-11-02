@@ -7,7 +7,6 @@ import { ArrowBack, PassIcon, PassIconShow } from '~/components/Icons';
 import config from '~/config';
 import axios from 'axios';
 
-
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './LoginPhoneAndEmail.module.scss';
 
@@ -131,7 +130,7 @@ function LoginByEmail({ onClick }) {
 }
 
 function SubmitInfo({ email1, password1, change }) {
-    const [showError, setShowError] = useState(false)
+    const [showError, setShowError] = useState(false);
 
     const handleLogin = async (e) => {
         try {
@@ -140,49 +139,58 @@ function SubmitInfo({ email1, password1, change }) {
             const email = email1.current.value;
             const password = password1.current.value;
 
-            //get list user để check
-            const configHeader = {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                },
+            try {
+                const response1 = await axios.get('http://localhost:5000/api/accounts');
+                response1.data.forEach((data) => {
+                    if (data.email !== email) {
+                        setShowError(true)
+                        setTimeout(() => {
+                            setShowError(false);
+                        }, 4000);
+                    }
+                });
+            } catch (error) {
+
             }
-            const response1 = await axios.get('http://localhost:5000/users', configHeader);
-            response1.data.forEach((data) => {
-                if(data.email !== email) {
-                    setShowError(!showError)
-                } else {
-                    setShowError(!showError)
+
+            if (showError === false) {
+                //gửi value từ form client đến server
+                const respone = await axios.post('http://localhost:5000/api/auth/login/phone-or-email', {
+                    email: email,
+                    password: password,
+                });
+                console.log(respone);
+
+                if (respone.status === 200) {
+                    const accessToken = respone.data.accessToken;
+                    const idAccount = respone.data._idAccount;
+                    //decode lay ra thong tin payload
+                    const payloadDecoded = jwt_decode(accessToken);
+
+                    if (payloadDecoded.role === 'user') {
+                        window.location.href = config.routes.home;
+                    } else {
+                        window.location.href = config.routes.dashboard;
+                    }
+
+                    //save accessToken to client
+                    localStorage.setItem('accessToken', accessToken);
+                    localStorage.setItem('idAccount', idAccount);
                 }
-            })
-
-            //gửi value từ form client đến server
-            const respone = await axios.post('http://localhost:5000/api/login/phone-or-email', {
-                email: email,
-                password: password,
-            });
-
-            if (respone.status === 200) {
-                const accessToken = respone.data.accessToken;
-                //decode lay ra thong tin payload
-                const payloadDecoded = jwt_decode(accessToken);
-
-                if (payloadDecoded.role === 'user') {
-                    // window.location.href = config.routes.home;
-                } else {
-                    window.location.href = config.routes.dashboard;
-                }
-
-                //save accessToken to client
-                localStorage.setItem('accessToken', accessToken);
             }
         } catch (error) {
-            console.log(error);
+            if(error.response.status === 400) {
+                setShowError(true)
+                setTimeout(() => {
+                    setShowError(false);
+                }, 4000);
+            }
         }
     };
 
     return (
         <>
-            {showError ? <p>Sai tải khoản hoặc mật khẩu</p> : <></>}
+            {showError ? <p style={{ color: 'red', fontWeight: '600' }}>Sai tải khoản hoặc mật khẩu</p> : <></>}
             <button className={cx('style-button')} onClick={handleLogin} disabled={change} id="submitBtn">
                 Đăng nhập
             </button>

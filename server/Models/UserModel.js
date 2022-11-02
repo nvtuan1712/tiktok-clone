@@ -1,22 +1,52 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    unique: true,
+  account: {
+    type: mongoose.Schema.Types.ObjectId, ref: 'Account'
   },
-  password: {
-    type: String,
-  },
-  phone: {
+  avatar: {
     type: String,
   },
-  birthday: {
+  nickname: {
     type: String,
   },
-  role: {
+  name: {
     type: String,
   },
+  follower_count: {
+    type: Number,
+  },
+  following_count: {
+    type: Number,
+  },
+  heart_count: {
+    type: Number,
+  },
+  follower: [{
+    type: mongoose.Schema.Types.ObjectId, ref: 'User'
+  }],
+  fllowing: [{
+    type: mongoose.Schema.Types.ObjectId, ref: 'User'
+  }],
+  description: {
+    type: String,
+    default: '',
+  },
+  tick: {
+    type: Boolean,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now(),
+  }
+});
+
+UserSchema.virtual('id').get(function () {
+  return this._id.toHexString();
+});
+
+UserSchema.set('toJSON', {
+  virtuals: true,
 });
 
 //compiler

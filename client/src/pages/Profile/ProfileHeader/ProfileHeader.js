@@ -8,11 +8,23 @@ import { MoreAction, ShareProfile, EditProfile } from '~/components/Icons';
 import styles from '../Profile.module.scss';
 import MenuMoreActions from './MenuMoreActions';
 import MenuShareProfile from './MenuShareProfile';
+import { useEffect, useState } from 'react';
 
 const cx = classNames.bind(styles);
 
-function ProfileHeader() {
-    const currentUser = true;
+function ProfileHeader({ user }) {
+    const [currentUser, setCurrentUser] = useState(true)
+    const idAccount = localStorage.getItem('idAccount')
+
+    useEffect(() => {
+        document.title = `${user.data.nickname} (@${user.data.nickname}) TikTok | Xem các video mới nhất của ${user.data.nickname}`
+    }, [user.data.nickname])
+
+    useEffect(() => {
+        if(user.data.account !== idAccount) {
+            setCurrentUser(false)
+        }
+    },[idAccount, user.data.account])
 
     return (
         <div className={cx('profile-content-header')}>
@@ -28,8 +40,8 @@ function ProfileHeader() {
                     </span>
                 </div>
                 <div className={cx('title-container')}>
-                    <div className={cx('title-profile')}>Ig.nvy</div>
-                    <h1 className={cx('title-sub')}>beososweet</h1>
+                    <div className={cx('title-profile')}>{user.data.nickname}</div>
+                    <h1 className={cx('title-sub')}>{user.data.nickname}</h1>
                     {currentUser ? (
                         <div className={cx('edit-container')}>
                             <Button text className={cx('btn-edit')}>
@@ -52,19 +64,19 @@ function ProfileHeader() {
             </div>
             <h2 className={cx('count-info')}>
                 <div className={cx('count-number')}>
-                    <strong title="Đang Follow">101</strong>
+                    <strong title="Đang Follow">{user.data.following_count}</strong>
                     <span className={cx('span-unit')}>Đang Follow</span>
                 </div>
                 <div className={cx('count-number')}>
-                    <strong title="Follower">6964</strong>
+                    <strong title="Follower">{user.data.follower_count}</strong>
                     <span className={cx('span-unit')}>Follower</span>
                 </div>
                 <div className={cx('count-number')}>
-                    <strong title="Thích">230.4k</strong>
+                    <strong title="Thích">{user.data.heart_count}</strong>
                     <span className={cx('span-unit')}>Thích</span>
                 </div>
             </h2>
-            <h2 className={cx('desc')}>🐥</h2>
+            {user.data.description === '' ? <h2 className={cx('desc')}>Chưa có tiểu sử.</h2> : <h2 className={cx('desc')}>{user.data.description}</h2>}
             <MenuShareProfile>
                 <div className={cx('share-actions')}>
                     <ShareProfile />

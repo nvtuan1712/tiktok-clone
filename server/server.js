@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const userRoute = require('./Router/UserRoute')
 const authRoute = require('./Router/AuthRoute')
+const accountRoute = require('./Router/AccountRoute')
 const connectDB = require('./Services/ConnectDBService');
 
 require('dotenv').config()
@@ -16,8 +17,9 @@ app.use(express.json());
 connectDB()
 
 //middleware router
-app.use('/users', userRoute)
-app.use('/api/', authRoute)
+app.use('/api/users', userRoute)
+app.use('/api/auth', authRoute)
+app.use('/api/accounts', accountRoute)
 
 //
 

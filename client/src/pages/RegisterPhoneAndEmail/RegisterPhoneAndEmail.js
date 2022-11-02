@@ -311,7 +311,13 @@ function RegisterByEmail() {
                 </div>
             </div>
             {showErrorCFPass && <span style={{ color: 'red', fontSize: '14px' }}>{textErrorCFPass}</span>}
-            <SubmitInfo email1={inputEmail} pass={inputPass} phone1={inputPhone} change={changeColor} pass1={inputPass1}/>
+            <SubmitInfo
+                email1={inputEmail}
+                pass={inputPass}
+                phone1={inputPhone}
+                change={changeColor}
+                pass1={inputPass1}
+            />
         </>
     );
 }
@@ -319,7 +325,7 @@ function RegisterByEmail() {
 //Nút gửi thông tin đăng ký
 function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
     const [notiRegisterSuccess, setNotiRegisterSuccess] = useState(false);
-    const [showError, setShowError] = useState(false)
+    const [showError, setShowError] = useState(false);
 
     const handleRegister = async (e) => {
         try {
@@ -334,23 +340,23 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
             const birthday = `${day.innerText}/${month.innerText}/${year.innerText}`;
             const role = 'user';
 
-            //get list user để check
-            const configHeader = {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                },
+            try {
+                const response1 = await axios.get('http://localhost:5000/api/accounts');
+                response1.data.forEach((data) => {
+                    if (data.email === email) {
+                        setShowError(true);
+                        setTimeout(() => {
+                            setShowError(false)
+                        }, 4000)
+                    } 
+                });
+            } catch (error) {
+                console.log(error);
             }
-            const response1 = await axios.get('http://localhost:5000/users', configHeader);
-            response1.data.forEach((data) => {
-                if(data.email === email) {
-                    setShowError(!showError)
-                } else {
-                    setShowError(!showError)
-                }
-            })
 
-            //gửi value từ form client đến server
-            const respone = await axios.post('http://localhost:5000/api/register/phone-or-email', {
+            if(showError === false) {
+                //gửi value từ form client đến server
+            const respone = await axios.post('http://localhost:5000/api/auth/register/phone-or-email', {
                 email: email,
                 password: password,
                 phone: phone,
@@ -360,14 +366,15 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
 
             if (respone.status === 200) {
                 setNotiRegisterSuccess(true);
-                day.innerText = 'Ngày'
-                month.innerText = 'Tháng'
-                year.innerText = 'Năm'
                 email1.current.value = '';
                 phone1.current.value = '';
                 pass.current.value = '';
                 email1.current.value = '';
                 pass1.current.value = '';
+                setTimeout(() => {
+                    setNotiRegisterSuccess(false);
+                },4000)
+            }
             }
         } catch (error) {
             console.log(error);
@@ -376,16 +383,18 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
 
     return (
         <>
-            {notiRegisterSuccess ? 
+            {notiRegisterSuccess ? (
                 <>
-                    <span style={{color: 'red', fontWeight: '600'}}>
-                        Đăng ký thành công!
-                    </span>
-                </> 
-            : 
+                    <span style={{ color: 'red', fontWeight: '600' }}>Đăng ký thành công!</span>
+                </>
+            ) : (
                 <></>
-            }
-            {showError ? <span style={{color: 'red', fontWeight: '600'}}>Email này đã được sử dụng,mời nhập email khác!</span> : <></>}
+            )}
+            {showError ? (
+                <span style={{ color: 'red', fontWeight: '600' }}>Email này đã được sử dụng,mời nhập email khác!</span>
+            ) : (
+                <></>
+            )}
             <button className={cx('style-button')} onClick={handleRegister} disabled={change} id="submitBtn">
                 Đăng ký
             </button>

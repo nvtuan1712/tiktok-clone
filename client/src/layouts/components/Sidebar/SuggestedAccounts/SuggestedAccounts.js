@@ -11,6 +11,8 @@ const cx = classNames.bind(styles);
 function SuggestedAccounts({ label }) {
     const [users, setUsers] = useState({})
     const [time, setTime] = useState(false)
+    const [addAndSubtractArr, setAddAndSubtractAddArr] = useState(5);
+    const [hide, setHide] = useState(false);
 
     useEffect(() => {
         try {
@@ -31,11 +33,34 @@ function SuggestedAccounts({ label }) {
     },[])
 
 
+    const handleAddArr = () => {
+        setAddAndSubtractAddArr(users.data.length);
+        setHide(!hide);
+    };
+
+    const handleSubTractArr = () => {
+        setAddAndSubtractAddArr(5);
+        setHide(!hide);
+    };
+
+
     return (
         <div className={cx('wrapper')}>
             <p className={cx('label')}>{label}</p>
 
-            { time && <AccountItem users={users}/> }
+            { time && users.data.slice(0, addAndSubtractArr).map((user, index) => {
+                return <AccountItem user={user} key={index}/>
+            }) }
+
+            {hide ? (
+                <p className={cx('more-btn')} onClick={handleSubTractArr}>
+                    Ẩn bớt
+                </p>
+            ) : (
+                <p className={cx('more-btn')} onClick={handleAddArr}>
+                    Xem tất cả
+                </p>
+            )}
         </div>
     );
 }

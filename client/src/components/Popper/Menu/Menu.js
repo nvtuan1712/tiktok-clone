@@ -47,6 +47,7 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn,
                         if(isSeparate) {
                             localStorage.removeItem('accessToken')
                             localStorage.removeItem('idAccount')
+                            localStorage.removeItem('nickName')
                             window.location.href = config.routes.home
                             setState(false)
                         }

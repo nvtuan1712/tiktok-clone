@@ -1,12 +1,16 @@
 .wrapper {
-    padding: 20px;
+    padding: 14px;
     width: 320px;
+    background: rgb(255, 255, 255);
+    box-shadow: rgb(0 0 0 / 12%) 0px 4px 16px;
+    border-radius: 8px;
 }
 
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 12px;
 }
 
 .avatar {
@@ -21,7 +25,7 @@
 }
 
 .body {
-    margin-top: 12px;
+
 }
 
 .nickname {
@@ -40,7 +44,7 @@
 }
 
 .analytics {
-    margin-top: 10px;
+    margin-top: 8px;
     font-size: 1.8rem;
 }
 

@@ -9,6 +9,7 @@ const register = async (req, res) => {
   try {
     //get info from client to req.body
     const { email, password, phone, birthday, role } = req.body;
+
     //creat data to db
     const accountModel = new AccountModel({
       email: email,
@@ -33,9 +34,9 @@ const register = async (req, res) => {
     })
     await user.save();
 
-    return res.status(200).send("register acount");
+    return res.status(200).send("Register success!");
   } catch (error) {
-    console.log("error", error);
+    return res.status(400).send('Email already exists!')
   }
 };
 
@@ -45,20 +46,23 @@ const login = async (req, res) => {
   //check email
   const account = await AccountModel.findOne({ email: req.body.email });
   if (!account) {
-    return res.status(400).send("Invalid Email Or Password");
+    return res.status(400).send("Invalid Email");
   }
 
   //check pass
   const isPassValid = bcrypt.compareSync(req.body.password, account.password);
   if (!isPassValid) {
-    return res.status(400).send("Invalid Email Or Password");
+    return res.status(400).send("Invalid Password");
   }
+
+  const user = await UserModel.findOne({ account: account._id })
 
   const jwtToken = jwt.sign(
     {
       _id: account.id,
       email: account.email,
       role: account.role,
+      nickname: user.nickname
     },
     process.env.SECRECT_JWT,
     {
@@ -68,7 +72,6 @@ const login = async (req, res) => {
 
   return res.status(200).send({
     accessToken: jwtToken,
-    _idAccount: account.id,
   });
 };
 

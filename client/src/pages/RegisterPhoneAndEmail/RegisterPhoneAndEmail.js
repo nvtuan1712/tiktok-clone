@@ -340,22 +340,7 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
             const birthday = `${day.innerText}/${month.innerText}/${year.innerText}`;
             const role = 'user';
 
-            try {
-                const response1 = await axios.get('http://localhost:5000/api/accounts');
-                response1.data.forEach((data) => {
-                    if (data.email === email) {
-                        setShowError(true);
-                        setTimeout(() => {
-                            setShowError(false)
-                        }, 4000)
-                    } 
-                });
-            } catch (error) {
-                console.log(error);
-            }
-
-            if(showError === false) {
-                //gửi value từ form client đến server
+            //gửi value từ form client đến server
             const respone = await axios.post('http://localhost:5000/api/auth/register/phone-or-email', {
                 email: email,
                 password: password,
@@ -366,18 +351,20 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
 
             if (respone.status === 200) {
                 setNotiRegisterSuccess(true);
+                setShowError(false)
                 email1.current.value = '';
                 phone1.current.value = '';
                 pass.current.value = '';
                 email1.current.value = '';
                 pass1.current.value = '';
-                setTimeout(() => {
-                    setNotiRegisterSuccess(false);
-                },4000)
-            }
             }
         } catch (error) {
-            console.log(error);
+            if(error.response.status === 400) {
+                if(error.response.data === 'Email already exists!') {
+                    setShowError(true);
+                    setNotiRegisterSuccess(false)
+                }
+            }
         }
     };
 

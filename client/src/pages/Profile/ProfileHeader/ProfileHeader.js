@@ -13,18 +13,19 @@ import { useEffect, useState } from 'react';
 const cx = classNames.bind(styles);
 
 function ProfileHeader({ user }) {
-    const [currentUser, setCurrentUser] = useState(true)
-    const idAccount = localStorage.getItem('idAccount')
+    const [currentUser, setCurrentUser] = useState(false)
 
     useEffect(() => {
         document.title = `${user.data.nickname} (@${user.data.nickname}) TikTok | Xem các video mới nhất của ${user.data.nickname}`
     }, [user.data.nickname])
 
     useEffect(() => {
-        if(user.data.account !== idAccount) {
+        if(user.data.isMe) {
+            setCurrentUser(true)
+        } else {
             setCurrentUser(false)
         }
-    },[idAccount, user.data.account])
+    },[user.data.nickname, user])
 
     return (
         <div className={cx('profile-content-header')}>

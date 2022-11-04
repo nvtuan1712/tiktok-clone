@@ -86,7 +86,7 @@ function Header({ className, children }) {
         {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'Xem hồ sơ',
-            to: '/@nickname',
+            to: `/${localStorage.getItem('nickName')}`,
             isUser: true
         },
         {

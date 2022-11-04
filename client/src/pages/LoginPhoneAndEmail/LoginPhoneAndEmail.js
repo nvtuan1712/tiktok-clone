@@ -131,6 +131,7 @@ function LoginByEmail({ onClick }) {
 
 function SubmitInfo({ email1, password1, change }) {
     const [showError, setShowError] = useState(false);
+    const [showErrorText, setShowErrorText] = useState('email');
 
     const handleLogin = async (e) => {
         try {
@@ -139,58 +140,46 @@ function SubmitInfo({ email1, password1, change }) {
             const email = email1.current.value;
             const password = password1.current.value;
 
-            try {
-                const response1 = await axios.get('http://localhost:5000/api/accounts');
-                response1.data.forEach((data) => {
-                    if (data.email !== email) {
-                        setShowError(true)
-                        setTimeout(() => {
-                            setShowError(false);
-                        }, 4000);
-                    }
-                });
-            } catch (error) {
+            //gửi value từ form client đến server
+            const respone = await axios.post('http://localhost:5000/api/auth/login/phone-or-email', {
+                email: email,
+                password: password,
+            });
 
-            }
+            if (respone.status === 200) {
+                setShowError(false)
+                const accessToken = respone.data.accessToken;
+                //decode lay ra thong tin payload
+                const payloadDecoded = jwt_decode(accessToken);
+                const idAccount = payloadDecoded._id;
+                const nickName = payloadDecoded.nickname;
 
-            if (showError === false) {
-                //gửi value từ form client đến server
-                const respone = await axios.post('http://localhost:5000/api/auth/login/phone-or-email', {
-                    email: email,
-                    password: password,
-                });
-                console.log(respone);
-
-                if (respone.status === 200) {
-                    const accessToken = respone.data.accessToken;
-                    const idAccount = respone.data._idAccount;
-                    //decode lay ra thong tin payload
-                    const payloadDecoded = jwt_decode(accessToken);
-
-                    if (payloadDecoded.role === 'user') {
-                        window.location.href = config.routes.home;
-                    } else {
-                        window.location.href = config.routes.dashboard;
-                    }
-
-                    //save accessToken to client
-                    localStorage.setItem('accessToken', accessToken);
-                    localStorage.setItem('idAccount', idAccount);
+                if (payloadDecoded.role === 'user') {
+                    window.location.href = config.routes.home;
+                } else {
+                    window.location.href = config.routes.dashboard;
                 }
+
+                //save accessToken to client
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('idAccount', idAccount);
+                localStorage.setItem('nickName', nickName);
             }
         } catch (error) {
-            if(error.response.status === 400) {
-                setShowError(true)
-                setTimeout(() => {
-                    setShowError(false);
-                }, 4000);
+            if (error.response.status === 400) {
+                if(error.response.data === 'Invalid Email'){
+                    setShowError(true)
+                } else {
+                    setShowError(true)
+                    setShowErrorText('mật khẩu')
+                }
             }
         }
     };
 
     return (
         <>
-            {showError ? <p style={{ color: 'red', fontWeight: '600' }}>Sai tải khoản hoặc mật khẩu</p> : <></>}
+            {showError ? <p style={{ color: 'red', fontWeight: '600' }}>Sai {showErrorText}, mời nhập lại</p> : <></>}
             <button className={cx('style-button')} onClick={handleLogin} disabled={change} id="submitBtn">
                 Đăng nhập
             </button>

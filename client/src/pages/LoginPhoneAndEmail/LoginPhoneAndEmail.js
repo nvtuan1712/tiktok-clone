@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { ArrowBack, PassIcon, PassIconShow } from '~/components/Icons';
 import config from '~/config';
 import axios from 'axios';
+import { configBaseURL } from '~/common/common'
+
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './LoginPhoneAndEmail.module.scss';
@@ -141,7 +143,7 @@ function SubmitInfo({ email1, password1, change }) {
             const password = password1.current.value;
 
             //gửi value từ form client đến server
-            const respone = await axios.post('http://localhost:5000/api/auth/login/phone-or-email', {
+            const respone = await axios.post(`${configBaseURL}/api/auth/login/phone-or-email`, {
                 email: email,
                 password: password,
             });

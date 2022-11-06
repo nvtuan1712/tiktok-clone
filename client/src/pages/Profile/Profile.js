@@ -8,6 +8,8 @@ import ProfileMain from './ProfileMain';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {useParams} from "react-router-dom";
+import { configBaseURL, configHeader } from '~/common/common'
+
 
 
 const cx = classNames.bind(styles);
@@ -20,14 +22,7 @@ function Profile() {
     useEffect(() => {
         try {
             //
-            const configHeader = {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                    Id: `Bearer ${localStorage.getItem('idAccount')}`
-                }
-            }
-
-            axios.get(`http://localhost:5000/api/users/${nickname}`, configHeader)
+            axios.get(`${configBaseURL}/api/users/${nickname}`, configHeader)
             .then((result) => {
                 setUser(result)
             }).catch((err) => {

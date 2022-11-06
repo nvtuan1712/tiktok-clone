@@ -1,7 +1,10 @@
+
 const AccountModel = require("../Models/AccountModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/UserModel");
+const TagModel = require("../Models/TagModel")
+const MusicModel = require("../Models/MusicModel")
 
 
 //xử lý đăng ký
@@ -62,7 +65,7 @@ const login = async (req, res) => {
       _id: account.id,
       email: account.email,
       role: account.role,
-      nickname: user.nickname
+      nickname: user.nickname,
     },
     process.env.SECRECT_JWT,
     {

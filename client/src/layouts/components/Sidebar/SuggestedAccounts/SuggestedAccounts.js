@@ -4,34 +4,37 @@ import classNames from 'classnames/bind';
 import AccountItem from './SuggestedAccountItem';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import { configBaseURL } from '~/common/common';
+import SekeletonLoadingForList from '../../SekeletonLoading/SeleketonLoadingForList/SekeletonLoadingForList';
 
 const cx = classNames.bind(styles);
 
 function SuggestedAccounts({ label }) {
-    const [users, setUsers] = useState({})
-    const [time, setTime] = useState(false)
+    const [users, setUsers] = useState([]);
+    const [time, setTime] = useState(false);
     const [addAndSubtractArr, setAddAndSubtractAddArr] = useState(5);
     const [hide, setHide] = useState(false);
 
     useEffect(() => {
         try {
             //get list người dùng đề xuất
-            axios.get('http://localhost:5000/api/users/get-list-suggest')
-            .then((result) => {
-                setUsers(result)
-            }).catch((err) => {
-                console.log(err);
-            });
-
-            setTimeout(() => {
-                setTime(true)
-            }, 500)
+            axios
+                .get(`${configBaseURL}/api/users/get-list-suggest`)
+                .then((result) => {
+                    setUsers(result);
+                    if(result) {
+                        setTimeout(() => {
+                            setTime(true);
+                        }, 2000);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         } catch (error) {
             console.log(error);
         }
-    },[])
-
+    }, []);
 
     const handleAddArr = () => {
         setAddAndSubtractAddArr(users.data.length);
@@ -43,14 +46,19 @@ function SuggestedAccounts({ label }) {
         setHide(!hide);
     };
 
-
     return (
         <div className={cx('wrapper')}>
             <p className={cx('label')}>{label}</p>
 
-            { time && users.data.slice(0, addAndSubtractArr).map((user, index) => {
-                return <AccountItem user={user} key={index}/>
-            }) }
+            {time ? (
+                <>
+                    {users.data.slice(0, addAndSubtractArr).map((user, index) => {
+                        return <AccountItem user={user} key={index} />;
+                    })}
+                </>
+            ) : (
+                <SekeletonLoadingForList />
+            )}
 
             {hide ? (
                 <p className={cx('more-btn')} onClick={handleSubTractArr}>

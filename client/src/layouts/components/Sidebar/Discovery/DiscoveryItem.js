@@ -11,16 +11,16 @@ import { Tag, Music } from '../../../../components/Icons';
 
 const cx = classNames.bind(styles);
 
-function DiscoveryItem({ text, index, path}) {
+function DiscoveryItem({ name, check}) {
+    console.log(name, check);
     return (
         <Link
-        key={index} 
         className={cx('discovery-item')} 
-        to={path === 'tag' ? config.routes.tag : config.routes.music} 
+        to={check === undefined ? `/tag/${name}` : `/music/${name}`} 
         >
             <div className={cx('discovery-item-container')}>
-                {path === 'tag' ? <Tag/> : <Music/>}
-                <p className={cx('discovery-item-text')}>{text}</p>     
+                {check === undefined ? <Tag/> : <Music/>}
+                <p className={cx('discovery-item-text')}>{name}</p>     
             </div>
         </Link>
     );

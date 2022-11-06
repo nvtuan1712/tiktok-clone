@@ -4,29 +4,29 @@ import classNames from 'classnames/bind';
 import FollowingAccountItem from './FollowingAccountItem';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { configBaseURL, configHeader } from '~/common/common';
+import SekeletonLoadingForList from '../../SekeletonLoading/SeleketonLoadingForList/SekeletonLoadingForList';
 
 const cx = classNames.bind(styles);
 
 function FollowingAccounts() {
-    const currentUser = true;
     const [followingAccounts, setFollowingAccount] = useState([]);
     const [addAndSubtractArr, setAddAndSubtractAddArr] = useState(5);
     const [hide, setHide] = useState(false);
+    const [time, setTime] = useState(false);
 
     useEffect(() => {
         try {
             //
-            const configHeader = {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                    IdAccount: `Bearer ${localStorage.getItem('idAccount')}`,
-                },
-            };
-
             axios
-                .get('http://localhost:5000/api/users/get-follow-user', configHeader)
+                .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
                 .then((result) => {
                     setFollowingAccount(result.data[0].fllowing);
+                    if(result) {
+                        setTimeout(() => {
+                            setTime(true);
+                        }, 2000);
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
@@ -48,34 +48,36 @@ function FollowingAccounts() {
 
     return (
         <>
-            {currentUser ? (
-                <div className={cx('wrapper')}>
-                    <p className={cx('label')}>Các tài khoản đang follow</p>
-                    {followingAccounts.length > 0 ? (
-                        <>
-                            {followingAccounts.slice(0, addAndSubtractArr).map((account, index) => {
-                                return <FollowingAccountItem key={index} account={account} />;
-                            })}
-
+            <div className={cx('wrapper')}>
+                <p className={cx('label')}>Các tài khoản đang follow</p>
+                {followingAccounts.length > 0 ? (
+                    <>
+                        {time ? (
                             <>
-                                {hide ? (
-                                    <p className={cx('more-btn')} onClick={handleSubTractArr}>
-                                        Ẩn bớt
-                                    </p>
-                                ) : (
-                                    <p className={cx('more-btn')} onClick={handleAddArr}>
-                                        Xem tất cả
-                                    </p>
-                                )}
+                                {followingAccounts.slice(0, addAndSubtractArr).map((account, index) => {
+                                    return <FollowingAccountItem key={index} account={account} />;
+                                })}
                             </>
+                        ) : (
+                            <SekeletonLoadingForList/>
+                        )}
+
+                        <>
+                            {hide ? (
+                                <p className={cx('more-btn')} onClick={handleSubTractArr}>
+                                    Ẩn bớt
+                                </p>
+                            ) : (
+                                <p className={cx('more-btn')} onClick={handleAddArr}>
+                                    Xem tất cả
+                                </p>
+                            )}
                         </>
-                    ) : (
-                        <p className={cx('empty')}>Những tài khoản bạn follow sẽ xuất hiện tại đây</p>
-                    )}
-                </div>
-            ) : (
-                <></>
-            )}
+                    </>
+                ) : (
+                    <p className={cx('empty')}>Những tài khoản bạn follow sẽ xuất hiện tại đây</p>
+                )}
+            </div>
         </>
     );
 }

@@ -21,7 +21,7 @@ function Sidebar({ className }) {
         if(accessToken) {
             setCurrent(!current)
         }
-    },[])
+    },[accessToken])
 
     return (
         <>

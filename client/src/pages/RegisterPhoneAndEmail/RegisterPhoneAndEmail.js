@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { ArrowBack, ArrowDown, PassIcon, PassIconShow } from '~/components/Icons';
 import config from '~/config';
 import { ArrDate, ArrMonth, ArrYear } from './ArrOptionsDate';
+import { configBaseURL } from '~/common/common'
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './RegisterPhoneAndEmail.module.scss';
@@ -341,13 +342,14 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
             const role = 'user';
 
             //gửi value từ form client đến server
-            const respone = await axios.post('http://localhost:5000/api/auth/register/phone-or-email', {
+            const respone = await axios.post(`${configBaseURL}/api/auth/register/phone-or-email`, {
                 email: email,
                 password: password,
                 phone: phone,
                 birthday: birthday,
                 role: role,
             });
+            console.log(respone);
 
             if (respone.status === 200) {
                 setNotiRegisterSuccess(true);

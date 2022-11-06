@@ -73,9 +73,35 @@ const followUser = async (req, res) => {
       await userModel
       .updateOne(
         { account: idAccount },
-        { $push: { fllowing: idUser } }
+        { $push: { fllowing: idUser } } 
       )
-      res.status(200).send(followUser);
+      res.status(200).send('Follow thành công!');
+    }
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+//follow người dùng
+const unFollowUser = async (req, res) => {
+  const bearerHeader = req.body.headers["Authorization"];
+  const accessToken = bearerHeader.split(" ")[1];
+  const bearerHeader1 = req.body.headers["IdAccount"];
+  const idAccount = bearerHeader1.split(" ")[1];
+  const bearerHeader2 = req.body.headers["IdUser"];
+  const idUser = bearerHeader2.split(" ")[1];
+  
+  try {
+    //verifile token
+    const decodeJwt = jwt.verify(accessToken, process.env.SECRECT_JWT);
+    if (decodeJwt) {
+      const followUser = 
+      await userModel
+      .updateOne(
+        { account: idAccount },
+        { $pull: { fllowing: idUser } }
+      )
+      res.status(200).send('Unfollow thành công!');
     }
   } catch (error) {
     res.send(error);
@@ -115,5 +141,6 @@ module.exports = {
   getCurrentUser: getCurrentUser,
   getSuggestUser: getSuggestUser,
   followUser: followUser,
+  unFollowUser: unFollowUser,
   getfollowUser: getfollowUser,
 };

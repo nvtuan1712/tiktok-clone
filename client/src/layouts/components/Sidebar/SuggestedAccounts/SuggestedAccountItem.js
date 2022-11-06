@@ -18,7 +18,7 @@ function AccountItem({ user }) {
     const renderPreview = (props) => {
         return (
             <div tabIndex="-1" {...props}>
-                    <AccountPreview user={user} />
+                    <AccountPreview user={user}/>
             </div>
         );
     };

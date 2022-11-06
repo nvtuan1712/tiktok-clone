@@ -3,7 +3,7 @@
 }
 
 .scroll-container {
-    overflow: hidden auto;
+    overflow: hidden overlay;
     overscroll-behavior-y: contain;
     perspective: 1px;
     transform-style: preserve-3d;

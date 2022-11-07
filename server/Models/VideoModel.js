@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 
 const VideoSchema = new mongoose.Schema({
-  thumbnail: {
-    type: String,
-  },
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

@@ -5,15 +5,6 @@ const videoModel = require("../Models/VideoModel");
 // SET STORAGE
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/images");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-var storageVideo = multer.diskStorage({
-  destination: function (req, file, cb) {
     cb(null, "public/video");
   },
   filename: function (req, file, cb) {
@@ -23,25 +14,31 @@ var storageVideo = multer.diskStorage({
 
 var upload = multer({
   storage: storage,
-}).single("myFile");
+}).single("myVideo");
 
-var uploadVideo = multer({
-  storage: storageVideo,
-}).single("myFileVideo");
 
 const uploadImage = async (req, res) => {
+  // console.log(req);
   try {
     upload(req, res, (err) => {
+      console.log(req);
       if (err) {
         console.log(err);
       } else {
-        const newVideo = new videoModel({
-          thumbnail: `http://localhost:5000/${req.file.destination}/${req.file.filename}`,
-          // video: `http://localhost:5000/${req.file.destination}/${req.file.filename}`
+        let private = false
+        if(req.body.select === 'Riêng tư') {
+          private = true
+        }
+        const newVideo = new videoModel({ 
+          description: req.body.description,
+          trendy: req.body.trendy, 
+          music: req.body.music,
+          isPrivate: private,
+          video: `http://localhost:5000/public/video/${req.file.filename}`
         });
         newVideo
           .save()
-          .then(() => res.send("success upload"))
+          .then(() => res.send('Upload Success!'))
           .catch((err) => console.log(err));
       }
     });

@@ -5,18 +5,90 @@ import styles from './Menu.module.scss';
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import MenuItem from './MenuItem';
 import HeaderLanguage from './Header';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import config from '~/config';
-// import { useRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faGlobe,
+    faUser,
+    faCircleQuestion,
+    faKeyboard,
+    faCoins,
+    faGear,
+    faSignOut,
+} from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
 const defaultFn = () => {};
 
-function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn, setState, state }) {
-    const [history, setHistory] = useState([{ data: items }]);
-    const current = history[history.length - 1];
+function Menu({ children, hideOnClick = false, onChange = defaultFn, setState, state }) {
+    const MENU_ITEMS = [
+        {
+            icon: <FontAwesomeIcon icon={faGlobe} />,
+            title: 'Ngôn ngữ',
+            children: {
+                title: 'Language',
+                data: [
+                    {
+                        type: 'language',
+                        code: 'en',
+                        title: 'English',
+                    },
+                    {
+                        type: 'language',
+                        code: 'vi',
+                        title: 'Tiếng Việt',
+                    },
+                ],
+            },
+        },
+        {
+            icon: <FontAwesomeIcon icon={faCircleQuestion} />,
+            title: 'Phản hồi và trợ giúp',
+            to: '/feedback',
+        },
+        {
+            icon: <FontAwesomeIcon icon={faKeyboard} />,
+            title: 'Phím tắt trên bàn phím',
+            show: true,
+        },
+    ];
+    
+    const userMenu = [
+        {
+            icon: <FontAwesomeIcon icon={faUser} />,
+            title: 'Xem hồ sơ',
+            to: `/${localStorage.getItem('nickName')}`,
+            isUser: true,
+        },
+        {
+            icon: <FontAwesomeIcon icon={faCoins} />,
+            title: 'Nhận xu',
+            to: '/coin',
+        },
+        {
+            icon: <FontAwesomeIcon icon={faGear} />,
+            title: 'Cài đặt',
+            to: '/settings',
+        },
+        ...MENU_ITEMS,
+        {
+            icon: <FontAwesomeIcon icon={faSignOut} />,
+            title: 'Đăng xuất',
+            separate: true,
+        },
+    ];
 
+    const [history, setHistory] = useState([{ data: MENU_ITEMS }]);
+    const current = history[history.length - 1];
+    const accessToken = localStorage.getItem('accessToken')
+
+    useEffect(() => {
+        if(accessToken) {
+            setHistory([{ data: userMenu }])
+        }
+    },[accessToken])
 
     //Hàm xử lý render ra các item của menu phần header
     const renderItem = () => {

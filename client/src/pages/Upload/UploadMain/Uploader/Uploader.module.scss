@@ -22,6 +22,10 @@
     height: 458px;
     border: 2px dashed rgba(22, 24, 35, 0.2);
     box-sizing: border-box;
+
+    &:hover {
+        border: 2px dashed var(--priamry);
+    }
 }
 
 .cloud-icon {
@@ -110,4 +114,69 @@
             }
         }
     }
+}
+
+#uploadphoto {
+    // display: none;
+    position: absolute;
+    z-index: -1;
+}
+
+.preview-container {
+    width: 280px;
+    height: 458px;
+    padding: 4px;
+    border: 1px solid rgba(22, 24, 35, 0.12);
+    border-radius: 4px;
+}
+
+.preview-video {
+    width: 100%;
+    height: 100%;
+}
+
+.preview-change-video {
+    margin-top: 18px;
+    background: rgb(255, 255, 255);
+    border: 1px solid rgba(22, 24, 35, 0.12);
+    box-sizing: border-box;
+    border-radius: 12px;
+    padding: 13px;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+
+    div {
+        font-size: 14px;
+        line-height: 17px;
+        font-weight: 400;
+        color: rgba(22, 24, 35, 0.75);
+        display: flex;
+        -webkit-box-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+        max-width: 150px;
+
+        img {
+            margin-right: 4px;
+        }
+
+        span {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-top: 2px;
+        }
+    }
+}
+
+.btn-change {
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: 600;
+    color: rgb(22, 24, 35);
+    cursor: pointer;
 }

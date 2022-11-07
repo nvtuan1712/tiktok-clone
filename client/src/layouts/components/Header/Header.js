@@ -2,13 +2,6 @@ import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faEllipsisVertical,
-    faGlobe,
-    faUser,
-    faCircleQuestion,
-    faKeyboard,
-    faCoins,
-    faGear,
-    faSignOut,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Link } from 'react-router-dom';
@@ -29,49 +22,13 @@ import { useState, useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
-const MENU_ITEMS = [
-    {
-        icon: <FontAwesomeIcon icon={faGlobe} />,
-        title: 'Ngôn ngữ',
-        children: {
-            title: 'Language',
-            data: [
-                {
-                    type: 'language',
-                    code: 'en',
-                    title: 'English',
-                },
-                {
-                    type: 'language',
-                    code: 'vi',
-                    title: 'Tiếng Việt',
-                },
-            ],
-        },
-    },
-    {
-        icon: <FontAwesomeIcon icon={faCircleQuestion} />,
-        title: 'Phản hồi và trợ giúp',
-        to: '/feedback',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faKeyboard} />,
-        title: 'Phím tắt trên bàn phím',
-        show: true,
-    },
-];
-
 function Header({ className, children }) {
     const [current, setCurrent] = useState(false);
-    const [time, setTime] = useState(false);
     const accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
         if (accessToken) {
             setCurrent(true);
-            setTimeout(() => {
-                setTime(true);
-            }, 2000);
         }
     }, [accessToken]);
 
@@ -84,31 +41,6 @@ function Header({ className, children }) {
             default:
         }
     };
-
-    const userMenu = [
-        {
-            icon: <FontAwesomeIcon icon={faUser} />,
-            title: 'Xem hồ sơ',
-            to: `/${localStorage.getItem('nickName')}`,
-            isUser: true,
-        },
-        {
-            icon: <FontAwesomeIcon icon={faCoins} />,
-            title: 'Nhận xu',
-            to: '/coin',
-        },
-        {
-            icon: <FontAwesomeIcon icon={faGear} />,
-            title: 'Cài đặt',
-            to: '/settings',
-        },
-        ...MENU_ITEMS,
-        {
-            icon: <FontAwesomeIcon icon={faSignOut} />,
-            title: 'Đăng xuất',
-            separate: true,
-        },
-    ];
 
     return (
         <header className={cx('wrapper')}>
@@ -157,26 +89,23 @@ function Header({ className, children }) {
                             </Button>
                         </>
                     )}
-                    {time && (
-                        <Menu
-                            items={current ? userMenu : MENU_ITEMS}
-                            setState={setCurrent}
-                            state={current}
-                            onChange={handleMenuChange}
-                        >
-                            {current ? (
-                                <Image
-                                    className={cx('user-avatar')}
-                                    alt="Avatar User"
-                                    src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/dab2fbac6d703a59107ed7cac91d09be~c5_300x300.webp?x-expires=1662631200&x-signature=hT2Evz9bo1GouXeqNKyQreAbV98%3D"
-                                ></Image>
-                            ) : (
-                                <button className={cx('more-btn')}>
-                                    <FontAwesomeIcon icon={faEllipsisVertical} />
-                                </button>
-                            )}
-                        </Menu>
-                    )}
+                    <Menu
+                        setState={setCurrent}
+                        state={current}
+                        onChange={handleMenuChange}
+                    >
+                        {current ? (
+                            <Image
+                                className={cx('user-avatar')}
+                                alt="Avatar User"
+                                src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/dab2fbac6d703a59107ed7cac91d09be~c5_300x300.webp?x-expires=1662631200&x-signature=hT2Evz9bo1GouXeqNKyQreAbV98%3D"
+                            ></Image>
+                        ) : (
+                            <button className={cx('more-btn')}>
+                                <FontAwesomeIcon icon={faEllipsisVertical} />
+                            </button>
+                        )}
+                    </Menu>
                 </div>
             </div>
         </header>

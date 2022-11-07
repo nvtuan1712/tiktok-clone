@@ -2,11 +2,13 @@
 import classNames from 'classnames/bind';
 import { useRef, useState } from 'react';
 import Button from '~/components/Button';
-import { ArrowDown, Check } from '~/components/Icons';
+import { Check } from '~/components/Icons';
+import { configBaseURL } from '~/common/common';
 // import Button from '~/components/Button';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './FormUpload.module.scss';
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
@@ -14,7 +16,7 @@ function FormUpload() {
     return (
         <div className={cx('form')}>
             <Caption />
-            <Thumbnail />
+            {/* <Thumbnail /> */}
             <Selection />
             <Coppyright />
             <ButtonRow />
@@ -24,39 +26,93 @@ function FormUpload() {
 
 //hàm xử lý đặt caption cho video
 function Caption() {
+    const [checkCountCaption, setCheckCountCaption] = useState(0);
+    const [checkCountTrendy, setCheckCountTrendy] = useState(0);
+    const [checkCountMusic, setCheckCountMusic] = useState(0);
+    const toastNotice = useRef()
+
+    const handleCountCharacterCaption = (e) => {
+        const str = e.target.value;
+        setCheckCountCaption(str.length);
+        if (str.length >= 150) {
+            toastNotice.current.style.animation = `${cx('showToast')} 0.5s 0.1s ease forwards alternate `
+            setTimeout(() => {
+                toastNotice.current.style.animation = `${cx('hideToast')} 0.5s 0.1s ease`
+            },3000)
+        }
+    };
+
+    const handleCountCharacterTrendy = (e) => {
+        const str = e.target.value;
+        setCheckCountTrendy(str.length);
+    };
+
+    const handleCountCharacterMusic = (e) => {
+        const str = e.target.value;
+        setCheckCountMusic(str.length);
+    };
+
     return (
         <div className={cx('caption-wrap')}>
+            <div className={cx('toast')} ref={toastNotice}>
+                <div className={cx('toast-notice')}>
+                    <div className={cx('toast-notice-content')}>
+                        <div>Tối đa 150 ký tự</div>
+                    </div>
+                </div>
+            </div>
             <div className={cx('caption-container')}>
                 <div>
                     <div className={cx('caption-text-container')}>
-                        <span className={cx('title-text-span')}>Chú thích</span>
+                        <span className={cx('title-text-span')}>Caption</span>
                         <span className={cx('caption-required-font')}>
-                            <span>0</span> / 150
+                            <span>{checkCountCaption}</span> / 150
                         </span>
                     </div>
                     <div className={cx('caption-input-container')}>
                         <div className={cx('caption-input-editor')}>
-                            <div className={cx('input-editor-container')}>
-                                <div
-                                    aria-autocomplete="list"
-                                    aria-expanded="false"
-                                    contentEditable="true"
-                                    spellCheck="false"
-                                    className={cx('editor-input')}
-                                ></div>
-                            </div>
+                            <input
+                                onChange={handleCountCharacterCaption}
+                                maxLength="150"
+                                spellCheck="false"
+                                className={cx('editor-input')}
+                                placeholder="Mô tả cho video"
+                                id='desc'
+                            ></input>
                         </div>
-                        <div className={cx('caption-icon-at', 'icon-style')}>
-                            <img
-                                src="https://lf16-tiktok-common.ttwstatic.com/obj/tiktok-web-common-sg/ies/creator_center/svgs/at.062a03e9.svg"
-                                alt=""
-                            />
+                    </div>
+                    <div className={cx('caption-text-container')}>
+                        <span className={cx('title-text-span')}>Xu hướng</span>
+                        <span className={cx('caption-required-font')}>
+                            <span>{checkCountTrendy}</span> / 150
+                        </span>
+                    </div>
+                    <div className={cx('caption-input-container')}>
+                        <div className={cx('caption-input-editor')}>
+                            <input
+                                onChange={handleCountCharacterTrendy}
+                                spellCheck="false"
+                                className={cx('editor-input')}
+                                placeholder="Xu hướng nổi bật"
+                                id='trendy'
+                            ></input>
                         </div>
-                        <div className={cx('caption-icon-hash', 'icon-style')}>
-                            <img
-                                src="https://lf16-tiktok-common.ttwstatic.com/obj/tiktok-web-common-sg/ies/creator_center/svgs/hashtag.234f1b9c.svg"
-                                alt=""
-                            />
+                    </div>
+                    <div className={cx('caption-text-container')}>
+                        <span className={cx('title-text-span')}>Âm nhạc</span>
+                        <span className={cx('caption-required-font')}>
+                            <span>{checkCountMusic}</span> / 150
+                        </span>
+                    </div>
+                    <div className={cx('caption-input-container')}>
+                        <div className={cx('caption-input-editor')}>
+                            <input
+                                onChange={handleCountCharacterMusic}
+                                spellCheck="false"
+                                className={cx('editor-input')}
+                                placeholder="Âm nhạc thịnh hành"
+                                id='music'
+                            ></input>
                         </div>
                     </div>
                 </div>
@@ -66,28 +122,24 @@ function Caption() {
 }
 
 //hàm xử lý đặt thumbnail cho video
-function Thumbnail() {
-    return (
-        <div className={cx('thumbnail-wrap')}>
-            <span className={cx('title-text-span')}>Ảnh bìa</span>
-            <div className={cx('thumbnail-container')}>
-                <div className={cx('thumbnail-bg-container')}>
-                    <div className={cx('thumbnail-candiate')}></div>
-                </div>
-            </div>
-        </div>
-    );
-}
+// function Thumbnail() {
+//     return (
+//         <div className={cx('thumbnail-wrap')}>
+//             <span className={cx('title-text-span')}>Ảnh bìa</span>
+//             <div className={cx('thumbnail-container')}>
+//                 <div className={cx('thumbnail-bg-container')}>
+//                     <div className={cx('thumbnail-candiate')}></div>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// }
 
 //component xử lý check cho video
 function Selection() {
-    const iconArrow = useRef();
     const iconCheck = useRef();
     const iconCheck1 = useRef();
-
-    const rotage = () => {
-        iconArrow.current.classList.toggle(cx('rotate'));
-    };
+    const [privateVideo, setPrivateVideo] = useState('Công khai');
 
     const checkRole = () => {
         iconCheck.current.classList.toggle(cx('checked'));
@@ -97,6 +149,10 @@ function Selection() {
         iconCheck1.current.classList.toggle(cx('checked'));
     };
 
+    const handleChange = (e) => {
+        setPrivateVideo(e.target.value);
+    };
+
     return (
         <div className={cx('selection-wrap')}>
             {/*  */}
@@ -104,15 +160,11 @@ function Selection() {
                 <span className={cx('title-text-span')}>Ai có thể xem video này</span>
             </div>
             {/*  */}
-            <div className={cx('selection-select')}>
-                <div className={cx('select-selector')}>
-                    <div className={cx('select-selector-left')}>
-                        <span className={cx('select-selector-text')}>Công khai</span>
-                    </div>
-                    <div className={cx('select-selector-icon')} onClick={rotage} ref={iconArrow}>
-                        <ArrowDown />
-                    </div>
-                </div>
+            <div>
+                <select value={privateVideo} onChange={handleChange} id='select' className={cx('selection-select')}>
+                    <option value="Công khai">Công khai</option>
+                    <option value="Riêng tư">Riêng tư</option>
+                </select>
             </div>
             {/*  */}
             <div className={cx('selection-title')}>
@@ -173,8 +225,6 @@ function Coppyright() {
         setModal(false);
     };
 
-    console.log(modal);
-
     return (
         <>
             <div className={cx('coppyright-wrap')}>
@@ -233,23 +283,59 @@ function Modal({ onClick }) {
 
 //component đăng tải video
 function ButtonRow() {
+    const [show, setShow] = useState(false)
+
+    const handleUploadVideo = async () => {
+        const inputDesc = document.querySelector('#desc')
+        const inputTrendy = document.querySelector('#trendy')
+        const inputMusic = document.querySelector('#music')
+        const selection = document.querySelector('#select')
+        const video = document.querySelector('#uploadphoto')
+        const file = video.files[0]
+        const form = new FormData();
+        form.append('myVideo', file)
+        form.append('description', inputDesc.value)
+        form.append('trendy', inputTrendy.value)
+        form.append('music', inputMusic.value)
+        form.append('selection', selection.value)
+        try {
+            const response = await axios({
+                method: 'post',
+                url: `${configBaseURL}/api/video/upload`,
+                data: form,
+                headers: {
+                    'Content-Type': `multipart/form-data; boundary=${form._boundary}`,
+                },
+            });
+            console.log(response);
+            if(response.data === 'Upload Success!') {
+                setShow(true)
+            }
+        } catch (error) {
+            
+        }
+    }
+
     return (
-        <div className={cx('buttonrow-wrap')}>
-            <div className={cx('btn-cancel')}>
-                <button className={cx('btn-cancel-container', 'btn')}>
-                    <div className={cx('btn-text-container')}>
-                        <div className={cx('btn-text')}>Hủy bỏ</div>
-                    </div>
-                </button>
+        <>
+            {show && <p>Đăng tải video thành công!</p>}
+            <div className={cx('buttonrow-wrap')}>
+                <div className={cx('btn-cancel')}>
+                    <button className={cx('btn-cancel-container', 'btn')}>
+                        <div className={cx('btn-text-container')}>
+                            <div className={cx('btn-text')}>Hủy bỏ</div>
+                        </div>
+                    </button>
+                </div>
+                <div className={cx('btn-post')}>
+                    <button className={cx('btn-post-container', 'btn')} onClick={handleUploadVideo}>
+                        <div className={cx('btn-text-container')}>
+                            <div className={cx('btn-text')}>Đăng</div>
+                        </div>
+                    </button>
+                </div>
             </div>
-            <div className={cx('btn-post')}>
-                <button className={cx('btn-post-container', 'btn')} disabled>
-                    <div className={cx('btn-text-container')}>
-                        <div className={cx('btn-text')}>Đăng</div>
-                    </div>
-                </button>
-            </div>
-        </div>
+        </>
     );
 }
 

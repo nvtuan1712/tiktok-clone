@@ -1,7 +1,7 @@
 .content-header {
     position: relative;
     flex: 0 0 auto;
-    margin-bottom: 20px;
+    margin-bottom: 28px;
     box-sizing: border-box;
     max-width: 624px;
     padding-right: 92px;
@@ -12,6 +12,7 @@
     flex-direction: row;
     -webkit-box-align: center;
     align-items: flex-start;
+    overflow: hidden;
 }
 
 .avatar-container {
@@ -116,4 +117,17 @@
     top: 11px;
     cursor: pointer;
     right: 12px;
+}
+
+.singer {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 25px;
+    text-overflow: ellipsis;
+    height: 25px;
+    overflow: hidden;
+    max-width: 450px;
+    white-space: nowrap;
+    display: flex;
+    align-items: flex-end;
 }

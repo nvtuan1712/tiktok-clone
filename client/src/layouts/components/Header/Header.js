@@ -57,20 +57,23 @@ const MENU_ITEMS = [
     {
         icon: <FontAwesomeIcon icon={faKeyboard} />,
         title: 'Phím tắt trên bàn phím',
-        show: true
+        show: true,
     },
 ];
 
 function Header({ className, children }) {
-    const [current, setCurrent] = useState(false)
-    const accessToken = localStorage.getItem('accessToken')
+    const [current, setCurrent] = useState(false);
+    const [time, setTime] = useState(false);
+    const accessToken = localStorage.getItem('accessToken');
 
     useEffect(() => {
-        if(accessToken) {
-            setCurrent(true)
+        if (accessToken) {
+            setCurrent(true);
+            setTimeout(() => {
+                setTime(true);
+            }, 2000);
         }
-    },[accessToken])
-
+    }, [accessToken]);
 
     //Handle logic
     const handleMenuChange = (menuItem) => {
@@ -87,7 +90,7 @@ function Header({ className, children }) {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'Xem hồ sơ',
             to: `/${localStorage.getItem('nickName')}`,
-            isUser: true
+            isUser: true,
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,
@@ -149,22 +152,31 @@ function Header({ className, children }) {
                                     <span className={cx('upload-text')}>Tải lên</span>
                                 </div>
                             </Link>
-                            <Button primary className={cx('btn-login')}>Đăng nhập</Button>
+                            <Button primary className={cx('btn-login')}>
+                                Đăng nhập
+                            </Button>
                         </>
                     )}
-                    <Menu items={ current === false ? userMenu : MENU_ITEMS } setState={setCurrent} state={current} onChange={handleMenuChange}>
-                        {current ? (
-                            <Image
-                                className={cx('user-avatar')}
-                                alt="Avatar User"
-                                src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/dab2fbac6d703a59107ed7cac91d09be~c5_300x300.webp?x-expires=1662631200&x-signature=hT2Evz9bo1GouXeqNKyQreAbV98%3D"
-                            ></Image>
-                        ) : (
-                            <button className={cx('more-btn')}>
-                                <FontAwesomeIcon icon={faEllipsisVertical} />
-                            </button>
-                        )}
-                    </Menu>
+                    {time && (
+                        <Menu
+                            items={current ? userMenu : MENU_ITEMS}
+                            setState={setCurrent}
+                            state={current}
+                            onChange={handleMenuChange}
+                        >
+                            {current ? (
+                                <Image
+                                    className={cx('user-avatar')}
+                                    alt="Avatar User"
+                                    src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/dab2fbac6d703a59107ed7cac91d09be~c5_300x300.webp?x-expires=1662631200&x-signature=hT2Evz9bo1GouXeqNKyQreAbV98%3D"
+                                ></Image>
+                            ) : (
+                                <button className={cx('more-btn')}>
+                                    <FontAwesomeIcon icon={faEllipsisVertical} />
+                                </button>
+                            )}
+                        </Menu>
+                    )}
                 </div>
             </div>
         </header>

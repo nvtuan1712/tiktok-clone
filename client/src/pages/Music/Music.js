@@ -2,31 +2,34 @@
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+
 
 //Thư viện internor sau(thư viện bên trong dự án)
-import { configBaseURL } from '~/common/common';
-import styles from './Tag.module.scss';
-import TagHeader from './TagHeader';
-import TagMain from './TagMain';
+import styles from './Music.module.scss';
+import MusicHeader from './MusicHeader';
+import MusicMain from './MusicMain';
 import Video from '~/components/Video';
-import { useParams } from 'react-router-dom';
+import { configBaseURL } from '~/common/common';
 import SekeletonLoadingForTagAndMusicV2 from '~/layouts/components/SekeletonLoading/SekeletonLoadingForTagAndMusicV2/SekeletonLoadingForTagAndMusicV2';
+
 
 const cx = classNames.bind(styles);
 
-function Tag() {
+function Music() {
     const [showvideo, setShowVideo] = useState(false);
-    const [trendy, setTrendy] = useState([]);
+    const [music, setMusic] = useState([]);
     const [time, setTime] = useState(false);
     const { name } = useParams();
+    // let currentTrendy = useRef()
 
     useEffect(() => {
         try {
             //get list âm nhạc
             axios
-                .get(`${configBaseURL}/api/trendy/${name}`)
+                .get(`${configBaseURL}/api/music/${name}`)
                 .then((result) => {
-                    setTrendy(result);
+                    setMusic(result);
                     if (result) {
                         setTimeout(() => {
                             setTime(true);
@@ -50,23 +53,23 @@ function Tag() {
     };
 
     useEffect(() => {
-        document.title = `#${name} Gắn hastag cho các video trên TikTok`;
+        document.title = `${name} | Bài hát phổ biến trên TikTok`;
     });
 
     return (
         <>
             <div className={cx('layout')}>
                 <div className={cx('content')}>
-                    {time ? (
+                {time ? (
                         <>
-                            {trendy.data.map((item, index) => {
-                                return <TagHeader data={item} key={index} />;
+                            {music.data.map((item, index) => {
+                                return <MusicHeader data={item} key={index} />;
                             })}
                         </>
                     ) : (
                         <SekeletonLoadingForTagAndMusicV2/>
                     )}
-                    <TagMain onClick={showVideo} />
+                    <MusicMain onClick={showVideo} />
                 </div>
             </div>
             {showvideo && <Video onClick={hideVideo} />}
@@ -74,4 +77,4 @@ function Tag() {
     );
 }
 
-export default Tag;
+export default Music;

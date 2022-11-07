@@ -7,12 +7,14 @@ import Button from '~/components/Button';
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { configBaseURL, configHeader } from '~/common/common';
+import { Link } from 'react-router-dom';
 
 
 const cx = classNames.bind(styles);
 
 function AccountPreview({ user }) {
     const [checkFollow, setCheckFollow] = useState(false);
+    const check = localStorage.getItem('accessToken')
     const configHeader1 = {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -24,27 +26,29 @@ function AccountPreview({ user }) {
     let arr = useRef()
 
     useEffect(() => {
-        setTimeout(() => {
-            arr.current.forEach((check) => {
-                if(check.nickname === user.nickname){
-                    setCheckFollow(true)
-                }
-            })
-        }, 1000)
-        try {
-            //
-            axios
-                .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
-                .then((result) => {
-                    arr.current = result.data[0].fllowing
+        if(check) {
+            setTimeout(() => {
+                arr.current.forEach((check) => {
+                    if(check.nickname === user.nickname){
+                        setCheckFollow(true)
+                    }
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
-        } catch (error) {
-            console.log(error);
+            }, 1000)
+            try {
+                //
+                axios
+                    .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
+                    .then((result) => {
+                        arr.current = result.data[0].fllowing
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
         }
-    }, [user.nickname]);
+    }, [user.nickname, check]);
 
     const handleFollow = async () => {
         setCheckFollow(true);
@@ -79,11 +83,13 @@ function AccountPreview({ user }) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('header')}>
-                <img
-                    className={cx('avatar')}
-                    src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-aiso/65d3c6b1d1e205c75536ccf1f26d552d~c5_100x100.jpeg?x-expires=1663660800&x-signature=oxiMe9kkqfLoIDJkbuH6%2Bl6FXVw%3D"
-                    alt="avatar"
-                />
+                <Link to={`/${user.nickname}`}>
+                    <img
+                        className={cx('avatar')}
+                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-aiso/65d3c6b1d1e205c75536ccf1f26d552d~c5_100x100.jpeg?x-expires=1663660800&x-signature=oxiMe9kkqfLoIDJkbuH6%2Bl6FXVw%3D"
+                        alt="avatar"
+                    />
+                </Link>
                 {checkFollow ? (
                     <Button text className={cx('follow-btn')} onClick={handleUnFollow}>
                         Đang follow
@@ -96,11 +102,13 @@ function AccountPreview({ user }) {
             </div>
 
             <div className={cx('body')}>
-                <p className={cx('nickname')}>
-                    <strong>{user.nickname}</strong>
-                    <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />
-                </p>
-                <p className={cx('name')}>{user.nickname}</p>
+                <Link to={`/${user.nickname}`}>
+                    <p className={cx('nickname')}>
+                        <strong>{user.nickname}</strong>
+                        <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />
+                    </p>
+                    <p className={cx('name')}>{user.nickname}</p>
+                </Link>
                 <p className={cx('analytics')}>
                     <strong className={cx('value')}>{user.follower_count} </strong>
                     <label className={cx('label')}>Followers</label>

@@ -6,7 +6,7 @@ const routes = {
     live: '/live',
     music: '/music/:name',
     tag: '/tag/:name',
-    video: '/@:nickname/video',
+    video: '/:nickname/video/:id',
     login: '/login',
     loginPhoneAndEmail: '/login/phone-or-email',
     register: '/register',

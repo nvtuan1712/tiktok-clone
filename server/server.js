@@ -7,6 +7,7 @@ const authRoute = require('./Router/AuthRoute')
 const accountRoute = require('./Router/AccountRoute')
 const trendyRoute = require('./Router/TagRoute')
 const musicRoute = require('./Router/MusicRoute')
+const videoRoute = require('./Router/VideoRoute')
 const connectDB = require('./Services/ConnectDBService');
 
 require('dotenv').config()
@@ -14,6 +15,9 @@ require('dotenv').config()
 app.use(cors())
 //middleware get info from client by req.body
 app.use(express.json());
+app.use('/public/images', express.static('public/images'))
+app.use('/public/video', express.static('public/video'))
+app.use('/public/music', express.static('public/music'))
 
 //connect database
 connectDB()
@@ -24,6 +28,7 @@ app.use('/api/accounts', accountRoute)
 app.use('/api/users', userRoute)
 app.use('/api/trendy', trendyRoute)
 app.use('/api/music', musicRoute)
+app.use('/api/video', videoRoute)
 
 //
 

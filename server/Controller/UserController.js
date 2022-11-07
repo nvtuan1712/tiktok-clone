@@ -46,6 +46,19 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
+//get người dùng 
+const getCurrentUserWithoutJWT = async (req, res) => {
+  try {
+    //verifile token
+    const nickname = req.params.nickname
+    let user = await userModel.findOne({ nickname: nickname });
+    res.status(200).json(user);
+  } catch (error) {
+    //gửi mã lỗi về client để biết refresh token
+    res.status(400).send(error);
+  }
+};
+
 //get người dùng đề xuất(thuộc tích tick = true)
 const getSuggestUser = async (req, res) => {
   try {
@@ -139,6 +152,7 @@ const getfollowUser = async (req, res) => {
 module.exports = {
   getListUser: getListUser,
   getCurrentUser: getCurrentUser,
+  getCurrentUserWithoutJWT: getCurrentUserWithoutJWT,
   getSuggestUser: getSuggestUser,
   followUser: followUser,
   unFollowUser: unFollowUser,

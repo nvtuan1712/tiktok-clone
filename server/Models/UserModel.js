@@ -5,7 +5,8 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, ref: 'Account'
   },
   avatar: {
-    type: String,
+    data: Buffer,
+    contentType: String,
   },
   nickname: {
     type: String,

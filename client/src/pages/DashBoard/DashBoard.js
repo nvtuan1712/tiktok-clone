@@ -1,19 +1,16 @@
 //Thư viện externor trước(thư viện bên ngoài)
-// import { useEffect, useState } from 'react';
+import { configBaseURL } from '~/common/common'
 
 function DashBoard() {
-    // const [show, setShow] = useState(false)
-
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         setShow(true)
-    //     }, 1000)
-    // }, [])
 
     return (
         <>
             <p>Danh sách người dùng</p>
-            {/* {show && <Show/>} */}
+            <form action={`${configBaseURL}/api/video/upload`} encType="multipart/form-data" method="POST">
+                <input type="file" name="myFile" />
+                <input type="submit" value="Upload a file"/>
+            </form>
+<img  src='http://localhost:5000/public/images/user.png' alt="" style={{width: '300px', height: '300px'}}></img>
         </>
     );
 }

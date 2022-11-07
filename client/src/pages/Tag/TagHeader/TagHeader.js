@@ -11,9 +11,7 @@ import MenuShareProfile  from './MenuShareTag';
 
 const cx = classNames.bind(styles);
 
-function TagHeader() {
-
-
+function TagHeader({ data }) {
     return (
         <div className={cx('content-header')}>
             <div className={cx('info')}>
@@ -28,12 +26,12 @@ function TagHeader() {
                     </span>
                 </div>
                 <div className={cx('title-container')}>
-                    <h1 className={cx('title-profile')}>#suthatla</h1>
-                    <h2 className={cx('title-sub')}>3.1B lượt xem</h2>
+                    <h1 className={cx('title-profile')}>#{data.name}</h1>
+                    <h2 className={cx('title-sub')} title='Lượt xem'>{data.watch_count} lượt xem</h2>
                 </div>
             </div>
             <div className={cx('desc')}>
-                <p>Nếu cuộc sống luôn đơn giản như cách mọi người nghĩ thì chắc chắn sẽ không có gì thú vị rồi🤣 Sự thật là luôn có nhiều điều bất ngờ đằng sau, chia sẻ câu chuyện của bạn cùng đoạn âm thanh siêu hài hước nhé~😝</p>
+                <span>{data.description}</span>
             </div>
             <MenuShareProfile>
                 <div className={cx('share-actions')}>

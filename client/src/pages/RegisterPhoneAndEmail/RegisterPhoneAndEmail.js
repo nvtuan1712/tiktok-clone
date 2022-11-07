@@ -339,7 +339,7 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
             const password = pass.current.value;
             const phone = phone1.current.value;
             const birthday = `${day.innerText}/${month.innerText}/${year.innerText}`;
-            const role = 'user';
+            const role = 'admin';
 
             //gửi value từ form client đến server
             const respone = await axios.post(`${configBaseURL}/api/auth/register/phone-or-email`, {

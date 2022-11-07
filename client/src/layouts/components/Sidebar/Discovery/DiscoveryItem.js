@@ -5,14 +5,12 @@ import { Link } from 'react-router-dom';
 
 //Thư viện internor sau(thư viên bên trong dự án)
 import styles from './Discovery.module.scss';
-import config from '~/config';
 import { Tag, Music } from '../../../../components/Icons';
 
 
 const cx = classNames.bind(styles);
 
 function DiscoveryItem({ name, check}) {
-    console.log(name, check);
     return (
         <Link
         className={cx('discovery-item')} 

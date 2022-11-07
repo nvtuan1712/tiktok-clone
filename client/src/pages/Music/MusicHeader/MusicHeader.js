@@ -5,13 +5,13 @@ import classNames from 'classnames/bind';
 import { MoreAction, ShareProfile } from '~/components/Icons';
 
 //Thư viện internor sau(thư viện bên trong dự án)
-import styles from './TagHeader.module.scss';
+import styles from './MusicHeader.module.scss';
 import MenuMoreActions from './MenuMoreActions';
 import MenuShareProfile  from './MenuShareTag';
 
 const cx = classNames.bind(styles);
 
-function TagHeader() {
+function MusicHeader({ data }) {
 
 
     return (
@@ -28,12 +28,10 @@ function TagHeader() {
                     </span>
                 </div>
                 <div className={cx('title-container')}>
-                    <h1 className={cx('title-profile')}>#suthatla</h1>
-                    <h2 className={cx('title-sub')}>3.1B lượt xem</h2>
+                    <h1 className={cx('title-profile')}>{data.name}</h1>
+                    <h2 className={cx('singer')}>{data.singer}</h2>
+                    <h2 className={cx('title-sub')} title='Lượt xem' >{data.watch_count} lượt xem</h2>
                 </div>
-            </div>
-            <div className={cx('desc')}>
-                <p>Nếu cuộc sống luôn đơn giản như cách mọi người nghĩ thì chắc chắn sẽ không có gì thú vị rồi🤣 Sự thật là luôn có nhiều điều bất ngờ đằng sau, chia sẻ câu chuyện của bạn cùng đoạn âm thanh siêu hài hước nhé~😝</p>
             </div>
             <MenuShareProfile>
                 <div className={cx('share-actions')}>
@@ -49,4 +47,4 @@ function TagHeader() {
     );
 }
 
-export default TagHeader;
+export default MusicHeader;

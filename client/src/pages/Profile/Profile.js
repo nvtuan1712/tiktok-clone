@@ -18,24 +18,45 @@ function Profile() {
     const [user, setUser] = useState({})
     const [time, setTime] = useState(false)
     const {nickname} = useParams();
+    const check = localStorage.getItem('accessToken')
 
     useEffect(() => {
-        try {
-            //
-            axios.get(`${configBaseURL}/api/users/${nickname}`, configHeader)
-            .then((result) => {
-                setUser(result)
-            }).catch((err) => {
-                console.log(err);
-            });
-
-            setTimeout(() => {
-                setTime(true)
-            }, 1000)
-        } catch (error) {
-            console.log(error);
+        if(check) {
+            try {
+                //
+                axios.get(`${configBaseURL}/api/users/auth/${nickname}`, configHeader)
+                .then((result) => {
+                    setUser(result)
+                    if(result) {
+                        setTimeout(() => {
+                            setTime(true)
+                        }, 1000)
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            try {
+                //
+                axios.get(`${configBaseURL}/api/users/${nickname}`)
+                .then((result) => {
+                    setUser(result)
+                    if(result) {
+                        setTimeout(() => {
+                            setTime(true)
+                        }, 1000)
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
+            } catch (error) {
+                console.log(error);
+            }
         }
-    },[nickname])
+    },[nickname, check])
 
     return (
         <div className={cx('profile-layout')}>

@@ -1,6 +1,6 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import classNames from 'classnames/bind';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Button from '~/components/Button';
 import { Check } from '~/components/Icons';
 import { configBaseURL } from '~/common/common';
@@ -29,27 +29,82 @@ function Caption() {
     const [checkCountCaption, setCheckCountCaption] = useState(0);
     const [checkCountTrendy, setCheckCountTrendy] = useState(0);
     const [checkCountMusic, setCheckCountMusic] = useState(0);
-    const toastNotice = useRef()
+    const [show, setShow] = useState(false);
+    const [showMusic, setShowMusic] = useState(false);
+    const [searchResult, setSearchResult] = useState([]);
+    const [searchResultMusic, setSearchResultMusic] = useState([]);
+    const toastNotice = useRef();
+    const inputDesc = useRef();
+    const inputTrendy = useRef();
+    const inputMusic = useRef();
+    const hideId = useRef();
+    const hideIdMusic = useRef();
 
     const handleCountCharacterCaption = (e) => {
         const str = e.target.value;
-        setCheckCountCaption(str.length);
-        if (str.length >= 150) {
-            toastNotice.current.style.animation = `${cx('showToast')} 0.5s 0.1s ease forwards alternate `
+        const btnSubmit = document.querySelector(`.${cx('btn-post-container')}`);
+
+
+        if (e.target === inputDesc.current) {
+            setCheckCountCaption(str.length);
+        } else if (e.target === inputTrendy.current) {
+            setCheckCountTrendy(str.length);
+
+            const fetch = async () => {
+                const response = await axios.post(`${configBaseURL}/api/trendy/get-list-trendy-upload`, {
+                    name: str,
+                });
+                if(response.data === 'No character') {
+                    setShow(false);
+                } else {
+                    setSearchResult(response.data);
+                    setShow(true)
+                }
+            };
+
             setTimeout(() => {
-                toastNotice.current.style.animation = `${cx('hideToast')} 0.5s 0.1s ease`
-            },3000)
+                fetch();
+            }, 2000);
+        } else if (e.target === inputMusic.current) {
+            setCheckCountMusic(str.length);
+
+            const fetch = async () => {
+                const response = await axios.post(`${configBaseURL}/api/music/get-list-music-upload`, {
+                    name: str,
+                });
+                if(response.data === 'No character') {
+                    setShowMusic(false);
+                } else {
+                    setSearchResultMusic(response.data);
+                    setShowMusic(true)
+                }
+            };
+
+            setTimeout(() => {
+                fetch();
+            }, 2000);
         }
-    };
 
-    const handleCountCharacterTrendy = (e) => {
-        const str = e.target.value;
-        setCheckCountTrendy(str.length);
-    };
-
-    const handleCountCharacterMusic = (e) => {
-        const str = e.target.value;
-        setCheckCountMusic(str.length);
+        if (str.length >= 150) {
+            toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
+                'hideToast',
+            )} ease 1s 4s forwards`;
+            setTimeout(() => {
+                toastNotice.current.style.animation = 'none';
+            }, 5000);
+        } else if (
+            inputTrendy.current.value !== '' &&
+            inputDesc.current.value !== '' &&
+            inputMusic.current.value !== ''
+        ) {
+            btnSubmit.classList.remove(cx('disabled'));
+        }  else if (
+            inputTrendy.current.value === '' ||
+            inputDesc.current.value === '' ||
+            inputMusic.current.value === ''
+        ) {
+            btnSubmit.classList.add(cx('disabled'));
+        }
     };
 
     return (
@@ -61,59 +116,107 @@ function Caption() {
                     </div>
                 </div>
             </div>
+
             <div className={cx('caption-container')}>
                 <div>
-                    <div className={cx('caption-text-container')}>
-                        <span className={cx('title-text-span')}>Caption</span>
-                        <span className={cx('caption-required-font')}>
-                            <span>{checkCountCaption}</span> / 150
-                        </span>
-                    </div>
-                    <div className={cx('caption-input-container')}>
-                        <div className={cx('caption-input-editor')}>
-                            <input
-                                onChange={handleCountCharacterCaption}
-                                maxLength="150"
-                                spellCheck="false"
-                                className={cx('editor-input')}
-                                placeholder="Mô tả cho video"
-                                id='desc'
-                            ></input>
+                    <div>
+                        <div className={cx('caption-text-container')}>
+                            <span className={cx('title-text-span')}>Caption</span>
+                            <span className={cx('caption-required-font')}>
+                                <span>{checkCountCaption}</span> / 150
+                            </span>
+                        </div>
+                        <div className={cx('caption-input-container')}>
+                            <div className={cx('caption-input-editor')}>
+                                <input
+                                    onChange={handleCountCharacterCaption}
+                                    maxLength="150"
+                                    spellCheck="false"
+                                    className={cx('editor-input')}
+                                    placeholder="Mô tả cho video"
+                                    id="desc"
+                                    ref={inputDesc}
+                                ></input>
+                            </div>
                         </div>
                     </div>
-                    <div className={cx('caption-text-container')}>
-                        <span className={cx('title-text-span')}>Xu hướng</span>
-                        <span className={cx('caption-required-font')}>
-                            <span>{checkCountTrendy}</span> / 150
-                        </span>
-                    </div>
-                    <div className={cx('caption-input-container')}>
-                        <div className={cx('caption-input-editor')}>
-                            <input
-                                onChange={handleCountCharacterTrendy}
-                                spellCheck="false"
-                                className={cx('editor-input')}
-                                placeholder="Xu hướng nổi bật"
-                                id='trendy'
-                            ></input>
+
+                    <div style={{position: 'relative'}}>
+                        <div className={cx('caption-text-container')}>
+                            <span className={cx('title-text-span')}>Xu hướng</span>
+                            <span className={cx('caption-required-font')}>
+                                <span>{checkCountTrendy}</span> / 150
+                            </span>
                         </div>
-                    </div>
-                    <div className={cx('caption-text-container')}>
-                        <span className={cx('title-text-span')}>Âm nhạc</span>
-                        <span className={cx('caption-required-font')}>
-                            <span>{checkCountMusic}</span> / 150
-                        </span>
-                    </div>
-                    <div className={cx('caption-input-container')}>
-                        <div className={cx('caption-input-editor')}>
-                            <input
-                                onChange={handleCountCharacterMusic}
-                                spellCheck="false"
-                                className={cx('editor-input')}
-                                placeholder="Âm nhạc thịnh hành"
-                                id='music'
-                            ></input>
+                        <div className={cx('caption-input-container')}>
+                            <div className={cx('caption-input-editor')}>
+                                <input
+                                    onChange={handleCountCharacterCaption}
+                                    spellCheck="false"
+                                    maxLength="150"
+                                    className={cx('editor-input')}
+                                    placeholder="Xu hướng nổi bật"
+                                    id="trendy"
+                                    ref={inputTrendy}
+                                ></input>
+                            </div>
+                            {show && (
+                            <div className={cx('result-container')}>
+                                {searchResult.map((item, index) => {
+                                    return (
+                                        <div className={cx('result-item')} key={index} onClick={() => {
+                                            inputTrendy.current.value = `#${item.name}`
+                                            hideId.current.innerText = item.id
+                                            setShow(false);
+                                            console.log(item);
+                                        }}>
+                                            #{item.name}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
                         </div>
+                        <span className={cx('result-hide')} id='idtrendy' ref={hideId}></span>
+                    </div>
+
+                    <div>
+                        <div className={cx('caption-text-container')}>
+                            <span className={cx('title-text-span')}>Âm nhạc</span>
+                            <span className={cx('caption-required-font')}>
+                                <span>{checkCountMusic}</span> / 150
+                            </span>
+                        </div>
+                        <div className={cx('caption-input-container')}>
+                            <div className={cx('caption-input-editor')}>
+                                <input
+                                    onChange={handleCountCharacterCaption}
+                                    spellCheck="false"
+                                    maxLength="150"
+                                    className={cx('editor-input')}
+                                    placeholder="Âm nhạc thịnh hành"
+                                    id="music"
+                                    ref={inputMusic}
+                                ></input>
+                            </div>
+                            {showMusic && (
+                            <div className={cx('result-container')}>
+                                {searchResultMusic.map((item, index) => {
+                                    return (
+                                        <div className={cx('result-item')} key={index} onClick={() => {
+                                            inputMusic.current.value = `${item.name}`
+                                            hideIdMusic.current.innerText = item.id
+                                            setShowMusic(false);
+                                            console.log(item);
+                                        }}>
+                                            {item.name}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                        </div>
+                        <span className={cx('result-hide')} id='idmusic' ref={hideIdMusic}></span>
                     </div>
                 </div>
             </div>
@@ -161,7 +264,7 @@ function Selection() {
             </div>
             {/*  */}
             <div>
-                <select value={privateVideo} onChange={handleChange} id='select' className={cx('selection-select')}>
+                <select value={privateVideo} onChange={handleChange} id="select" className={cx('selection-select')}>
                     <option value="Công khai">Công khai</option>
                     <option value="Riêng tư">Riêng tư</option>
                 </select>
@@ -283,21 +386,23 @@ function Modal({ onClick }) {
 
 //component đăng tải video
 function ButtonRow() {
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false);
+    const btnSubmit = useRef();
 
     const handleUploadVideo = async () => {
-        const inputDesc = document.querySelector('#desc')
-        const inputTrendy = document.querySelector('#trendy')
-        const inputMusic = document.querySelector('#music')
-        const selection = document.querySelector('#select')
-        const video = document.querySelector('#uploadphoto')
-        const file = video.files[0]
+        const inputDesc = document.querySelector('#desc');
+        const trendy = document.querySelector('#idtrendy');
+        const music = document.querySelector('#idmusic');
+        const selection = document.querySelector('#select');
+        const video = document.querySelector('#uploadphoto');
+        const file = video.files[0];
         const form = new FormData();
-        form.append('myVideo', file)
-        form.append('description', inputDesc.value)
-        form.append('trendy', inputTrendy.value)
-        form.append('music', inputMusic.value)
-        form.append('selection', selection.value)
+        form.append('myVideo', file);
+        form.append('description', inputDesc.value);
+        form.append('trendy', trendy.innerText);
+        form.append('music', music.innerText);
+        form.append('selection', selection.value);
+        form.append('author', localStorage.getItem('idUser'));
         try {
             const response = await axios({
                 method: 'post',
@@ -307,30 +412,33 @@ function ButtonRow() {
                     'Content-Type': `multipart/form-data; boundary=${form._boundary}`,
                 },
             });
-            console.log(response);
-            if(response.data === 'Upload Success!') {
-                setShow(true)
+            if (response.data === 'Upload Success!') {
+                setShow(true);
             }
         } catch (error) {
-            
+            console.log(error);
         }
-    }
+    };
 
     return (
         <>
             {show && <p>Đăng tải video thành công!</p>}
             <div className={cx('buttonrow-wrap')}>
                 <div className={cx('btn-cancel')}>
-                    <button className={cx('btn-cancel-container', 'btn')}>
+                    <button className={cx('btn-cancel-container', 'btn')} onClick={handleUploadVideo}>
                         <div className={cx('btn-text-container')}>
                             <div className={cx('btn-text')}>Hủy bỏ</div>
                         </div>
                     </button>
                 </div>
                 <div className={cx('btn-post')}>
-                    <button className={cx('btn-post-container', 'btn')} onClick={handleUploadVideo}>
+                    <button
+                        className={cx('btn-post-container', 'btn', 'disabled')}
+                        onClick={handleUploadVideo}
+                        ref={btnSubmit}
+                    >
                         <div className={cx('btn-text-container')}>
-                            <div className={cx('btn-text')}>Đăng</div>
+                            <div className={cx('btn-text ')}>Đăng</div>
                         </div>
                     </button>
                 </div>

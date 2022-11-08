@@ -25,8 +25,9 @@ const uploadImage = async (req, res) => {
       if (err) {
         console.log(err);
       } else {
+        console.log(req);
         let private = false
-        if(req.body.select === 'Riêng tư') {
+        if(req.body.selection === 'Riêng tư') {
           private = true
         }
         const newVideo = new videoModel({ 
@@ -34,7 +35,11 @@ const uploadImage = async (req, res) => {
           trendy: req.body.trendy, 
           music: req.body.music,
           isPrivate: private,
-          video: `http://localhost:5000/public/video/${req.file.filename}`
+          video: `http://localhost:5000/public/video/${req.file.filename}`,
+          heart_count: 0,
+          share_count: 0,
+          comment_count: 0,
+          author: req.body.author,
         });
         newVideo
           .save()

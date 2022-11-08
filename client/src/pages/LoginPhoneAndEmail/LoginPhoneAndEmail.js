@@ -155,6 +155,7 @@ function SubmitInfo({ email1, password1, change }) {
                 const payloadDecoded = jwt_decode(accessToken);
                 const idAccount = payloadDecoded._id;
                 const nickName = payloadDecoded.nickname;
+                const idUser = payloadDecoded.iduser;
 
                 if (payloadDecoded.role === 'user') {
                     window.location.href = config.routes.home;
@@ -166,6 +167,7 @@ function SubmitInfo({ email1, password1, change }) {
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('idAccount', idAccount);
                 localStorage.setItem('nickName', nickName);
+                localStorage.setItem('idUser', idUser);
             }
         } catch (error) {
             if (error.response.status === 400) {

@@ -37,7 +37,7 @@ function Uploader() {
             <div className={cx('upload')}>
                 {video ? (
                     <div className={cx('preview-container')}>
-                        <video src={video.preview} controls disablePictureInPicture controlsList="nodownload noplaybackrate" autoPlay loop className={cx('preview-video')}></video>
+                        <video src={video.preview} controls disablePictureInPicture controlsList="nodownload noplaybackrate nofullscreen" autoPlay  loop className={cx('preview-video')}></video>
                         <div className={cx('preview-change-video')}>
                             <div>
                                 <img src='https://lf16-tiktok-common.ttwstatic.com/obj/tiktok-web-common-sg/ies/creator_center/svgs/check_icon.8e166106.svg' alt=''/>
@@ -91,6 +91,7 @@ function Uploader() {
                     ref={inputFile}
                     onChange={handlePreviewVideo}
                     name="myVideo"
+                    className={cx('file-upload')}
                 />
             </div>
         </div>

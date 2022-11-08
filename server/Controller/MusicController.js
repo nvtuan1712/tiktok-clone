@@ -10,6 +10,24 @@ const getListMusic = async (req, res) => {
     }
 }
 
+//xử lý get list tag trendy theo params
+const getListMusicUpload = async (req, res) => {
+    try {
+      console.log(req);
+      if (req.body.name !== "") {
+        const char = req.body.name;
+        const listMusic = await MusicModel.find({
+          name: { $regex: "^" + char, $options: "i" },
+        });
+        res.send(listMusic);
+      } else {
+        res.send("No character");
+      }
+    } catch (error) {
+      res.send(error);
+    }
+  };
+
 const getMusic = async (req, res) => {
     try {
         const name = req.params.name
@@ -23,4 +41,5 @@ const getMusic = async (req, res) => {
 module.exports = {
     getListMusic: getListMusic,
     getMusic: getMusic,
+    getListMusicUpload: getListMusicUpload,
   };

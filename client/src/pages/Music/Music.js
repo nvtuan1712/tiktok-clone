@@ -9,7 +9,6 @@ import { useParams } from 'react-router-dom';
 import styles from './Music.module.scss';
 import MusicHeader from './MusicHeader';
 import MusicMain from './MusicMain';
-import Video from '~/components/Video';
 import { configBaseURL } from '~/common/common';
 import SekeletonLoadingForTagAndMusicV2 from '~/layouts/components/SekeletonLoading/SekeletonLoadingForTagAndMusicV2/SekeletonLoadingForTagAndMusicV2';
 
@@ -17,11 +16,9 @@ import SekeletonLoadingForTagAndMusicV2 from '~/layouts/components/SekeletonLoad
 const cx = classNames.bind(styles);
 
 function Music() {
-    const [showvideo, setShowVideo] = useState(false);
     const [music, setMusic] = useState([]);
     const [time, setTime] = useState(false);
     const { name } = useParams();
-    // let currentTrendy = useRef()
 
     useEffect(() => {
         try {
@@ -44,14 +41,6 @@ function Music() {
         }
     }, [name]);
 
-    const showVideo = () => {
-        setShowVideo(!showvideo);
-    };
-
-    const hideVideo = () => {
-        setShowVideo(false);
-    };
-
     useEffect(() => {
         document.title = `${name} | Bài hát phổ biến trên TikTok`;
     });
@@ -69,10 +58,9 @@ function Music() {
                     ) : (
                         <SekeletonLoadingForTagAndMusicV2/>
                     )}
-                    <MusicMain onClick={showVideo} />
+                    <MusicMain/>
                 </div>
             </div>
-            {showvideo && <Video onClick={hideVideo} />}
         </>
     );
 }

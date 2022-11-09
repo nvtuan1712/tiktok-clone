@@ -62,7 +62,7 @@ function Profile() {
         <div className={cx('profile-layout')}>
             <div className={cx('profile-content')}>
                 {time && <ProfileHeader user={user}/>}
-                {time && <ProfileMain/>}
+                {time && <ProfileMain />}
             </div>
         </div>
     );

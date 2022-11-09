@@ -8,14 +8,12 @@ import { configBaseURL } from '~/common/common';
 import styles from './Tag.module.scss';
 import TagHeader from './TagHeader';
 import TagMain from './TagMain';
-import Video from '~/components/Video';
 import { useParams } from 'react-router-dom';
 import SekeletonLoadingForTagAndMusicV2 from '~/layouts/components/SekeletonLoading/SekeletonLoadingForTagAndMusicV2/SekeletonLoadingForTagAndMusicV2';
 
 const cx = classNames.bind(styles);
 
 function Tag() {
-    const [showvideo, setShowVideo] = useState(false);
     const [trendy, setTrendy] = useState([]);
     const [time, setTime] = useState(false);
     const { name } = useParams();
@@ -41,14 +39,6 @@ function Tag() {
         }
     }, [name]);
 
-    const showVideo = () => {
-        setShowVideo(!showvideo);
-    };
-
-    const hideVideo = () => {
-        setShowVideo(false);
-    };
-
     useEffect(() => {
         document.title = `#${name} Gắn hastag cho các video trên TikTok`;
     });
@@ -66,10 +56,9 @@ function Tag() {
                     ) : (
                         <SekeletonLoadingForTagAndMusicV2/>
                     )}
-                    <TagMain onClick={showVideo} />
+                    <TagMain />
                 </div>
             </div>
-            {showvideo && <Video onClick={hideVideo} />}
         </>
     );
 }

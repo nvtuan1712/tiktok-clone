@@ -8,10 +8,12 @@ const VideoSchema = new mongoose.Schema({
   music: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Music",
+    require: false,
   },
   trendy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Tag",
+    require: false,
   },
   description: {
     type: String,
@@ -26,6 +28,9 @@ const VideoSchema = new mongoose.Schema({
     type: Number,
   },
   share_count: {
+    type: Number,
+  },
+  watch_count: {
     type: Number,
   },
   isPrivate: {

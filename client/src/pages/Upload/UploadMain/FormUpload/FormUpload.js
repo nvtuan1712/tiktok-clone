@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Button from '~/components/Button';
 import { Check } from '~/components/Icons';
 import { configBaseURL } from '~/common/common';
+import * as searchServices from '~/services/searchServices';
+import { useDebounce } from '~/hooks';
 // import Button from '~/components/Button';
 
 //Thư viện internor sau(thư viện bên trong dự án)
@@ -31,14 +33,58 @@ function Caption() {
     const [checkCountMusic, setCheckCountMusic] = useState(0);
     const [show, setShow] = useState(false);
     const [showMusic, setShowMusic] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+    const [searchValueMusic, setSearchValueMusic] = useState('');
     const [searchResult, setSearchResult] = useState([]);
     const [searchResultMusic, setSearchResultMusic] = useState([]);
+    const debouncedValue = useDebounce(searchValue, 1000);
+    const debouncedValueMusic = useDebounce(searchValueMusic, 1000);
     const toastNotice = useRef();
     const inputDesc = useRef();
     const inputTrendy = useRef();
     const inputMusic = useRef();
     const hideId = useRef();
     const hideIdMusic = useRef();
+
+    useEffect(() => {
+        if (!debouncedValue.trim()) {
+            setSearchResult([]);
+            return;
+        }
+
+        const fetchApi = async () => {
+
+            const results = await searchServices.searchTrendy(debouncedValue);
+
+            setSearchResult(results);
+
+            setShow(true)
+        };
+
+        fetchApi();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedValue]);
+
+    useEffect(() => {
+        if (!debouncedValueMusic.trim()) {
+            setSearchResultMusic([]);
+            return;
+        }
+
+        const fetchApi = async () => {
+
+            const results = await searchServices.searchMusic(debouncedValueMusic);
+
+            setSearchResultMusic(results);
+
+            setShowMusic(true)
+        };
+
+        fetchApi();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedValueMusic]);
 
     const handleCountCharacterCaption = (e) => {
         const str = e.target.value;
@@ -49,40 +95,10 @@ function Caption() {
             setCheckCountCaption(str.length);
         } else if (e.target === inputTrendy.current) {
             setCheckCountTrendy(str.length);
-
-            const fetch = async () => {
-                const response = await axios.post(`${configBaseURL}/api/trendy/get-list-trendy-upload`, {
-                    name: str,
-                });
-                if(response.data === 'No character') {
-                    setShow(false);
-                } else {
-                    setSearchResult(response.data);
-                    setShow(true)
-                }
-            };
-
-            setTimeout(() => {
-                fetch();
-            }, 2000);
+            setSearchValue(e.target.value)
         } else if (e.target === inputMusic.current) {
             setCheckCountMusic(str.length);
-
-            const fetch = async () => {
-                const response = await axios.post(`${configBaseURL}/api/music/get-list-music-upload`, {
-                    name: str,
-                });
-                if(response.data === 'No character') {
-                    setShowMusic(false);
-                } else {
-                    setSearchResultMusic(response.data);
-                    setShowMusic(true)
-                }
-            };
-
-            setTimeout(() => {
-                fetch();
-            }, 2000);
+            setSearchValueMusic(e.target.value)
         }
 
         if (str.length >= 150) {
@@ -93,15 +109,11 @@ function Caption() {
                 toastNotice.current.style.animation = 'none';
             }, 5000);
         } else if (
-            inputTrendy.current.value !== '' &&
-            inputDesc.current.value !== '' &&
-            inputMusic.current.value !== ''
+            inputTrendy.current.value !== '' 
         ) {
             btnSubmit.classList.remove(cx('disabled'));
         }  else if (
-            inputTrendy.current.value === '' ||
-            inputDesc.current.value === '' ||
-            inputMusic.current.value === ''
+            inputTrendy.current.value === '' 
         ) {
             btnSubmit.classList.add(cx('disabled'));
         }
@@ -160,7 +172,7 @@ function Caption() {
                                     ref={inputTrendy}
                                 ></input>
                             </div>
-                            {show && (
+                            {show && searchResult.length > 0 && (
                             <div className={cx('result-container')}>
                                 {searchResult.map((item, index) => {
                                     return (
@@ -168,7 +180,6 @@ function Caption() {
                                             inputTrendy.current.value = `#${item.name}`
                                             hideId.current.innerText = item.id
                                             setShow(false);
-                                            console.log(item);
                                         }}>
                                             #{item.name}
                                         </div>
@@ -199,7 +210,7 @@ function Caption() {
                                     ref={inputMusic}
                                 ></input>
                             </div>
-                            {showMusic && (
+                            {showMusic && searchResultMusic.length > 0 && (
                             <div className={cx('result-container')}>
                                 {searchResultMusic.map((item, index) => {
                                     return (
@@ -207,7 +218,6 @@ function Caption() {
                                             inputMusic.current.value = `${item.name}`
                                             hideIdMusic.current.innerText = item.id
                                             setShowMusic(false);
-                                            console.log(item);
                                         }}>
                                             {item.name}
                                         </div>

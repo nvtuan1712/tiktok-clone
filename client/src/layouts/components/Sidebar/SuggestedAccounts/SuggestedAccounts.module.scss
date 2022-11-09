@@ -33,6 +33,7 @@
     padding: 5.5px 8px;
     border-radius: 4px;
     cursor: pointer;
+    flex-direction: row;
 
     &:hover {
         background: rgba(22, 24, 35, 0.03)

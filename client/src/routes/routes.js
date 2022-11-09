@@ -13,7 +13,7 @@ import Profile from '~/pages/Profile';
 import Live from '~/pages/Live';
 import Music from '~/pages/Music';
 import Tag from '~/pages/Tag';
-import Video from '~/components/Video';
+import Video from '~/pages/Video';
 import Login from '~/pages/Login';
 import Register from '~/pages/Register';
 import LoginPhoneAndEmail from '~/pages/LoginPhoneAndEmail';
@@ -25,7 +25,7 @@ import DashBoard from '~/pages/DashBoard'
 const publicRoutes = [
     { path: config.routes.home, component: Home },
     { path: config.routes.following, component: Following },
-    { path: config.routes.video, component: Video },
+    { path: config.routes.video, component: Video, layout: 'div' },
     { path: config.routes.live, component: Live, layout: DefaultLayoutv2},
     { path: config.routes.profile, component: Profile,layout: DefaultLayoutv2 },
     { path: config.routes.music, component: Music, layout: DefaultLayoutv2 },

@@ -13,9 +13,9 @@ const getListTrendy = async (req, res) => {
 //xử lý get list tag trendy theo params
 const getListTrendyUpload = async (req, res) => {
   try {
-    console.log(req);
-    if (req.body.name !== "") {
-      const char = req.body.name;
+    console.log(req.query);
+    if (req.query.q !== "") {
+      const char = req.query.q;
       const listTrendy = await TagModel.find({
         name: { $regex: "^" + char, $options: "i" },
       });

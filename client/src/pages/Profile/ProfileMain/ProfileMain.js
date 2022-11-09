@@ -8,6 +8,8 @@ import ProfileMainVideo from './ProfileMainVideo';
 const cx = classNames.bind(styles);
 
 function ProfileMain() {
+    
+
     return (
         <div className={cx('profile-content-main')}>
             <div className={cx('video-tab')}>
@@ -20,7 +22,7 @@ function ProfileMain() {
                 </p>
                 <div className={cx('video-bottom-line')}></div>
             </div>
-            <ProfileMainVideo/>
+            <ProfileMainVideo />
         </div>
     );
 }

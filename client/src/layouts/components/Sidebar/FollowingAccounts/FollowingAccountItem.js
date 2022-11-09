@@ -16,7 +16,7 @@ function AccountItem({ account }) {
             <Link to={`/${account.nickname}`}>
                 <img
                     className={cx('avatar')}
-                    src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-aiso/65d3c6b1d1e205c75536ccf1f26d552d~c5_100x100.jpeg?x-expires=1663660800&x-signature=oxiMe9kkqfLoIDJkbuH6%2Bl6FXVw%3D"
+                    src={account.avatar}
                     alt="avatar"
                 />
             </Link>
@@ -26,7 +26,7 @@ function AccountItem({ account }) {
                         <strong>{account.nickname}</strong>
                         <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />
                     </p>
-                    <p className={cx('name')}>{account.nickname}</p>
+                    <p className={cx('name')}>{account.name}</p>
                 </div>
             </Link>
         </div>

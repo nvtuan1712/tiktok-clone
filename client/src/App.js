@@ -4,6 +4,7 @@ import { publicRoutes } from '~/routes/routes';
 import  DefaultLayout, { DefaultLayoutv3, DefaultLayoutDashBoard }  from '~/layouts';
 import DefaultLayoutv2 from './layouts/DefaultLayoutv2';
 import ModalKey from './components/ModalKey';
+import { Fragment } from 'react';
 
 function App({ children }) {
 
@@ -24,6 +25,8 @@ function App({ children }) {
                             Layout = DefaultLayoutv3;
                         } else if (route.layout === null) {
                             Layout = DefaultLayoutDashBoard
+                        } else if (route.layout === 'div') {
+                            Layout = <Fragment/>
                         }
 
                         const Page = route.component;

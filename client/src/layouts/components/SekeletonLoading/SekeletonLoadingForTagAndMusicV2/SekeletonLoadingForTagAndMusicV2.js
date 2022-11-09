@@ -6,11 +6,11 @@ import styles from './SekeletonLoadingForTagAndMusicV2.module.scss';
 
 const cx = classNames.bind(styles);
 
-function SekeletonLoadingForTagAndMusicV2() {
+function SekeletonLoadingForTagAndMusicV2({ className }) {
     return (
         <>
             <div className={cx('container')}>
-                <div className={cx('avatar', 'sekeleton')}></div>
+                <div className={cx('avatar', 'sekeleton', className)}></div>
                 <div className={cx('content')}>
                     <div className={cx('nickname', 'sekeleton')}></div>
                     <div className={cx('name', 'sekeleton')}></div>

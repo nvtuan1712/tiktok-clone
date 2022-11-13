@@ -156,6 +156,7 @@ function SubmitInfo({ email1, password1, change }) {
                 const idAccount = payloadDecoded._id;
                 const nickName = payloadDecoded.nickname;
                 const idUser = payloadDecoded.iduser;
+                const avatar = payloadDecoded.avatar;
 
                 if (payloadDecoded.role === 'user') {
                     window.location.href = config.routes.home;
@@ -168,6 +169,7 @@ function SubmitInfo({ email1, password1, change }) {
                 localStorage.setItem('idAccount', idAccount);
                 localStorage.setItem('nickName', nickName);
                 localStorage.setItem('idUser', idUser);
+                localStorage.setItem('avatar', avatar);
             }
         } catch (error) {
             if (error.response.status === 400) {

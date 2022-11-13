@@ -8,20 +8,23 @@ const CommentSchema = new mongoose.Schema({
   content: {
     type: String,
   },
+  heart_count: {
+    type: Number,
+  },
   created_at: {
     type: Date,
     default: Date.now(),
   },
 });
 
-VideoSchema.virtual("id").get(function () {
+CommentSchema.virtual("id").get(function () {
   return this._id.toHexString();
 });
 
-VideoSchema.set("toJSON", {
+CommentSchema.set("toJSON", {
   virtuals: true,
 });
 
 //compiler
-const VideoModel = mongoose.model("Video", VideoSchema);
-module.exports = VideoModel;
+const CommentModel = mongoose.model("Comment", CommentSchema);
+module.exports = CommentModel;

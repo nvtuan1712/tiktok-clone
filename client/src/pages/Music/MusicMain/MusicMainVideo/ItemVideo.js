@@ -1,47 +1,69 @@
 import classNames from 'classnames/bind';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-// import { PlayProfile } from '~/components/Icons';
-import config from '~/config';
-// import { Lock } from '~/components/Icons';
+import Video from '~/components/Video';
 
 //Thư viện internor sau(thư viện bên trong dự án)
-import styles from './TagMainVideo.module.scss';
+import styles from './MusicMainVideo.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ItemVideo({ onClick }) {
-    // const history = window.history.replaceState(null, null, '/@hoa/video')
+function ItemVideo({ data, metadata }) {
+    const [show, setShow] = useState(false)
+
+    const handleHide = () => {
+        setShow(false)
+        const nextURL = `http://localhost:3000/music/${data.music.name}`;
+        const nextTitle = 'My new page title';
+        const nextState = { additionalInformation: 'Updated the URL with JS' };
+        
+        // This will replace the current entry in the browser's history, without reloading
+        window.history.replaceState(nextState, nextTitle, nextURL);
+    }
+
+    const test = (e) => {
+        e.preventDefault();
+        const nextURL = `http://localhost:3000/${data.author.nickname}/video/${data.id}`;
+        const nextTitle = 'My new page title';
+        const nextState = { additionalInformation: 'Updated the URL with JS' };
+        
+        // This will replace the current entry in the browser's history, without reloading
+        window.history.replaceState(nextState, nextTitle, nextURL);
+        setShow(true)
+    }
+
     return (
         <>
+            {show && <Video data={data} onClick={handleHide} followUser={metadata}/>}
             <div className={cx('item-container')}>
                 <div className={cx('item-video')}>
                     <div style={{ paddingTop: '132.653%' }}>
                         <div className={cx('video-wrapper')}>
-                            <Link to={config.routes.video} onClick={onClick}>
+                            <Link to={`/${data.author.nickname}/video/${data.id}`} onClick={test}>
                                 <canvas width="75.38461538461539" height="100" className={cx('video-canvas')}></canvas>
                                 <div className={cx('player-container')}>
                                     <div className={cx('player-wrapper')}>
-                                        <img
-                                            src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-p-0037-aiso/5458d8a3f31c4e2a85d5b104a52499b1~tplv-f5insbecw7-1:480:480.jpeg?x-expires=1664265600&x-signature=KrX68rFUSODZu7FOu7JHxTW8%2Bs0%3D"
+                                        <video
+                                            src={data.video}
                                             alt="Trả lời @beososweet xíu xoá liền"
                                             loading="lazy"
                                             className={cx('img-poster')}
                                         />
                                     </div>
                                     <div className={cx('player-footer')}>
-                                        <Link to={config.routes.profile} className={cx('footer-avatar')}>
+                                        <Link to={`/${data.author.nickname}`} className={cx('footer-avatar')}>
                                             <span shape="circle" className={cx('span-avatar-container')}>
                                                 <img
-                                                    src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-p-0037-aiso/5458d8a3f31c4e2a85d5b104a52499b1~tplv-f5insbecw7-1:480:480.jpeg?x-expires=1664265600&x-signature=KrX68rFUSODZu7FOu7JHxTW8%2Bs0%3D"
-                                                    alt="Trả lời @beososweet xíu xoá liền"
+                                                    src={data.author.avatar}
+                                                    alt={data.author.nickname}
                                                     loading="lazy"
                                                     className={cx('img-avatar')}
                                                 />
                                             </span>
                                         </Link>
-                                        <Link to={config.routes.profile} className={cx('footer-text')}>
+                                        <Link to={`/${data.author.nickname}`} className={cx('footer-text')}>
                                             <div className={cx('user-title')}>
-                                                <h4 className={cx('user-name')}>trangtrung08</h4>
+                                                <h4 className={cx('user-name')}>{data.author.nickname}</h4>
                                             </div>
                                         </Link>
                                     </div>
@@ -52,226 +74,18 @@ function ItemVideo({ onClick }) {
                 </div>
                 <div className={cx('item-card-desc')}>
                     <Link
-                        to={config.routes.profile}
-                        alt=""
-                        title="Trả lời @beososweet xíu xoá liền"
+                        to={'/'}
+                        alt={data.description}
+                        title={data.description}
                         className={cx('cap-line')}
+                        onClick={test}
                     >
                         <div className={cx('desc-container')}>
-                            <span className={cx('span-text')}>Trả lời </span>
-                            <span className={cx('cap-link')}>
-                                <strong className={cx('strong-text')}> @beososweet</strong>
-                            </span>
-                            <span className={cx('span-text')}> xíu xóa liền</span>
+                            <span className={cx('span-text')}>{data.description}</span>
                         </div>
                     </Link>
                 </div>
             </div>
-            {/* <div className={cx('item-container')}>
-                <div className={cx('item-video')}>
-                    <div style={{ paddingTop: '132.653%' }}>
-                        <div className={cx('video-wrapper')}>
-                            <Link to={config.routes.profile} target="_blank">
-                                <canvas width="75.38461538461539" height="100" className={cx('video-canvas')}></canvas>
-                                <div className={cx('player-container')}>
-                                    <div className={cx('player-wrapper')}>
-                                        <img
-                                            src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-p-0037-aiso/5458d8a3f31c4e2a85d5b104a52499b1~tplv-f5insbecw7-1:480:480.jpeg?x-expires=1664265600&x-signature=KrX68rFUSODZu7FOu7JHxTW8%2Bs0%3D"
-                                            alt="Trả lời @beososweet xíu xoá liền"
-                                            loading="lazy"
-                                            className={cx('img-poster')}
-                                        />
-                                    </div>
-                                    <div className={cx('player-footer')}>
-                                        <PlayProfile className={cx('style-play')} />
-                                        <strong className={cx('video-count')}>38.8k</strong>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className={cx('item-card-desc')}>
-                    <Link
-                        to={config.routes.profile}
-                        alt=""
-                        title="Trả lời @beososweet xíu xoá liền"
-                        className={cx('cap-line')}
-                    >
-                        <div className={cx('desc-container')}>
-                            <span className={cx('span-text')}>Trả lời </span>
-                            <span className={cx('cap-link')}>
-                                <strong className={cx('strong-text')}> @beososweet</strong>
-                            </span>
-                            <span className={cx('span-text')}> xíu xóa liền</span>
-                        </div>
-                    </Link>
-                </div>
-            </div>
-            <div className={cx('item-container')}>
-                <div className={cx('item-video')}>
-                    <div style={{ paddingTop: '132.653%' }}>
-                        <div className={cx('video-wrapper')}>
-                            <Link to={config.routes.profile} target="_blank">
-                                <canvas width="75.38461538461539" height="100" className={cx('video-canvas')}></canvas>
-                                <div className={cx('player-container')}>
-                                    <div className={cx('player-wrapper')}>
-                                        <img
-                                            src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-p-0037-aiso/5458d8a3f31c4e2a85d5b104a52499b1~tplv-f5insbecw7-1:480:480.jpeg?x-expires=1664265600&x-signature=KrX68rFUSODZu7FOu7JHxTW8%2Bs0%3D"
-                                            alt="Trả lời @beososweet xíu xoá liền"
-                                            loading="lazy"
-                                            className={cx('img-poster')}
-                                        />
-                                    </div>
-                                    <div className={cx('player-footer')}>
-                                        <PlayProfile className={cx('style-play')} />
-                                        <strong className={cx('video-count')}>38.8k</strong>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className={cx('item-card-desc')}>
-                    <Link
-                        to={config.routes.profile}
-                        alt=""
-                        title="Trả lời @beososweet xíu xoá liền"
-                        className={cx('cap-line')}
-                    >
-                        <div className={cx('desc-container')}>
-                            <span className={cx('span-text')}>Trả lời </span>
-                            <span className={cx('cap-link')}>
-                                <strong className={cx('strong-text')}> @beososweet</strong>
-                            </span>
-                            <span className={cx('span-text')}> xíu xóa liền</span>
-                        </div>
-                    </Link>
-                </div>
-            </div>
-            <div className={cx('item-container')}>
-                <div className={cx('item-video')}>
-                    <div style={{ paddingTop: '132.653%' }}>
-                        <div className={cx('video-wrapper')}>
-                            <Link to={config.routes.profile} target="_blank">
-                                <canvas width="75.38461538461539" height="100" className={cx('video-canvas')}></canvas>
-                                <div className={cx('player-container')}>
-                                    <div className={cx('player-wrapper')}>
-                                        <img
-                                            src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-p-0037-aiso/5458d8a3f31c4e2a85d5b104a52499b1~tplv-f5insbecw7-1:480:480.jpeg?x-expires=1664265600&x-signature=KrX68rFUSODZu7FOu7JHxTW8%2Bs0%3D"
-                                            alt="Trả lời @beososweet xíu xoá liền"
-                                            loading="lazy"
-                                            className={cx('img-poster')}
-                                        />
-                                    </div>
-                                    <div className={cx('player-footer')}>
-                                        <PlayProfile className={cx('style-play')} />
-                                        <strong className={cx('video-count')}>38.8k</strong>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className={cx('item-card-desc')}>
-                    <Link
-                        to={config.routes.profile}
-                        alt=""
-                        title="Trả lời @beososweet xíu xoá liền"
-                        className={cx('cap-line')}
-                    >
-                        <div className={cx('desc-container')}>
-                            <span className={cx('span-text')}>Trả lời </span>
-                            <span className={cx('cap-link')}>
-                                <strong className={cx('strong-text')}> @beososweet</strong>
-                            </span>
-                            <span className={cx('span-text')}> xíu xóa liền</span>
-                        </div>
-                    </Link>
-                </div>
-            </div>
-            <div className={cx('item-container')}>
-                <div className={cx('item-video')}>
-                    <div style={{ paddingTop: '132.653%' }}>
-                        <div className={cx('video-wrapper')}>
-                            <Link to={config.routes.profile} target="_blank">
-                                <canvas width="75.38461538461539" height="100" className={cx('video-canvas')}></canvas>
-                                <div className={cx('player-container')}>
-                                    <div className={cx('player-wrapper')}>
-                                        <img
-                                            src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-p-0037-aiso/5458d8a3f31c4e2a85d5b104a52499b1~tplv-f5insbecw7-1:480:480.jpeg?x-expires=1664265600&x-signature=KrX68rFUSODZu7FOu7JHxTW8%2Bs0%3D"
-                                            alt="Trả lời @beososweet xíu xoá liền"
-                                            loading="lazy"
-                                            className={cx('img-poster')}
-                                        />
-                                    </div>
-                                    <div className={cx('player-footer')}>
-                                        <PlayProfile className={cx('style-play')} />
-                                        <strong className={cx('video-count')}>38.8k</strong>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className={cx('item-card-desc')}>
-                    <Link
-                        to={config.routes.profile}
-                        alt=""
-                        title="Trả lời @beososweet xíu xoá liền"
-                        className={cx('cap-line')}
-                    >
-                        <div className={cx('desc-container')}>
-                            <span className={cx('span-text')}>Trả lời </span>
-                            <span className={cx('cap-link')}>
-                                <strong className={cx('strong-text')}> @beososweet</strong>
-                            </span>
-                            <span className={cx('span-text')}> xíu xóa liền</span>
-                        </div>
-                    </Link>
-                </div>
-            </div>
-            <div className={cx('item-container')}>
-                <div className={cx('item-video')}>
-                    <div style={{ paddingTop: '132.653%' }}>
-                        <div className={cx('video-wrapper')}>
-                            <Link to={config.routes.profile} target="_blank">
-                                <canvas width="75.38461538461539" height="100" className={cx('video-canvas')}></canvas>
-                                <div className={cx('player-container')}>
-                                    <div className={cx('player-wrapper')}>
-                                        <img
-                                            src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-p-0037-aiso/5458d8a3f31c4e2a85d5b104a52499b1~tplv-f5insbecw7-1:480:480.jpeg?x-expires=1664265600&x-signature=KrX68rFUSODZu7FOu7JHxTW8%2Bs0%3D"
-                                            alt="Trả lời @beososweet xíu xoá liền"
-                                            loading="lazy"
-                                            className={cx('img-poster')}
-                                        />
-                                    </div>
-                                    <div className={cx('player-footer')}>
-                                        <PlayProfile className={cx('style-play')} />
-                                        <strong className={cx('video-count')}>38.8k</strong>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className={cx('item-card-desc')}>
-                    <Link
-                        to={config.routes.profile}
-                        alt=""
-                        title="Trả lời @beososweet xíu xoá liền"
-                        className={cx('cap-line')}
-                    >
-                        <div className={cx('desc-container')}>
-                            <span className={cx('span-text')}>Trả lời </span>
-                            <span className={cx('cap-link')}>
-                                <strong className={cx('strong-text')}> @beososweet</strong>
-                            </span>
-                            <span className={cx('span-text')}> xíu xóa liền</span>
-                        </div>
-                    </Link>
-                </div>
-            </div> */}
         </>
     );
 }

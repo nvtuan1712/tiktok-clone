@@ -16,10 +16,12 @@ const cx = classNames.bind(styles);
 
 function Profile() {
     const [user, setUser] = useState({})
+    const [followingAccounts, setFollowingAccount] = useState([]);  
     const [time, setTime] = useState(false)
     const {nickname} = useParams();
     const check = localStorage.getItem('accessToken')
 
+    //lấy người dùng khi đăng nhập và khi không
     useEffect(() => {
         if(check) {
             try {
@@ -58,11 +60,28 @@ function Profile() {
         }
     },[nickname, check])
 
+    //lấy người người dùng follow của người dùng đang đăng nhập
+    useEffect(() => {
+        try {
+            //
+            axios
+                .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
+                .then((result) => {
+                    setFollowingAccount(result.data[0].fllowing);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }, []);
+
     return (
         <div className={cx('profile-layout')}>
             <div className={cx('profile-content')}>
-                {time && <ProfileHeader user={user}/>}
-                {time && <ProfileMain />}
+                {time && <ProfileHeader user={user} followUser={followingAccounts}/>}
+                {time && <ProfileMain followUser={followingAccounts}/>}
             </div>
         </div>
     );

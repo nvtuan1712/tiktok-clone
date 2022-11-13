@@ -7,7 +7,7 @@ import ProfileMainVideo from './ProfileMainVideo';
 
 const cx = classNames.bind(styles);
 
-function ProfileMain() {
+function ProfileMain({ followUser }) {
     
 
     return (
@@ -22,7 +22,7 @@ function ProfileMain() {
                 </p>
                 <div className={cx('video-bottom-line')}></div>
             </div>
-            <ProfileMainVideo />
+            <ProfileMainVideo followUser={followUser}/>
         </div>
     );
 }

@@ -1,1 +1,1 @@
-export { default } from './TagMainVideo'
+export { default } from './MusicMainVideo'

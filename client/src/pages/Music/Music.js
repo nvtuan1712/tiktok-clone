@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import styles from './Music.module.scss';
 import MusicHeader from './MusicHeader';
 import MusicMain from './MusicMain';
-import { configBaseURL } from '~/common/common';
+import { configBaseURL, configHeader } from '~/common/common';
 import SekeletonLoadingForTagAndMusicV2 from '~/layouts/components/SekeletonLoading/SekeletonLoadingForTagAndMusicV2/SekeletonLoadingForTagAndMusicV2';
 
 
@@ -17,20 +17,23 @@ const cx = classNames.bind(styles);
 
 function Music() {
     const [music, setMusic] = useState([]);
+    const [followingAccounts, setFollowingAccount] = useState([]);
     const [time, setTime] = useState(false);
     const { name } = useParams();
+    const { id } = useParams();
 
     useEffect(() => {
+        setTime(false)
         try {
-            //get list âm nhạc
+            //get âm nhạc
             axios
-                .get(`${configBaseURL}/api/music/${name}`)
+                .get(`${configBaseURL}/api/music/${name}-${id}`)
                 .then((result) => {
                     setMusic(result);
                     if (result) {
                         setTimeout(() => {
                             setTime(true);
-                        }, 2000);
+                        }, 500);
                     }
                 })
                 .catch((err) => {
@@ -39,11 +42,28 @@ function Music() {
         } catch (error) {
             console.log(error);
         }
-    }, [name]);
+    }, [name, id]);
 
     useEffect(() => {
         document.title = `${name} | Bài hát phổ biến trên TikTok`;
     });
+
+    //lấy người dùng follow của người dùng đang đăng nhập
+    useEffect(() => {
+        try {
+            //
+            axios
+                .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
+                .then((result) => {
+                    setFollowingAccount(result.data[0].fllowing);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }, []);
 
     return (
         <>
@@ -58,7 +78,7 @@ function Music() {
                     ) : (
                         <SekeletonLoadingForTagAndMusicV2/>
                     )}
-                    <MusicMain/>
+                    <MusicMain data={followingAccounts}/>
                 </div>
             </div>
         </>

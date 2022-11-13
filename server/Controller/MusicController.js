@@ -10,7 +10,7 @@ const getListMusic = async (req, res) => {
     }
 }
 
-//xử lý get list tag trendy theo params
+//xử lý get list music theo params cho upload
 const getListMusicUpload = async (req, res) => {
     try {
       console.log(req.query);
@@ -28,10 +28,11 @@ const getListMusicUpload = async (req, res) => {
     }
   };
 
+//get âm nhạc
 const getMusic = async (req, res) => {
     try {
-        const name = req.params.name
-        const music = await MusicModel.find({ name: name })
+        const id = req.params.id
+        const music = await MusicModel.find({ _id: id })
         res.send(music)
     } catch (error) {
         res.send(error)        

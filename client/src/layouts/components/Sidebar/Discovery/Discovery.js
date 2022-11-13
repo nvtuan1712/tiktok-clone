@@ -71,7 +71,7 @@ function Discovery({ label }) {
                 {time ? (
                     <>
                         {arrTag.map((data, index) => {
-                            return <DiscoveryItem key={index} name={data.name} check={data.music}/>;
+                            return <DiscoveryItem key={index} name={data.name} idMusic={data._id} check={data.music}/>;
                         })}
                     </>
                 ) : (

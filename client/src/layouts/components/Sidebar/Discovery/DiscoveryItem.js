@@ -10,11 +10,11 @@ import { Tag, Music } from '../../../../components/Icons';
 
 const cx = classNames.bind(styles);
 
-function DiscoveryItem({ name, check}) {
+function DiscoveryItem({ name, check, idMusic}) {
     return (
         <Link
         className={cx('discovery-item')} 
-        to={check === undefined ? `/tag/${name}` : `/music/${name}`} 
+        to={check === undefined ? `/tag/${name}` : `/music/${name}-${idMusic}`} 
         >
             <div className={cx('discovery-item-container')}>
                 {check === undefined ? <Tag/> : <Music/>}

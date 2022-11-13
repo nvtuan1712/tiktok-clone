@@ -4,6 +4,7 @@ import { useState } from 'react';
 // import { useState, useEffect, useRef, forwardRef } from 'react';
 import { CloseVideo, LogoVideo, VideoReport } from '~/components/Icons';
 
+
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './VideoPlayer.module.scss';
 import ModalReport from '~/components/ModalReport';

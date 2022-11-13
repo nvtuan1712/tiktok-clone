@@ -7,10 +7,10 @@ import MusicMainVideo from './MusicMainVideo';
 
 const cx = classNames.bind(styles);
 
-function MusicMain({ onClick }) {
+function MusicMain({ data }) {
     return (
         <div className={cx('content-main')}>
-            <MusicMainVideo onClick={onClick}/>
+            <MusicMainVideo metadata={data}/>
         </div>
     );
 }

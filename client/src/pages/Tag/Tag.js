@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 //Thư viện internor sau(thư viện bên trong dự án)
-import { configBaseURL } from '~/common/common';
+import { configBaseURL, configHeader } from '~/common/common';
 import styles from './Tag.module.scss';
 import TagHeader from './TagHeader';
 import TagMain from './TagMain';
@@ -15,10 +15,12 @@ const cx = classNames.bind(styles);
 
 function Tag() {
     const [trendy, setTrendy] = useState([]);
+    const [followingAccounts, setFollowingAccount] = useState([]);
     const [time, setTime] = useState(false);
     const { name } = useParams();
 
     useEffect(() => {
+        setTime(false)
         try {
             //get list âm nhạc
             axios
@@ -28,7 +30,7 @@ function Tag() {
                     if (result) {
                         setTimeout(() => {
                             setTime(true);
-                        }, 2000);
+                        }, 500);
                     }
                 })
                 .catch((err) => {
@@ -39,9 +41,27 @@ function Tag() {
         }
     }, [name]);
 
+    //lấy người dùng follow của người dùng đang đăng nhập
+    useEffect(() => {
+        try {
+            //
+            axios
+                .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
+                .then((result) => {
+                    setFollowingAccount(result.data[0].fllowing);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }, []);
+
     useEffect(() => {
         document.title = `#${name} Gắn hastag cho các video trên TikTok`;
     });
+
 
     return (
         <>
@@ -56,7 +76,7 @@ function Tag() {
                     ) : (
                         <SekeletonLoadingForTagAndMusicV2/>
                     )}
-                    <TagMain />
+                    <TagMain data={followingAccounts}/>
                 </div>
             </div>
         </>

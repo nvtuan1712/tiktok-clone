@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
-function ProfileMainVideo() {
+function ProfileMainVideo({ followUser }) {
     const [arrVideo, setArrVideo] = useState([]);
     const [show, setShow] = useState(false);
     const { nickname } = useParams();
@@ -41,7 +41,7 @@ function ProfileMainVideo() {
                 {show ? (
                     <>
                         {arrVideo.map((item, index) => {
-                            return <ItemVideo data={item} key={index}/>;
+                            return <ItemVideo data={item} key={index} followUser={followUser}/>;
                         })}
                     </>
                 ) : (

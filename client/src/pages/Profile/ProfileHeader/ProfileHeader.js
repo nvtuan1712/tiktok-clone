@@ -2,29 +2,39 @@
 import classNames from 'classnames/bind';
 // import { useRef } from 'react';
 import Button from '~/components/Button';
-import { MoreAction, ShareProfile, EditProfile } from '~/components/Icons';
-import axios from 'axios';
+import { MoreAction, ShareProfile, EditProfile, CheckProfile } from '~/components/Icons';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from '../Profile.module.scss';
 import MenuMoreActions from './MenuMoreActions';
 import MenuShareProfile from './MenuShareProfile';
 import { useEffect, useState } from 'react';
-import { configBaseURL, configHeader } from '~/common/common';
 import SekeletonLoadingForTagAndMusicV2 from '~/layouts/components/SekeletonLoading/SekeletonLoadingForTagAndMusicV2/SekeletonLoadingForTagAndMusicV2';
 
 const cx = classNames.bind(styles);
 
-function ProfileHeader({ user }) {
+function ProfileHeader({ user, followUser }) {
     const [currentUser, setCurrentUser] = useState(false);
-    const [followingAccounts, setFollowingAccount] = useState([]);
     const [check, setCheck] = useState(false);
+    const [checkTick, setCheckTick] = useState(false);
     const [loading, setLoading] = useState(false);
-
-
+    const tick = user.data.tick
+    
     useEffect(() => {
+        if(followUser) {
+            setTimeout(() => {
+                setLoading(true)
+            },500)
+            setLoading(false)
+        }
+
+        if(tick) {
+            setCheckTick(true)
+        } else {
+            setCheckTick(false)
+        }
         document.title = `${user.data.nickname} (@${user.data.nickname}) TikTok | Xem các video mới nhất của ${user.data.nickname}`;
-    }, [user.data.nickname]);
+    }, [user.data.nickname, followUser, tick]);
 
     useEffect(() => {
         if (user.data.isMe) {
@@ -33,7 +43,7 @@ function ProfileHeader({ user }) {
             setCurrentUser(false);
         }
 
-        followingAccounts.forEach((account) => {
+        followUser.forEach((account) => {
             if (user.data.nickname === account.nickname) {
                 setTimeout(() => {
                     setCheck(true);
@@ -42,29 +52,7 @@ function ProfileHeader({ user }) {
                 setCheck(false);
             }
         })
-    }, [user.data.nickname, user, followingAccounts]);
-
-    useEffect(() => {
-        try {
-            //
-            axios
-                .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
-                .then((result) => {
-                    setFollowingAccount(result.data[0].fllowing);
-                    if(result) {
-                        setTimeout(() => {
-                            setLoading(true)
-                        },500)
-                        setLoading(false)
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            } catch (error) {
-                console.log(error);
-            }
-        }, []);
+    }, [user.data.nickname, user, followUser]);
 
     return (
         <>
@@ -76,8 +64,11 @@ function ProfileHeader({ user }) {
                         </span>
                     </div>
                     <div className={cx('title-container')}>
-                        <div className={cx('title-profile')}>{user.data.nickname}</div>
-                        <h1 className={cx('title-sub')}>{user.data.nickname}</h1>
+                        <div className={cx('title-profile')}>
+                            {user.data.nickname}
+                            {checkTick ? <CheckProfile className={cx('icon-check')}/> : <></>}
+                        </div>
+                        <h1 className={cx('title-sub')}>{user.data.name}</h1>
                         {currentUser ? (
                             <div className={cx('edit-container')}>
                                 <Button text className={cx('btn-edit')}>

@@ -64,6 +64,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
+    display: flex;
+    align-items: center;
+
+    .icon-check {
+        margin-left: 16px;
+    }
 }
 
 .title-sub {
@@ -397,11 +403,14 @@
 }
 
 .item-card-desc {
-    font-weight: 400;
+    font-weight: 500;
     padding: 2px 4px 0px;
     height: 28px;
     overflow: hidden;
     box-sizing: content-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .share-link {

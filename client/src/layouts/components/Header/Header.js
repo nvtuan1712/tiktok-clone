@@ -98,7 +98,7 @@ function Header({ className, children }) {
                             <Image
                                 className={cx('user-avatar')}
                                 alt="Avatar User"
-                                src="https://p16-sign-sg.tiktokcdn.com/tos-alisg-avt-0068/dab2fbac6d703a59107ed7cac91d09be~c5_300x300.webp?x-expires=1662631200&x-signature=hT2Evz9bo1GouXeqNKyQreAbV98%3D"
+                                src={localStorage.getItem('avatar')}
                             ></Image>
                         ) : (
                             <button className={cx('more-btn')}>

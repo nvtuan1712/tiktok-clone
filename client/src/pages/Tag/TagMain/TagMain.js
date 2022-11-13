@@ -7,10 +7,10 @@ import TagMainVideo from './TagMainVideo';
 
 const cx = classNames.bind(styles);
 
-function TagMain({ onClick }) {
+function TagMain({ data }) {
     return (
         <div className={cx('content-main')}>
-            <TagMainVideo onClick={onClick}/>
+            <TagMainVideo metadata={data}/>
         </div>
     );
 }

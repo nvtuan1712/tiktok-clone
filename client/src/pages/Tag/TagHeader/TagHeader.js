@@ -19,8 +19,8 @@ function TagHeader({ data }) {
                     <span shape="circle" className={cx('span-avatar-container')}>
                         <img
                             loading="lazy"
-                            alt=""
-                            src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/4a7cd775e9232698e132c2206f9ad2de~c5_100x100.jpeg?x-expires=1664370000&amp;x-signature=V9rwgsuVRAUBKGLewv4HZ5E6iF8%3D"
+                            alt={data.name}
+                            src={data.thumbnail}
                             className={cx('avatar-img')}
                         />
                     </span>

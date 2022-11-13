@@ -82,20 +82,32 @@ const followUser = async (req, res) => {
     //verifile token
     const decodeJwt = jwt.verify(accessToken, process.env.SECRECT_JWT);
     if (decodeJwt) {
-      const followUser = 
+      const user = await userModel.findOne({ account: idAccount })
+      const userFollow = await userModel.findOne({ _id: idUser })
       await userModel
       .updateOne(
         { account: idAccount },
         { $push: { fllowing: idUser } } 
       )
+      .updateOne(
+        { account: idAccount},
+        { $set: { following_count: user.following_count + 1 } }
+      )
+
+      await userModel
+      .updateOne(
+        { _id: idUser },
+        { $set: { follower_count: userFollow.follower_count + 1 } }
+      )
       res.status(200).send('Follow thành công!');
     }
   } catch (error) {
     res.send(error);
+    console.log(error);
   }
 };
 
-//follow người dùng
+//unfollow người dùng
 const unFollowUser = async (req, res) => {
   const bearerHeader = req.body.headers["Authorization"];
   const accessToken = bearerHeader.split(" ")[1];
@@ -108,12 +120,24 @@ const unFollowUser = async (req, res) => {
     //verifile token
     const decodeJwt = jwt.verify(accessToken, process.env.SECRECT_JWT);
     if (decodeJwt) {
-      const followUser = 
+      const user = await userModel.findOne({ account: idAccount })
+      const userFollow = await userModel.findOne({ _id: idUser })
       await userModel
       .updateOne(
         { account: idAccount },
         { $pull: { fllowing: idUser } }
       )
+      .updateOne(
+        { account: idAccount},
+        { $set: { following_count: user.following_count - 1 } }
+      )
+
+      await userModel
+      .updateOne(
+        { _id: idUser },
+        { $set: { follower_count: userFollow.follower_count - 1 } }
+      )
+      
       res.status(200).send('Unfollow thành công!');
     }
   } catch (error) {

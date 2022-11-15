@@ -1,28 +1,51 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
-// import Button from '~/components/Button';
-import { Comment, Heart, Music, Share, VideoPlay, VideoReport, VideoVoice } from '~/components/Icons';
+import { Comment, Heart, LikedVideo, Music, Share, VideoReport } from '~/components/Icons';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './RecommendItem.module.scss';
+import ModalReport from '~/components/ModalReport';
 import MenuShare from '../MenuShare';
-// import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Video from '~/components/Video';
+import axios from 'axios';
+import { configBaseURL, configHeader } from '~/common/common';
+
 
 const cx = classNames.bind(styles);
 
-function RecommendItem({ data }) {
+function RecommendItem({ data, followUser, check }) {
+    const [show, setShow] = useState(false);
+
+    const handleHide = () => {
+        setShow(false);
+        const nextURL = `http://localhost:3000/`;
+        const nextTitle = 'My new page title';
+        const nextState = { additionalInformation: 'Updated the URL with JS' };
+
+        // This will replace the current entry in the browser's history, without reloading
+        window.history.replaceState(nextState, nextTitle, nextURL);
+    };
+
+    const test = (e) => {
+        e.preventDefault();
+        const nextURL = `http://localhost:3000/${data.author.nickname}/video/${data.id}`;
+        const nextTitle = 'My new page title';
+        const nextState = { additionalInformation: 'Updated the URL with JS' };
+
+        // This will replace the current entry in the browser's history, without reloading
+        window.history.replaceState(nextState, nextTitle, nextURL);
+        setShow(true);
+    };
+
     return (
         <div className={cx('container')}>
             {/* avatar profile */}
             <Link to={`/${data.author.nickname}`} className={cx('avatar-anchor')}>
                 <div className={cx('avatar-container')}>
                     <span className={cx('avatar-style')}>
-                        <img
-                            alt=""
-                            className={cx('avatar-img')}
-                            src={data.author.avatar}
-                        ></img>
+                        <img alt="" className={cx('avatar-img')} src={data.author.avatar}></img>
                     </span>
                 </div>
             </Link>
@@ -44,11 +67,14 @@ function RecommendItem({ data }) {
                     <h4 className={cx('h4link')}>
                         <Link to={`/music/${data.music.name}-${data.music.id}`}>
                             <Music className={cx('music-icon')} />
-                            <span>{data.music.name} - {data.music.singer ? data.music.singer : data.author.nickname}</span>
+                            <span>
+                                {data.music.name} - {data.music.singer ? data.music.singer : data.author.nickname}
+                            </span>
                         </Link>
                     </h4>
                 </div>
                 {/* video container */}
+                {show && <Video data={data} onClick={handleHide} followUser={followUser} />}
                 <div className={cx('video-wrapper')}>
                     <div className={cx('video-card-container')}>
                         <canvas width="56.25" height="100" className={cx('canvas-video-player')}></canvas>
@@ -57,6 +83,7 @@ function RecommendItem({ data }) {
                                 <div className={cx('basic-player-wrapper')}>
                                     <div style={{ width: '100%', height: '100%' }}>
                                         <video
+                                            onClick={test}
                                             src={data.video}
                                             controls
                                             muted
@@ -68,37 +95,113 @@ function RecommendItem({ data }) {
                                 </div>
                             </div>
                             <div className={cx('video-control-bottom')}></div>
-                            <p className={cx('report-text')}>
-                                <VideoReport className={cx('icon-flag')} />
-                                <span>Báo cáo</span>
-                            </p>
+                            <ReportForm />
                         </div>
                     </div>
                     <div className={cx('video-action-item-container')}>
-                        <button className={cx('btn-action-item')}>
-                            <span className={cx('like-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
-                                <Heart />
-                            </span>
-                            <span className={cx('like-count')}>{data.heart_count}</span>
-                        </button>
-                        <button className={cx('btn-action-item')}>
-                            <span className={cx('comment-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
-                                <Comment />
-                            </span>
-                            <span className={cx('comment-count')}>{data.comment_count}</span>
-                        </button>
-                        <MenuShare className={cx('share-container')}>
-                                <button className={cx('btn-action-item')}>
-                                    <span className={cx('share-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
-                                        <Share />
-                                    </span>
-                                    <span className={cx('share-count')}>{data.share_count}</span>
-                                </button>
-                        </MenuShare>
+                        <LikeVideo data={data} check={check}/>
+                        <CommentVideo data={data} />
+                        <ShareVideo data={data} />
                     </div>
                 </div>
             </div>
         </div>
+    );
+}
+
+function LikeVideo({ data, check }) {
+    const [change, setChange] = useState();
+
+    useEffect(() => {
+        if(check[0].liked.length > 0) {
+            check[0].liked.forEach((item) => {
+                if(data.id === item.id) {
+                    setChange(true)
+                }
+            })
+        }
+    },[check, data.id])
+
+    const handlerLikeVideo = async () => {
+        try {
+            await axios.post(`${configBaseURL}/api/video/liked/${data.id}`, configHeader);
+        } catch (error) {
+            console.log(error);
+        }
+        setChange(true);
+    };
+
+    const handlerUnLikeVideo = async () => {
+        try {
+            await axios.post(`${configBaseURL}/api/video/unliked/${data.id}`, configHeader);
+        } catch (error) {}
+        setChange(false);
+    };
+
+    return (
+        <>
+            {change ? (
+                <button className={cx('btn-action-item')} onClick={handlerUnLikeVideo}>
+                    <span className={cx('like-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
+                        <LikedVideo />
+                    </span>
+                    <span className={cx('like-count')}>{data.heart_count}</span>
+                </button>
+            ) : (
+                <button className={cx('btn-action-item')} onClick={handlerLikeVideo}>
+                    <span className={cx('like-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
+                        <Heart />
+                    </span>
+                    <span className={cx('like-count')}>{data.heart_count}</span>
+                </button>
+            )}
+        </>
+    );
+}
+
+function CommentVideo({ data }) {
+    return (
+        <button className={cx('btn-action-item')}>
+            <span className={cx('comment-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
+                <Comment />
+            </span>
+            <span className={cx('comment-count')}>{data.comment_count}</span>
+        </button>
+    );
+}
+
+function ShareVideo({ data }) {
+    return (
+        <MenuShare className={cx('share-container')}>
+            <button className={cx('btn-action-item')}>
+                <span className={cx('share-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
+                    <Share />
+                </span>
+                <span className={cx('share-count')}>{data.share_count}</span>
+            </button>
+        </MenuShare>
+    );
+}
+
+function ReportForm() {
+    const [showReport, setShowReport] = useState(false);
+
+    const showModalReport = () => {
+        setShowReport(!showReport);
+    };
+
+    const hideModalReport = () => {
+        setShowReport(!showReport);
+    };
+
+    return (
+        <>
+            <div className={cx('report-text')} onClick={showModalReport}>
+                <VideoReport className={cx('icon-flag')} />
+                <span>Báo cáo</span>
+            </div>
+            {showReport ? <ModalReport onClick={hideModalReport} /> : <></>}
+        </>
     );
 }
 

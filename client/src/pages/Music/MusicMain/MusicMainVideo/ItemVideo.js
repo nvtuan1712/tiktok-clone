@@ -44,8 +44,9 @@ function ItemVideo({ data, metadata }) {
                                 <div className={cx('player-container')}>
                                     <div className={cx('player-wrapper')}>
                                         <video
+                                            muted
                                             src={data.video}
-                                            alt="Trả lời @beososweet xíu xoá liền"
+                                            alt={data.description}
                                             loading="lazy"
                                             className={cx('img-poster')}
                                         />

@@ -7,25 +7,63 @@ import axios from 'axios';
 import styles from './Following.module.scss';
 import RecommendItem from './RecommendItem';
 import { configBaseURL, configHeader } from '~/common/common';
-import { Link } from 'react-router-dom';
-import Button from '~/components/Button';
-import SekeletonLoadingForVideo from '~/layouts/components/SekeletonLoading/SekeletonForVideo/SekeletonLoadingForVideo';
+import SekeletonLoadingForFllowing from '~/layouts/components/SekeletonLoading/SekeletonForFollowing/SekeletonLoadingForFllowing';
+import RecommendItemV2 from './RecommendItemV2';
+import SeleketonLoadingForHome from '~/layouts/components/SekeletonLoading/SeleketonLoadingForHome';
 
 const cx = classNames.bind(styles);
 
 function Home() {
     const [data, setData] = useState([]);
     const [followingAccounts, setFollowingAccount] = useState([]);
-    const [check, setCheck] = useState(false);
     const [show, setShow] = useState(false);
+    const [show2, setShow2] = useState(false);
+    const [check, setCheck] = useState([]);
 
     useEffect(() => {
         document.title = 'Đang follow - Xem video từ những nhà sáng tạo mà bạn follow | TikTok';
     }, []);
 
+    //lấy người người dùng follow của người dùng đang đăng nhập
     useEffect(() => {
-        setShow(false);
         if (localStorage.getItem('accessToken')) {
+            setShow(true);
+            try {
+                //
+                axios
+                    .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
+                    .then((result) => {
+                        setFollowingAccount(result.data[0].fllowing);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        try {
+            axios
+                .get(`${configBaseURL}/api/users/get-liked-video`, configHeader)
+                .then((result) => {
+                    if(result) {
+                        setCheck(result.data)
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    },[]);
+
+    useEffect(() => {
+        if (localStorage.getItem('accessToken') && followingAccounts.length > 0) {
+            setShow2(false);
             try {
                 axios
                     .get(`${configBaseURL}/api/video/get-list-video-login-follow`, configHeader)
@@ -33,7 +71,7 @@ function Home() {
                         setData(result.data);
                         if (result) {
                             setTimeout(() => {
-                                setShow(true);
+                                setShow2(true);
                             }, 1000);
                         }
                     })
@@ -43,7 +81,6 @@ function Home() {
             } catch (error) {
                 console.log(error);
             }
-            setCheck(true);
         } else {
             try {
                 axios
@@ -51,7 +88,7 @@ function Home() {
                     .then((result) => {
                         if (result) {
                             setTimeout(() => {
-                                setShow(true);
+                                setShow2(true);
                             }, 1000);
                         }
                         const authors = result.data.map((o) => o.author.id);
@@ -67,63 +104,69 @@ function Home() {
                 console.log(error);
             }
         }
-    }, []);
+    }, [followingAccounts.length]);
 
-    //lấy người người dùng follow của người dùng đang đăng nhập
-    useEffect(() => {
-        try {
-            //
-            axios
-                .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
-                .then((result) => {
-                    setFollowingAccount(result.data[0].fllowing);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        } catch (error) {
-            console.log(error);
-        }
-    }, []);
-
-    console.log(data);
     return (
         <div className={cx('main-container')}>
-            {show ? <>{check && followingAccounts.length > 0 ? (
+            {show ? (
                 <>
-                    {data.map((item, index) => {
-                        return <RecommendItem data={item} key={index}/>
-                    })}
+                    {show2 && followingAccounts.length > 0 ? (
+                        <>
+                            {followingAccounts.length > 0 ? (
+                                <>
+                                    {data.reverse().map((item, index) => {
+                                        return <RecommendItem data={item} key={index} followUser={followingAccounts} check={check}/>;
+                                    })}
+                                </>
+                            ) : (
+                                <div className={cx('user-list-wrapper')}>
+                                    {data.map((item, index) => {
+                                        return <RecommendItemV2 data={item} key={index} />;
+                                    })}
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {show2 ? (
+                                <div className={cx('user-list-wrapper')}>
+                                    {data.map((item, index) => {
+                                        return <RecommendItemV2 data={item} key={index} />;
+                                    })}
+                                </div>
+                            ) : (
+                                <>
+                                    {followingAccounts.length > 0 ? (
+                                            <><SeleketonLoadingForHome /></>
+                                    ) : (
+                                        <div style={{ width: '720px', paddingTop: '20px' }}>
+                                            {data.map(() => {
+                                                return <SekeletonLoadingForFllowing />;
+                                            })}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </>
+                    )}
                 </>
             ) : (
-                <div className={cx('user-list-wrapper')}>
-                    {data.map((item, index) => {
-                        return (
-                            <div className={cx('DUser-card')} key={index}>
-                                <Link target="_blank" to={`/${item.author.nickname}`} className={cx('AUser-card')}>
-                                    <div className={cx('video-container')}>
-                                        <div className={cx('player-wrapper')}>
-                                            <video className={cx('video')} src={item.video}></video>
-                                        </div>
-                                    </div>
-                                    <div className={cx('info-container')}>
-                                        <span className={cx('span-avatar-container')}>
-                                            <img src={item.author.avatar} alt="" loading="lazy" />
-                                        </span>
-                                        <h5 className={cx('user-name')}>{item.author.name}</h5>
-                                        <h6 className={cx('user-nickname')}>
-                                            <span>{item.author.nickname}</span>
-                                        </h6>
-                                        <div className={cx('button-container')}>
-                                            <Button primary>Follow</Button>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}</> : <SekeletonLoadingForVideo/>}
+                <>
+                    {show2 ? (
+                        <div className={cx('user-list-wrapper')}>
+                            {data.map((item, index) => {
+                                return <RecommendItemV2 data={item} key={index} />;
+                            })}
+                        </div>
+                    ) : (
+                        <div style={{ width: '720px', paddingTop: '20px' }}>
+                            {data.map(() => {
+                                return <SekeletonLoadingForFllowing />;
+                            })}
+                        </div>
+                    )}
+                </>
+            )}
         </div>
     );
 }

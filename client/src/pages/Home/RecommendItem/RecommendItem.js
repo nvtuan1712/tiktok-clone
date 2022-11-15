@@ -2,17 +2,21 @@
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import Button from '~/components/Button';
-import { CheckProfile, Comment, Heart, Music, Share, VideoReport } from '~/components/Icons';
+import ModalReport from '~/components/ModalReport';
+import { CheckProfile, Comment, Heart, LikedVideo, Music, Share, VideoReport } from '~/components/Icons';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './RecommendItem.module.scss';
 import MenuShare from '../MenuShare';
 import { useEffect, useRef, useState } from 'react';
 import Video from '~/components/Video';
+import axios from 'axios';
+import { configBaseURL, configHeader } from '~/common/common';
+import config from '~/config';
 
 const cx = classNames.bind(styles);
 
-function RecommendItem({ data, index, followUser }) {
+function RecommendItem({ data, index, followUser, check }) {
     const [show, setShow] = useState(false);
     const [current, setCurrent] = useState(false);
     const video = useRef();
@@ -120,33 +124,13 @@ function RecommendItem({ data, index, followUser }) {
                                 </div>
                             </div>
                             <div className={cx('video-control-bottom')}></div>
-                            <p className={cx('report-text')}>
-                                <VideoReport className={cx('icon-flag')} />
-                                <span>Báo cáo</span>
-                            </p>
+                            <ReportForm />
                         </div>
                     </div>
                     <div className={cx('video-action-item-container')}>
-                        <button className={cx('btn-action-item')}>
-                            <span className={cx('like-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
-                                <Heart />
-                            </span>
-                            <span className={cx('like-count')}>{data.heart_count}</span>
-                        </button>
-                        <button className={cx('btn-action-item')}>
-                            <span className={cx('comment-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
-                                <Comment />
-                            </span>
-                            <span className={cx('comment-count')}>{data.comment_count}</span>
-                        </button>
-                        <MenuShare className={cx('share-container')}>
-                            <button className={cx('btn-action-item')}>
-                                <span className={cx('share-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
-                                    <Share />
-                                </span>
-                                <span className={cx('share-count')}>{data.share_count}</span>
-                            </button>
-                        </MenuShare>
+                        <LikeVideo data={data} check={check}/>
+                        <CommentVideo data={data} />
+                        <ShareVideo data={data} />
                     </div>
                 </div>
             </div>
@@ -154,4 +138,108 @@ function RecommendItem({ data, index, followUser }) {
     );
 }
 
+function LikeVideo({ data, check }) {
+    const [change, setChange] = useState(false);
+
+    useEffect(() => {
+        if(localStorage.getItem('accessToken')) {
+            if(check[0].liked.length > 0) {
+                check[0].liked.forEach((item) => {
+                    if(data.id === item.id) {
+                        setChange(true)
+                    }
+                })
+            }
+        }
+    },[check, data.id])
+
+    const handlerLikeVideo = async () => {
+        if (localStorage.getItem('accessToken')) {
+            try {
+                await axios.post(`${configBaseURL}/api/video/liked/${data.id}`, configHeader);
+            } catch (error) {}
+        } else {
+            window.location = config.routes.login;
+        }
+        setChange(true);
+    };
+
+    const handlerUnLikeVideo = async () => {
+        if (localStorage.getItem('accessToken')) {
+            try {
+               await axios.post(`${configBaseURL}/api/video/unliked/${data.id}`, configHeader);
+            } catch (error) {}
+            setChange(true);
+        } else {
+            window.location = config.routes.login;
+        }
+        setChange(false);
+    };
+
+    return (
+        <>
+            {change ? (
+                <button className={cx('btn-action-item')} onClick={handlerUnLikeVideo}>
+                    <span className={cx('like-icon')}>
+                        <LikedVideo/>
+                    </span>
+                    <span className={cx('like-count')}>{data.heart_count}</span>
+                </button>
+            ) : (
+                <button className={cx('btn-action-item')} onClick={handlerLikeVideo}>
+                    <span className={cx('like-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
+                        <Heart />
+                    </span>
+                    <span className={cx('like-count')}>{data.heart_count}</span>
+                </button>
+            )}
+        </>
+    );
+}
+
+function CommentVideo({ data }) {
+    return (
+        <button className={cx('btn-action-item')}>
+            <span className={cx('comment-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
+                <Comment />
+            </span>
+            <span className={cx('comment-count')}>{data.comment_count}</span>
+        </button>
+    );
+}
+
+function ShareVideo({ data }) {
+    return (
+        <MenuShare className={cx('share-container')}>
+            <button className={cx('btn-action-item')}>
+                <span className={cx('share-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
+                    <Share />
+                </span>
+                <span className={cx('share-count')}>{data.share_count}</span>
+            </button>
+        </MenuShare>
+    );
+}
+
+function ReportForm() {
+    const [showReport, setShowReport] = useState(false);
+
+    const showModalReport = () => {
+        setShowReport(!showReport);
+    };
+
+    const hideModalReport = () => {
+        setShowReport(!showReport);
+    };
+
+    return (
+        <>
+            <div className={cx('report-text')} onClick={showModalReport}>
+                <VideoReport className={cx('icon-flag')} />
+                <span>Báo cáo</span>
+            </div>
+            {showReport ? <ModalReport onClick={hideModalReport} /> : <></>}
+        </>
+    );
+}
 export default RecommendItem;

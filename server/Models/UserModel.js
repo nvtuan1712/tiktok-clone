@@ -5,8 +5,7 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, ref: 'Account'
   },
   avatar: {
-    data: Buffer,
-    contentType: String,
+    type: String,
   },
   nickname: {
     type: String,
@@ -28,6 +27,9 @@ const UserSchema = new mongoose.Schema({
   }],
   fllowing: [{
     type: mongoose.Schema.Types.ObjectId, ref: 'User'
+  }],
+  liked: [{
+    type: mongoose.Schema.Types.ObjectId, ref: 'Video'
   }],
   description: {
     type: String,

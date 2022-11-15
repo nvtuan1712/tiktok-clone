@@ -55,6 +55,7 @@ function ItemVideo({ data, followUser }) {
                                 <div className={cx('player-container')}>
                                     <div className={cx('player-wrapper')}>
                                         <video
+                                            muted
                                             ref={video}
                                             src={data.video}
                                             alt={data.description}

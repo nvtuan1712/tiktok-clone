@@ -183,7 +183,6 @@ const getRandomVideoLoginFollow = async (req, res) => {
       .populate("author")
       .populate("music")
       .populate("trendy");
-      console.log(listVideo);
     res.status(200).send(listVideo);
   } catch (error) {
     res.status(404).send(error);
@@ -211,6 +210,79 @@ const getFirstVideoUser = async (req, res) => {
   }
 };
 
+//Thả tim video
+const likeVideo = async (req, res) => {
+  const bearerHeader = req.headers["idaccount"];
+  const idAccount = bearerHeader.split(" ")[1];
+  try {
+    const idVideo = req.params.id;
+    const currentVideo = await videoModel.findOne({ _id: idVideo }).populate('author')
+    const user = currentVideo.author
+    console.log(user);
+    const videoLiked = await videoModel.updateOne(
+      { _id: idVideo },
+      { $set: { heart_count: currentVideo.heart_count + 1 } }
+    );
+
+    await userModel.updateOne(
+      { account: idAccount },
+      { $push: { liked: idVideo } }
+    );
+
+    await userModel.updateOne(
+      { _id: user._id },
+      { $set: { heart_count: user.heart_count + 1 } }
+    )
+    res.status(200).send("Yêu thích thành công");
+  } catch (error) {
+    res.status(404).send(error);
+  }
+};
+
+//Thả tim video
+const unLikeVideo = async (req, res) => {
+  const bearerHeader = req.headers["idaccount"];
+  const idAccount = bearerHeader.split(" ")[1];
+  try {
+    const idVideo = req.params.id;
+    const currentVideo = await videoModel.findOne({ _id: idVideo }).populate('author')
+    const user = currentVideo.author
+    console.log(user);
+    const videoLiked = await videoModel.updateOne(
+      { _id: idVideo },
+      { $set: { heart_count: currentVideo.heart_count - 1 } }
+    );
+
+    await userModel.updateOne(
+      { account: idAccount },
+      { $pull: { liked: idVideo } }
+    );
+
+    await userModel.updateOne(
+      { _id: user._id },
+      { $set: { heart_count: user.heart_count - 1 } }
+    )
+    res.status(200).send("Hủy yêu thích thành công");
+  } catch (error) {
+    res.status(404).send(error);
+  }
+};
+
+//tăng lượt xem
+const increaseView = async (req, res) => {
+  try {
+    const idVideo = req.params.id;
+    const currentVideo = await videoModel.findOne({ _id: idVideo });
+    const increaseView = await videoModel.updateOne(
+      { _id: idVideo },
+      { $set: { watch_count: currentVideo.watch_count + 1 } }
+    );
+    res.send('Video thêm lượt xem!')
+  } catch (error) {
+    res.send(error)
+  }
+};
+
 module.exports = {
   uploadVideo: uploadVideo,
   getUserVideo: getUserVideo,
@@ -221,4 +293,7 @@ module.exports = {
   getRandomVideoLogin: getRandomVideoLogin,
   getFirstVideoUser: getFirstVideoUser,
   getRandomVideoLoginFollow: getRandomVideoLoginFollow,
+  likeVideo: likeVideo,
+  unLikeVideo: unLikeVideo,
+  increaseView: increaseView,
 };

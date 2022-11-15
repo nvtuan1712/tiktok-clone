@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 import { configBaseURL, configHeader } from '~/common/common';
 import { Link } from 'react-router-dom';
+import config from '~/config';
 
 
 const cx = classNames.bind(styles);
@@ -51,7 +52,8 @@ function AccountPreview({ user }) {
     }, [user.nickname, check]);
 
     const handleFollow = async () => {
-        setCheckFollow(true);
+        if(localStorage.getItem('accessToken')) {
+            setCheckFollow(true);
         try {
             //
             await axios.post('http://localhost:5000/api/users/follow-user', configHeader1)
@@ -62,6 +64,9 @@ function AccountPreview({ user }) {
             });
         } catch (error) {
             console.log(error);
+        }
+        } else {
+            window.location = config.routes.login
         }
     };
 

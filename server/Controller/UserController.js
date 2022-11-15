@@ -172,6 +172,17 @@ const getfollowUser = async (req, res) => {
   }
 };
 
+//lấy ra danh sách nhưng video đã like của người dùng
+const getLikedVideo = async (req, res) => {
+  const bearerHeader1 = req.headers["idaccount"];
+  const idAccount = bearerHeader1.split(" ")[1];
+  try {
+    const likedVideo = await userModel.find({ account: idAccount}).populate('liked')
+    res.send(likedVideo)
+  } catch (error) {
+    res.send(error)
+  }
+}
 
 module.exports = {
   getListUser: getListUser,
@@ -181,4 +192,5 @@ module.exports = {
   followUser: followUser,
   unFollowUser: unFollowUser,
   getfollowUser: getfollowUser,
+  getLikedVideo: getLikedVideo,
 };

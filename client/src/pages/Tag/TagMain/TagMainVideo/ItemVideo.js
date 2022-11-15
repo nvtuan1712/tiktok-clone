@@ -43,6 +43,7 @@ function ItemVideo({ data, metadata }) {
                                 <div className={cx('player-container')}>
                                     <div className={cx('player-wrapper')}>
                                         <video
+                                            muted
                                             src={data.video}
                                             loading="lazy"
                                             className={cx('img-poster')}

@@ -271,6 +271,9 @@
 
     div {
         video {
+            &::-webkit-media-controls{
+                margin-bottom: 10px;
+            }
             &::-webkit-media-controls-fullscreen-button {
                 display: none;
             }

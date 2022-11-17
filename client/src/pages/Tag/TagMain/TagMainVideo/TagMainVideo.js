@@ -11,7 +11,7 @@ import SekeletonLoadingForVideo from '~/layouts/components/SekeletonLoading/Seke
 
 const cx = classNames.bind(styles);
 
-function TagMainVideo({ metadata }) {
+function TagMainVideo({ metadata, onClick }) {
     const [data, setData] = useState([]);
     const [show, setShow] = useState(false);
     const { name } = useParams();
@@ -40,7 +40,7 @@ function TagMainVideo({ metadata }) {
                     {show ? (
                         <>
                             {data.map((item, index) => {
-                                return <ItemVideo data={item} key={index} metadata={metadata} />;
+                                return <ItemVideo data={item} key={index} metadata={metadata}  onClick={onClick}/>;
                             })}
                         </>
                     ) : (

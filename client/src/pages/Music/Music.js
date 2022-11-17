@@ -65,6 +65,22 @@ function Music() {
             }
         }, []);
 
+        const renderData = () => {
+            try {
+                //get âm nhạc
+                axios
+                    .get(`${configBaseURL}/api/music/${name}-${id}`)
+                    .then((result) => {
+                        setMusic(result);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
     return (
         <>
             <div className={cx('layout')}>
@@ -78,7 +94,7 @@ function Music() {
                     ) : (
                         <SekeletonLoadingForTagAndMusicV2/>
                     )}
-                    <MusicMain data={followingAccounts}/>
+                    <MusicMain data={followingAccounts} onClick={renderData}/>
                 </div>
             </div>
         </>

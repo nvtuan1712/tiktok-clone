@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../Controller/UserController')
 
+router.post('/update', userController.updateProfile)
+router.get('/search', userController.searchUser)
 router.get('/get-liked-video', userController.getLikedVideo)
 router.get('/get-list', userController.getListUser)
 router.get('/get-list-suggest', userController.getSuggestUser)

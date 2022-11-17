@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/Public
 /.pnp
 .pnp.js
 

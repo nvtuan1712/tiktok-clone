@@ -1,4 +1,5 @@
 const MusicModel = require("../Models/MusicModel")
+const videoModel = require("../Models/VideoModel")
 
 //xử lý get list music
 const getListMusic = async (req, res) => {
@@ -13,7 +14,6 @@ const getListMusic = async (req, res) => {
 //xử lý get list music theo params cho upload
 const getListMusicUpload = async (req, res) => {
     try {
-      console.log(req.query);
     if (req.query.q !== "") {
       const char = req.query.q;
       const listMusic = await MusicModel.find({
@@ -32,6 +32,15 @@ const getListMusicUpload = async (req, res) => {
 const getMusic = async (req, res) => {
     try {
         const id = req.params.id
+    const listVideo = await videoModel.find({ music: id })
+    let viewcount = 0
+    listVideo.forEach((item) => {
+      viewcount += item.watch_count
+    })
+    await MusicModel.updateOne(
+      { _id: id },
+      { $set: { watch_count: viewcount } }
+    )
         const music = await MusicModel.find({ _id: id })
         res.send(music)
     } catch (error) {

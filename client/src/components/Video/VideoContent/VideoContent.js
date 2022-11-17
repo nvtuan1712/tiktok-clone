@@ -78,9 +78,29 @@ function VideoInfo({ data, followUser }) {
 //Main video container
 function MainContent({ data }) {
     const currentURL = window.location.href;
+    const link = useRef();
+    const toastNotice = useRef();
+
+    const handleCoppyURL = () => {
+        navigator.clipboard.writeText(link.current.innerText)
+        toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
+            'hideToast',
+        )} ease 1s 4s forwards`;
+        setTimeout(() => {
+            toastNotice.current.style.animation = 'none';
+        }, 5000);
+    }
 
     return (
         <div className={cx('content-container')}>
+            {/*  */}
+            <div className={cx('toast')} ref={toastNotice}>
+                <div className={cx('toast-notice')}>
+                    <div className={cx('toast-notice-content')}>
+                        <div>Đã sao chép</div>
+                    </div>
+                </div>
+            </div>
             {/*  */}
             <div className={cx('video-desc')}>
                 <span className={cx('span-text')}>{data.description}</span>
@@ -116,8 +136,8 @@ function MainContent({ data }) {
                     </div>
                 </div>
                 <div className={cx('coppylink-container')}>
-                    <p className={cx('coppylink-text')}>{currentURL}</p>
-                    <button className={cx('button-coppylink')}>Sao chép liên kết</button>
+                    <p className={cx('coppylink-text')} ref={link}>{currentURL}</p>
+                    <button className={cx('button-coppylink')} onClick={handleCoppyURL}>Sao chép liên kết</button>
                 </div>
             </div>
         </div>

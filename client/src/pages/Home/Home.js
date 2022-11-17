@@ -100,16 +100,30 @@ function Home() {
         }
     }, []);
 
-    const shuffled = data.sort(() => Math.random() - 0.5);
+
+    const renderData = () => {
+        try {
+            axios
+                .get(`${configBaseURL}/api/video/get-list-video-login`, configHeader)
+                .then((result) => {
+                    setData(result.data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <div className={cx('main-container')}>
             <div>
                 {show ? (
                     <>
-                        {shuffled.reverse().map((item, index) => {
+                        {data.reverse().map((item, index) => {
                             return (
-                                <RecommendItem data={item} key={index} index={index} followUser={followingAccounts} check={check}/>
+                                <RecommendItem data={item} key={index} index={index} followUser={followingAccounts} check={check} onClick={renderData}/>
                             );
                         })}
                     </>

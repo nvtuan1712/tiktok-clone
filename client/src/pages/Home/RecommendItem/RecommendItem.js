@@ -16,10 +16,18 @@ import config from '~/config';
 
 const cx = classNames.bind(styles);
 
-function RecommendItem({ data, index, followUser, check }) {
+function RecommendItem({ data, index, followUser, check, onClick }) {
     const [show, setShow] = useState(false);
+    const [checkFollow, setCheckFollow] = useState(false);
     const [current, setCurrent] = useState(false);
     const video = useRef();
+    const configHeader1 = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            IdAccount: `Bearer ${localStorage.getItem('idAccount')}`,
+            IdUser: `Bearer ${data.author.id}`,
+        },
+    };
 
     useEffect(() => {
         if (index === 0) {
@@ -52,6 +60,40 @@ function RecommendItem({ data, index, followUser, check }) {
         setShow(true);
     };
 
+    const handleFollow = async () => {
+        if(localStorage.getItem('accessToken')) {
+            setCheckFollow(true);
+        try {
+            //
+            await axios.post('http://localhost:5000/api/users/follow-user', configHeader1)
+            .then((result) => {
+                
+            }).catch((err) => {
+                
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        } else {
+            window.location = config.routes.login
+        }
+    };
+
+    const handleUnFollow = async() => {
+        setCheckFollow(false);
+        try {
+            //
+            await axios.post('http://localhost:5000/api/users/unfollow-user', configHeader1)
+            .then((result) => {
+                
+            }).catch((err) => {
+                
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className={cx('container')} index={index}>
             {/* avatar profile */}
@@ -77,9 +119,15 @@ function RecommendItem({ data, index, followUser, check }) {
                     {current ? (
                         <></>
                     ) : (
-                        <Button primary className={cx('follow-btn')}>
-                            Follow
-                        </Button>
+                        <>{checkFollow ? (
+                            <Button text className={cx('follow-btn', 'following')} onClick={handleUnFollow}>
+                                Đang follow
+                            </Button>
+                        ) : (
+                            <Button primary className={cx('follow-btn')} onClick={handleFollow}>
+                                Follow
+                            </Button>
+                        )}</>
                     )}
 
                     <div className={cx('desc')}>
@@ -128,7 +176,7 @@ function RecommendItem({ data, index, followUser, check }) {
                         </div>
                     </div>
                     <div className={cx('video-action-item-container')}>
-                        <LikeVideo data={data} check={check}/>
+                        <LikeVideo data={data} check={check} onClick={onClick}/>
                         <CommentVideo data={data} />
                         <ShareVideo data={data} />
                     </div>
@@ -138,7 +186,7 @@ function RecommendItem({ data, index, followUser, check }) {
     );
 }
 
-function LikeVideo({ data, check }) {
+function LikeVideo({ data, check, onClick }) {
     const [change, setChange] = useState(false);
 
     useEffect(() => {
@@ -158,10 +206,11 @@ function LikeVideo({ data, check }) {
             try {
                 await axios.post(`${configBaseURL}/api/video/liked/${data.id}`, configHeader);
             } catch (error) {}
+            onClick()
+            setChange(true);
         } else {
             window.location = config.routes.login;
         }
-        setChange(true);
     };
 
     const handlerUnLikeVideo = async () => {
@@ -169,11 +218,11 @@ function LikeVideo({ data, check }) {
             try {
                await axios.post(`${configBaseURL}/api/video/unliked/${data.id}`, configHeader);
             } catch (error) {}
-            setChange(true);
+            onClick()
+            setChange(false);
         } else {
             window.location = config.routes.login;
         }
-        setChange(false);
     };
 
     return (

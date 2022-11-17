@@ -48,6 +48,7 @@ const uploadVideo = async (req, res) => {
           share_count: 0,
           comment_count: 0,
           author: req.body.author,
+          watch_count: 0,
         });
         newVideo
           .save()
@@ -217,9 +218,7 @@ const likeVideo = async (req, res) => {
   try {
     const idVideo = req.params.id;
     const currentVideo = await videoModel.findOne({ _id: idVideo }).populate('author')
-    const user = currentVideo.author
-    console.log(user);
-    const videoLiked = await videoModel.updateOne(
+    await videoModel.updateOne(
       { _id: idVideo },
       { $set: { heart_count: currentVideo.heart_count + 1 } }
     );
@@ -228,11 +227,6 @@ const likeVideo = async (req, res) => {
       { account: idAccount },
       { $push: { liked: idVideo } }
     );
-
-    await userModel.updateOne(
-      { _id: user._id },
-      { $set: { heart_count: user.heart_count + 1 } }
-    )
     res.status(200).send("Yêu thích thành công");
   } catch (error) {
     res.status(404).send(error);
@@ -246,9 +240,7 @@ const unLikeVideo = async (req, res) => {
   try {
     const idVideo = req.params.id;
     const currentVideo = await videoModel.findOne({ _id: idVideo }).populate('author')
-    const user = currentVideo.author
-    console.log(user);
-    const videoLiked = await videoModel.updateOne(
+    await videoModel.updateOne(
       { _id: idVideo },
       { $set: { heart_count: currentVideo.heart_count - 1 } }
     );
@@ -257,11 +249,6 @@ const unLikeVideo = async (req, res) => {
       { account: idAccount },
       { $pull: { liked: idVideo } }
     );
-
-    await userModel.updateOne(
-      { _id: user._id },
-      { $set: { heart_count: user.heart_count - 1 } }
-    )
     res.status(200).send("Hủy yêu thích thành công");
   } catch (error) {
     res.status(404).send(error);

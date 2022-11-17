@@ -106,6 +106,21 @@ function Home() {
         }
     }, [followingAccounts.length]);
 
+    const renderData = () => {
+        try {
+            axios
+                .get(`${configBaseURL}/api/video/get-list-video-login-follow`, configHeader)
+                .then((result) => {
+                    setData(result.data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className={cx('main-container')}>
             {show ? (
@@ -115,7 +130,7 @@ function Home() {
                             {followingAccounts.length > 0 ? (
                                 <>
                                     {data.reverse().map((item, index) => {
-                                        return <RecommendItem data={item} key={index} followUser={followingAccounts} check={check}/>;
+                                        return <RecommendItem data={item} key={index} followUser={followingAccounts} check={check} onClick={renderData} />;
                                     })}
                                 </>
                             ) : (

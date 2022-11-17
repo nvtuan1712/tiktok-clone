@@ -10,6 +10,7 @@ import MenuMoreActions from './MenuMoreActions';
 import MenuShareProfile from './MenuShareProfile';
 import { useEffect, useState } from 'react';
 import SekeletonLoadingForTagAndMusicV2 from '~/layouts/components/SekeletonLoading/SekeletonLoadingForTagAndMusicV2/SekeletonLoadingForTagAndMusicV2';
+import ModalUpdateProfile from '../ModalUpdateProfile';
 
 const cx = classNames.bind(styles);
 
@@ -18,6 +19,7 @@ function ProfileHeader({ user, followUser }) {
     const [check, setCheck] = useState(false);
     const [checkTick, setCheckTick] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [show, setShow] = useState(false);
     const tick = user.data.tick
     
     useEffect(() => {
@@ -54,8 +56,18 @@ function ProfileHeader({ user, followUser }) {
         })
     }, [user.data.nickname, user, followUser]);
 
+
+    const handlerShowUpdateProfile = () => {
+        setShow(true);
+    }
+
+    const handlerHideUpdateProfile = () => {
+        setShow(false);
+    }
+
     return (
         <>
+            {show && <ModalUpdateProfile data={user} onClick={handlerHideUpdateProfile}/>}
             {loading ? (<div className={cx('profile-content-header')}>
                 <div className={cx('profile-info')}>
                     <div className={cx('avatar-container')}>
@@ -70,7 +82,7 @@ function ProfileHeader({ user, followUser }) {
                         </div>
                         <h1 className={cx('title-sub')}>{user.data.name}</h1>
                         {currentUser ? (
-                            <div className={cx('edit-container')}>
+                            <div className={cx('edit-container')} onClick={handlerShowUpdateProfile}>
                                 <Button text className={cx('btn-edit')}>
                                     <span>
                                         <EditProfile className={cx('edit-profile-icon')} />

@@ -8,10 +8,22 @@ import { MoreAction, ShareProfile } from '~/components/Icons';
 import styles from './TagHeader.module.scss';
 import MenuMoreActions from './MenuMoreActions';
 import MenuShareProfile  from './MenuShareTag';
+import { useState } from 'react';
+import ModalReport from '~/components/ModalReport';
 
 const cx = classNames.bind(styles);
 
 function TagHeader({ data }) {
+    const [show, setShow] = useState(false)
+
+    const handlerShowModalReport = () => {
+        setShow(true)
+    }
+
+    const handlerHideModalReport = () => {
+        setShow(false)
+    }
+
     return (
         <div className={cx('content-header')}>
             <div className={cx('info')}>
@@ -38,11 +50,12 @@ function TagHeader({ data }) {
                     <ShareProfile/>
                 </div>
             </MenuShareProfile>
-            <MenuMoreActions>
+            <MenuMoreActions onClick={handlerShowModalReport}>
                 <div className={cx('more-actions')}>
                     <MoreAction />
                 </div>
             </MenuMoreActions>
+            {show && <ModalReport onClick={handlerHideModalReport}/>}
         </div>
     );
 }

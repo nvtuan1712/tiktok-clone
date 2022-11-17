@@ -11,6 +11,8 @@ import { useDebounce } from '~/hooks';
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './FormUpload.module.scss';
 import axios from 'axios';
+import ModalUpload from '../../ModalUpload';
+import config from '~/config';
 
 const cx = classNames.bind(styles);
 
@@ -407,32 +409,38 @@ function ButtonRow() {
         const video = document.querySelector('#uploadphoto');
         const file = video.files[0];
         const form = new FormData();
-        form.append('myVideo', file);
-        form.append('description', inputDesc.value);
-        form.append('trendy', trendy.innerText);
-        form.append('music', music.innerText);
-        form.append('selection', selection.value);
-        form.append('author', localStorage.getItem('idUser'));
-        try {
-            const response = await axios({
-                method: 'post',
-                url: `${configBaseURL}/api/video/upload`,
-                data: form,
-                headers: {
-                    'Content-Type': `multipart/form-data; boundary=${form._boundary}`,
-                },
-            });
-            if (response.data === 'Upload Success!') {
-                setShow(true);
+        if(inputDesc.value !== '' && trendy.innerText !== '') {
+            form.append('myVideo', file);
+            form.append('description', inputDesc.value);
+            form.append('trendy', trendy.innerText);
+            form.append('music', music.innerText);
+            form.append('selection', selection.value);
+            form.append('author', localStorage.getItem('idUser'));
+            try {
+                const response = await axios({
+                    method: 'post',
+                    url: `${configBaseURL}/api/video/upload`,
+                    data: form,
+                    headers: {
+                        'Content-Type': `multipart/form-data; boundary=${form._boundary}`,
+                    },
+                });
+                if (response.data === 'Upload Success!') {
+                    setShow(true);
+                }
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
         }
     };
 
+    const hideModal = () => {
+        window.location = config.routes.upload
+    }
+
     return (
         <>
-            {show && <p>Đăng tải video thành công!</p>}
+            {show && <ModalUpload onClick={hideModal}/>}
             <div className={cx('buttonrow-wrap')}>
                 <div className={cx('btn-cancel')}>
                     <button className={cx('btn-cancel-container', 'btn')} onClick={handleUploadVideo}>

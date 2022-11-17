@@ -32,6 +32,7 @@ function Header({ className, children }) {
         }
     }, [accessToken]);
 
+
     //Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -78,7 +79,7 @@ function Header({ className, children }) {
                         </>
                     ) : (
                         <>
-                            <Link to={config.routes.upload} className={cx('link-text')}>
+                            <Link to={current ? config.routes.upload : config.routes.login} className={cx('link-text')}>
                                 <div className={cx('upload')}>
                                     <Add className={cx('upload-icon')} />
                                     <span className={cx('upload-text')}>Tải lên</span>

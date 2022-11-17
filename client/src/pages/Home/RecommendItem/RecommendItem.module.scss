@@ -176,6 +176,17 @@
     }
 }
 
+.following {
+    border-color: rgba(22, 24, 35, 0.12);
+    background-color: white;
+    color: black;
+
+    &:hover {
+    background-color: white;
+    border-color: rgba(22, 24, 35, 0.12);
+    }
+}
+
 .desc {
     font-size: 16px;
     line-height: 22px;

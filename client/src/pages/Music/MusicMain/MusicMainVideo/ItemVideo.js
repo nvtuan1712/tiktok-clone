@@ -8,7 +8,7 @@ import styles from './MusicMainVideo.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ItemVideo({ data, metadata }) {
+function ItemVideo({ data, metadata, onClick }) {
     const [show, setShow] = useState(false)
 
     const handleHide = () => {
@@ -19,6 +19,7 @@ function ItemVideo({ data, metadata }) {
         
         // This will replace the current entry in the browser's history, without reloading
         window.history.replaceState(nextState, nextTitle, nextURL);
+        onClick()
     }
 
     const test = (e) => {
@@ -76,13 +77,16 @@ function ItemVideo({ data, metadata }) {
                 <div className={cx('item-card-desc')}>
                     <Link
                         to={'/'}
-                        alt={data.description}
-                        title={data.description}
+                        title={`${data.description} #${data.trendy.name}`}
                         className={cx('cap-line')}
                         onClick={test}
                     >
                         <div className={cx('desc-container')}>
-                            <span className={cx('span-text')}>{data.description}</span>
+                            <span className={cx('span-text')}>{data.description}</span> {data.trendy && (
+                                <Link to={`/${data.trendy.name}`}>
+                                    <strong>#{data.trendy.name}</strong>
+                                </Link>
+                            )}
                         </div>
                     </Link>
                 </div>

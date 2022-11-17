@@ -62,7 +62,7 @@ function Discovery({ label }) {
         }
     }, []);
 
-    arrTag = trendy.concat(music);
+    arrTag = trendy.slice(0, 5).concat(music.slice(0, 5));
 
     return (
         <div className={cx('wrapper')}>

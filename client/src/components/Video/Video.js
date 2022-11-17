@@ -18,7 +18,6 @@ function Video({ data, onClick, followUser }) {
         try {
             axios.post(`${configBaseURL}/api/video/increase-views/${data.id}`)
             .then((result) => {
-                console.log(result);
             }).catch((err) => {
                 console.log(err);
             });

@@ -1,4 +1,5 @@
 const TagModel = require("../Models/TagModel");
+const videoModel = require("../Models/VideoModel");
 
 //xử lý get list tag trendy
 const getListTrendy = async (req, res) => {
@@ -13,7 +14,6 @@ const getListTrendy = async (req, res) => {
 //xử lý get list tag trendy theo params
 const getListTrendyUpload = async (req, res) => {
   try {
-    console.log(req.query);
     if (req.query.q !== "") {
       const char = req.query.q;
       const listTrendy = await TagModel.find({
@@ -31,7 +31,18 @@ const getListTrendyUpload = async (req, res) => {
 const getTrendy = async (req, res) => {
   try {
     const name = req.params.name;
-    const trendy = await TagModel.find({ name: name });
+    const trendyv1 = await TagModel.findOne({ name: name });
+    const listVideo = await videoModel.find({ trendy: trendyv1._id })
+    let viewcount = 0
+    listVideo.forEach((item) => {
+      viewcount += item.watch_count
+    })
+    await TagModel.updateOne(
+      { name: name },
+      { $set: { watch_count: viewcount } }
+    )
+
+    const trendy = await TagModel.find({ name: name })
     res.send(trendy);
   } catch (error) {
     res.send(error);

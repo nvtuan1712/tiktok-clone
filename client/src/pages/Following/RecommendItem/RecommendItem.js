@@ -15,7 +15,7 @@ import { configBaseURL, configHeader } from '~/common/common';
 
 const cx = classNames.bind(styles);
 
-function RecommendItem({ data, followUser, check }) {
+function RecommendItem({ data, followUser, check, onClick }) {
     const [show, setShow] = useState(false);
 
     const handleHide = () => {
@@ -99,7 +99,7 @@ function RecommendItem({ data, followUser, check }) {
                         </div>
                     </div>
                     <div className={cx('video-action-item-container')}>
-                        <LikeVideo data={data} check={check}/>
+                        <LikeVideo data={data} check={check} onClick={onClick} />
                         <CommentVideo data={data} />
                         <ShareVideo data={data} />
                     </div>
@@ -109,7 +109,7 @@ function RecommendItem({ data, followUser, check }) {
     );
 }
 
-function LikeVideo({ data, check }) {
+function LikeVideo({ data, check, onClick }) {
     const [change, setChange] = useState();
 
     useEffect(() => {
@@ -129,6 +129,7 @@ function LikeVideo({ data, check }) {
             console.log(error);
         }
         setChange(true);
+        onClick()
     };
 
     const handlerUnLikeVideo = async () => {
@@ -136,6 +137,7 @@ function LikeVideo({ data, check }) {
             await axios.post(`${configBaseURL}/api/video/unliked/${data.id}`, configHeader);
         } catch (error) {}
         setChange(false);
+        onClick()
     };
 
     return (

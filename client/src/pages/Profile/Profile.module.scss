@@ -411,6 +411,15 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    cursor: pointer;
+
+    a {
+        display: inline-block;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 }
 
 .share-link {

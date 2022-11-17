@@ -62,6 +62,21 @@ function Tag() {
         document.title = `#${name} Gắn hastag cho các video trên TikTok`;
     });
 
+    const renderData = () => {
+        try {
+            axios
+                .get(`${configBaseURL}/api/trendy/${name}`)
+                .then((result) => {
+                    setTrendy(result);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <>
@@ -70,13 +85,13 @@ function Tag() {
                     {time ? (
                         <>
                             {trendy.data.map((item, index) => {
-                                return <TagHeader data={item} key={index} />;
+                                return <TagHeader data={item} key={index}/>;
                             })}
                         </>
                     ) : (
                         <SekeletonLoadingForTagAndMusicV2/>
                     )}
-                    <TagMain data={followingAccounts}/>
+                    <TagMain data={followingAccounts} onClick={renderData}/>
                 </div>
             </div>
         </>

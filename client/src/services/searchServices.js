@@ -1,10 +1,10 @@
-import * as httpRequest from '~/utils/httpRequests';
+// import * as httpRequest from '~/utils/httpRequests';
 import { configBaseURL } from '~/common/common';
 import axios from 'axios';
 
 export const search = async (q, type = 'less') => {
     try {
-        const res = await httpRequest.get('users/search', {
+        const res = await axios.get(`${configBaseURL}/api/users/search`, {
             params: {
                 q,
                 type,

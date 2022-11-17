@@ -109,6 +109,10 @@
     line-height: 22px;
     color: rgb(22, 24, 35);
     pointer-events: none;
+
+    a {
+        display: inline-block;
+    }
 }
 
 .span-text {

@@ -72,8 +72,9 @@ function ItemVideo({ data, followUser }) {
                         </div>
                     </div>
                 </div>
-                <div className={cx('item-card-desc')}>
+                <div className={cx('item-card-desc')} title={`${data.description} #${data.trendy.name}`}>
                     {data.description}
+                    {data.trendy && <Link to={`/${data.trendy.name}`}><strong>#{data.trendy.name}</strong></Link>}
                 </div>
             </div>
         </>

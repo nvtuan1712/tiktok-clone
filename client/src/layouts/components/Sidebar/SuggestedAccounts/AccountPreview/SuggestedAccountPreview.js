@@ -57,11 +57,6 @@ function AccountPreview({ user }) {
         try {
             //
             await axios.post('http://localhost:5000/api/users/follow-user', configHeader1)
-            .then((result) => {
-                
-            }).catch((err) => {
-                
-            });
         } catch (error) {
             console.log(error);
         }
@@ -75,11 +70,6 @@ function AccountPreview({ user }) {
         try {
             //
             await axios.post('http://localhost:5000/api/users/unfollow-user', configHeader1)
-            .then((result) => {
-                
-            }).catch((err) => {
-                
-            });
         } catch (error) {
             console.log(error);
         }

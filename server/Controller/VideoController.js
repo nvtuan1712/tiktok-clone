@@ -260,11 +260,26 @@ const increaseView = async (req, res) => {
   try {
     const idVideo = req.params.id;
     const currentVideo = await videoModel.findOne({ _id: idVideo });
-    const increaseView = await videoModel.updateOne(
+    await videoModel.updateOne(
       { _id: idVideo },
       { $set: { watch_count: currentVideo.watch_count + 1 } }
     );
     res.send('Video thêm lượt xem!')
+  } catch (error) {
+    res.send(error)
+  }
+};
+
+//tăng lượt share
+const increaseShare = async (req, res) => {
+  try {
+    const idVideo = req.params.id;
+    const currentVideo = await videoModel.findOne({ _id: idVideo });
+    await videoModel.updateOne(
+      { _id: idVideo },
+      { $set: { share_count: currentVideo.share_count + 1 } }
+    );
+    res.send('Video thêm lượt share!')
   } catch (error) {
     res.send(error)
   }
@@ -283,4 +298,5 @@ module.exports = {
   likeVideo: likeVideo,
   unLikeVideo: unLikeVideo,
   increaseView: increaseView,
+  increaseShare: increaseShare,
 };

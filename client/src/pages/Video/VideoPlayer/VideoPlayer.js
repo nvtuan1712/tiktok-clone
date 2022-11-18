@@ -11,7 +11,10 @@ import ModalReport from '~/components/ModalReport';
 
 const cx = classNames.bind(styles);
 
+
 function VideoPlayer({ data }) {
+    console.log(data);
+
     return (
         <div className={cx('container')}>
             <BlurBackground />
@@ -37,7 +40,7 @@ function VideoWrapper({ data }) {
             <div className={cx('video-container')}>
                 <div className={cx('basic-player-wrapper')}>
                     <video
-                        src={data[0].video}
+                        src={data.video}
                         loading="lazy"
                         disablePictureInPicture
                         loop
@@ -53,13 +56,8 @@ function VideoWrapper({ data }) {
 }
 
 function ButtonClose() {
-
-    const handleTurnOffVideo = () => {
-        window.history.back()
-    }
-
     return (
-        <div className={cx('btn-close')} onClick={handleTurnOffVideo} >
+        <div className={cx('btn-close')}>
             <CloseVideo />
         </div>
     );

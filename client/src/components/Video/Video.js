@@ -12,7 +12,7 @@ import VideoPlayer from './VideoPlayer';
 
 const cx = classNames.bind(styles);
 
-function Video({ data, onClick, followUser }) {
+function Video({ data, onClick, followUser, check, onClickRender }) {
 
     useEffect(() => {
         try {
@@ -29,7 +29,7 @@ function Video({ data, onClick, followUser }) {
     return (
         <div className={cx('container')}>
             <VideoPlayer data={data} onClick={onClick} />
-            <VideoContent data={data} followUser={followUser}/>
+            <VideoContent data={data} followUser={followUser} check={check} onClick={onClickRender}/>
         </div>
     );
 }

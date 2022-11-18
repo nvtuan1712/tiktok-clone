@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const videoController = require('../Controller/VideoController')
 
+router.post('/increase-share/:id', videoController.increaseShare)
 router.post('/increase-views/:id', videoController.increaseView)
 router.post('/liked/:id', videoController.likeVideo)
 router.post('/unliked/:id', videoController.unLikeVideo)

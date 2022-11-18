@@ -1,41 +1,111 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import axios from 'axios';
 import classNames from 'classnames/bind';
-import { useEffect } from 'react';
-import {useParams} from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { configBaseURL, configHeader } from '~/common/common';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './Video.module.scss';
 import VideoContent from './VideoContent';
-import { configBaseURL } from '~/common/common'
 import VideoPlayer from './VideoPlayer';
-import { useState } from 'react';
 
 
 const cx = classNames.bind(styles);
 
 function Video() {
     const [data, setData] = useState([])
+    const [followUser, setFollowUser] = useState([])
+    const [check, setCheck] = useState([])
+    const { id, nickname } = useParams()
     const [show, setShow] = useState(false)
-    const { nickname } = useParams();
-    const { id } = useParams();
     
     useEffect(() => {
-        axios.get(`${configBaseURL}/api/video/${nickname}/${id}`)
-        .then((result) => {
-            setData(result.data)
-            if(result) {
-                setShow(true)
+        try {
+            axios.get(`${configBaseURL}/api/video/${nickname}/${id}`)
+            .then((result) => {
+                if (result) {
+                    setData(result.data[0])
+                    setTimeout(() => {
+                        setShow(true)
+                    },500)
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+        } catch (error) {
+            
+        }
+    },[])
+
+    // useEffect(() => {
+    //     try {
+    //         axios.post(`${configBaseURL}/api/video/increase-views/${id}`)
+    //         .then((result) => {
+    //         }).catch((err) => {
+    //             console.log(err);
+    //         });
+    //     } catch (error) {
+            
+    //     }
+    // },[id])
+
+    useEffect(() => {
+        try {
+            axios
+                .get(`${configBaseURL}/api/users/get-liked-video`, configHeader)
+                .then((result) => {
+                    if(result) {
+                        setCheck(result.data)
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    },[]);
+
+    //lấy người người dùng follow của người dùng đang đăng nhập
+    useEffect(() => {
+        if (localStorage.getItem('accessToken')) {
+            try {
+                //
+                axios
+                    .get(`${configBaseURL}/api/users/get-follow-user`, configHeader)
+                    .then((result) => {
+                        setFollowUser(result.data[0].fllowing);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            } catch (error) {
+                console.log(error);
             }
-        }).catch((err) => {
-            console.log(err);
-        });
-    },[nickname, id])
+        }
+    }, []);
+
+
+    const onClickRender = () => {
+        try {
+            axios.get(`${configBaseURL}/api/video/${nickname}/${id}`)
+            .then((result) => {
+                if (result) {
+                    setData(result.data[0])
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+        } catch (error) {
+            
+        }
+    }
 
     return (
         <div className={cx('container')}>
-            {show && <VideoPlayer data={data}/>}
-            {show && <VideoContent data={data}/>}
+            {show ? <VideoPlayer data={data}/> : null}
+            {show && <VideoContent data={data} followUser={followUser} check={check} onClick={onClickRender}/>}
         </div>
     );
 }

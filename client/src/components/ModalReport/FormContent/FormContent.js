@@ -1,6 +1,6 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './FormContent.module.scss';
@@ -83,16 +83,23 @@ function FormContent({ onClick }) {
                     </ul>
                 )}
 
-                {check === false && <FormContentFooter />}
+                {check === false && <FormContentFooter/>}
             </div>
         </>
     );
 }
 
 function FormContentFooter() {
+
+    const handleSubmitRP = (e) => {
+        e.preventDefault();
+        const itemContent = document.getElementsByTagName('li')
+        console.log(itemContent);
+    }
+
     return (
         <div className={cx('footer')}>
-            <button>Gửi</button>
+            <button onClick={handleSubmitRP}>Gửi</button>
         </div>
     );
 }

@@ -41,7 +41,7 @@ function RecommendItem({ data, index, followUser, check, onClick }) {
 
     const handleHide = () => {
         setShow(false);
-        const nextURL = `http://localhost:3000/`;
+        const nextURL = config.routes.home;
         const nextTitle = 'My new page title';
         const nextState = { additionalInformation: 'Updated the URL with JS' };
 
@@ -66,11 +66,6 @@ function RecommendItem({ data, index, followUser, check, onClick }) {
         try {
             //
             await axios.post('http://localhost:5000/api/users/follow-user', configHeader1)
-            .then((result) => {
-                
-            }).catch((err) => {
-                
-            });
         } catch (error) {
             console.log(error);
         }
@@ -84,11 +79,6 @@ function RecommendItem({ data, index, followUser, check, onClick }) {
         try {
             //
             await axios.post('http://localhost:5000/api/users/unfollow-user', configHeader1)
-            .then((result) => {
-                
-            }).catch((err) => {
-                
-            });
         } catch (error) {
             console.log(error);
         }
@@ -150,7 +140,7 @@ function RecommendItem({ data, index, followUser, check, onClick }) {
                     </h4>
                 </div>
                 {/* video container */}
-                {show && <Video data={data} onClick={handleHide} followUser={followUser} />}
+                {show && <Video data={data} onClick={handleHide} followUser={followUser} check={check} onClickRender={onClick}/>}
                 <div className={cx('video-wrapper')}>
                     <div className={cx('video-card-container')}>
                         <canvas width="56.25" height="100" className={cx('canvas-video-player')}></canvas>
@@ -177,7 +167,7 @@ function RecommendItem({ data, index, followUser, check, onClick }) {
                     </div>
                     <div className={cx('video-action-item-container')}>
                         <LikeVideo data={data} check={check} onClick={onClick}/>
-                        <CommentVideo data={data} />
+                        <CommentVideo data={data} onClick={test}/>
                         <ShareVideo data={data} />
                     </div>
                 </div>
@@ -246,9 +236,9 @@ function LikeVideo({ data, check, onClick }) {
     );
 }
 
-function CommentVideo({ data }) {
+function CommentVideo({ data, onClick }) {
     return (
-        <button className={cx('btn-action-item')}>
+        <button className={cx('btn-action-item')} onClick={onClick}>
             <span className={cx('comment-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
                 <Comment />
             </span>

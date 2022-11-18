@@ -23,7 +23,7 @@ import styles from './MenuShare.module.scss';
 
 const cx = classNames.bind(styles);
 
-function MenuShare({ children }) {
+function MenuShare({ children, data, onClickRender }) {
     const shareArr = [
         {
             icon: <Emble />,
@@ -92,6 +92,8 @@ function MenuShare({ children }) {
 
             return (
                 <ItemMenuShare
+                    onClickRender={onClickRender}
+                    data={data}
                     key={index}
                     text={item.text}
                     icon={item.icon}

@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import Video from '~/components/Video';
 import axios from 'axios';
 import { configBaseURL, configHeader } from '~/common/common';
+import config from '~/config';
 
 
 const cx = classNames.bind(styles);
@@ -20,7 +21,7 @@ function RecommendItem({ data, followUser, check, onClick }) {
 
     const handleHide = () => {
         setShow(false);
-        const nextURL = `http://localhost:3000/`;
+        const nextURL = config.routes.following;
         const nextTitle = 'My new page title';
         const nextState = { additionalInformation: 'Updated the URL with JS' };
 
@@ -74,7 +75,7 @@ function RecommendItem({ data, followUser, check, onClick }) {
                     </h4>
                 </div>
                 {/* video container */}
-                {show && <Video data={data} onClick={handleHide} followUser={followUser} />}
+                {show && <Video data={data} onClick={handleHide} followUser={followUser} check={check} onClickRender={onClick}/>}
                 <div className={cx('video-wrapper')}>
                     <div className={cx('video-card-container')}>
                         <canvas width="56.25" height="100" className={cx('canvas-video-player')}></canvas>
@@ -100,8 +101,8 @@ function RecommendItem({ data, followUser, check, onClick }) {
                     </div>
                     <div className={cx('video-action-item-container')}>
                         <LikeVideo data={data} check={check} onClick={onClick} />
-                        <CommentVideo data={data} />
-                        <ShareVideo data={data} />
+                        <CommentVideo data={data} onClick={test} />
+                        <ShareVideo data={data} onClick={onClick} />
                     </div>
                 </div>
             </div>
@@ -161,9 +162,9 @@ function LikeVideo({ data, check, onClick }) {
     );
 }
 
-function CommentVideo({ data }) {
+function CommentVideo({ data, onClick }) {
     return (
-        <button className={cx('btn-action-item')}>
+        <button className={cx('btn-action-item')} onClick={onClick}>
             <span className={cx('comment-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
                 <Comment />
             </span>
@@ -172,9 +173,9 @@ function CommentVideo({ data }) {
     );
 }
 
-function ShareVideo({ data }) {
+function ShareVideo({ data, onClick }) {
     return (
-        <MenuShare className={cx('share-container')}>
+        <MenuShare className={cx('share-container')} data={data} onClickRender={onClick}>
             <button className={cx('btn-action-item')}>
                 <span className={cx('share-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
                     <Share />

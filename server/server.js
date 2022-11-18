@@ -8,6 +8,7 @@ const accountRoute = require('./Router/AccountRoute')
 const trendyRoute = require('./Router/TagRoute')
 const musicRoute = require('./Router/MusicRoute')
 const videoRoute = require('./Router/VideoRoute')
+const commentRoute = require('./Router/CommentRoute')
 const connectDB = require('./Services/ConnectDBService');
 
 require('dotenv').config()
@@ -29,6 +30,7 @@ app.use('/api/users', userRoute)
 app.use('/api/trendy', trendyRoute)
 app.use('/api/music', musicRoute)
 app.use('/api/video', videoRoute)
+app.use('/api/comment', commentRoute)
 
 //
 

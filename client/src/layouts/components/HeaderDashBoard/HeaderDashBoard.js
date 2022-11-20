@@ -26,7 +26,7 @@ function HeaderDashBoard({ className }) {
                 </Link>
 
                 <div>
-                    <div className={cx('title')}>Xin chào test@gmail.com!</div>
+                    <div className={cx('title')}>Xin chào {localStorage.getItem('nickName')}!</div>
                 </div>
             </div>
         </header>

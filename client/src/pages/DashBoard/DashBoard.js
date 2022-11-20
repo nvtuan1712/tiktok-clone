@@ -1,19 +1,18 @@
 //Thư viện externor trước(thư viện bên ngoài)
-import { configBaseURL } from '~/common/common';
+import { useLayoutEffect, useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 function DashBoard() {
+    const navigate = useNavigate();
+    useEffect(() => {
+        navigate('/admin/dashboard/manageAccount');
+        return () => {
+            // clean up
+        };
+    }, []);
     return (
         <>
-            <p>Danh sách người dùng</p>
-            <form action={`${configBaseURL}/api/video/upload`} encType="multipart/form-data" method="POST">
-                <input type="file" name="myFile" />
-                <input type="submit" value="Upload a file" />
-            </form>
-            <img
-                src="http://localhost:5000/public/images/user.png"
-                alt=""
-                style={{ width: '300px', height: '300px' }}
-            ></img>
+            <Outlet />
         </>
     );
 }

@@ -285,6 +285,110 @@ const increaseShare = async (req, res) => {
   }
 };
 
+
+/////////////////Phần của Linh//////////////
+// get list videos
+const getListVideos = async (req, res) => {
+  try {
+    const videos = await videoModel
+      .find({})
+      .populate({ path: "author", select: "name _id" })
+      .populate({ path: "music", select: "music" })
+      .populate({ path: "trendy", select: "name" });
+    return res.send(videos);
+  } catch (err) {
+    console.log(err);
+  }
+};
+// get detail video
+const viewVideoDetail = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const video = await videoModel.findById({ _id: id });
+    if (!video) {
+      return res.status(404).send({ message: "Video không tồn tại!" });
+    }
+    return res.status(200).send(video);
+  } catch (error) {
+    return res.status(500).json({ message: `Internal Server Error: ${error}` });
+  }
+};
+// xóa music
+const deleteVideo = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const video = await videoModel.findById({
+      _id: id,
+    });
+    if (!video) {
+      return res.status(404).send({ message: "video does not exist" });
+    } else {
+      videoModel.deleteOne({ _id: id }, function (err, result) {
+        if (err) {
+          return res.status(500).send({ message: `Error: ${err}` });
+        } else {
+          return res.status(200).send({ message: "delete successfully" });
+        }
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: `Internal Server Error: ${err}` });
+  }
+};
+// report video
+const getReportVideo = async (req, res) => {
+  try {
+    const videos = await videoModel.find({});
+    const result = {
+      total: videos.length,
+      totalWatch: videos
+        .map((item) => item.comment_count)
+        .reduce((prev, next) => prev + next),
+      totalHeartCount: videos
+        .map((item) => item.heart_count)
+        .reduce((prev, next) => prev + next),
+    };
+    return res.status(200).send(result);
+  } catch (err) {
+    return res.status(500).json({ message: `Internal Server Error: ${err}` });
+  }
+};
+// admin update video
+const updateVideoByAdmin = async(req, res) => {
+  try{
+    const id = req.params.id;
+    const {description} = req.body;
+    const videoRecord = await videoModel.find({_id: id});
+    if (!videoRecord) {
+      return res.status(404).send({ message: "Video không tồn tại" });
+    } else {
+      await videoModel.findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            description: description,
+            video:
+              !!req.files?.length && !!req.files[0]
+                ? `http://localhost:5000/public/images/${req.files[0].filename}`
+                : videoRecord.video,
+          },
+        },
+        { new: true },
+        (err, doc) => {
+          if (err) {
+            console.log("Something wrong when updating data!");
+          }
+          return res.status(200).send({ message: "Update thành công!" });
+        }
+      ).clone();
+    }
+  }
+  catch(err){
+    return res.status(500).json({ message: `Internal Server Error: ${err}` });
+  }
+
+}
+
 module.exports = {
   uploadVideo: uploadVideo,
   getUserVideo: getUserVideo,
@@ -299,4 +403,10 @@ module.exports = {
   unLikeVideo: unLikeVideo,
   increaseView: increaseView,
   increaseShare: increaseShare,
+  //Phần của Linh
+  getReportVideo: getReportVideo,
+  getListVideos: getListVideos,
+  deleteVideo: deleteVideo,
+  updateVideoByAdmin: updateVideoByAdmin,
+  viewVideoDetail: viewVideoDetail
 };

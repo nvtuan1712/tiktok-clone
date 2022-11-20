@@ -149,6 +149,7 @@ function MainContent({ data, check, onClick }) {
             });
         }
     }, [check, data.id]);
+    console.log(check);
 
     const handlerLikeVideo = async () => {
         try {

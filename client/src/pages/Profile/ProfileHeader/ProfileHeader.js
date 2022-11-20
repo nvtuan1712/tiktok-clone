@@ -14,7 +14,7 @@ import ModalUpdateProfile from '../ModalUpdateProfile';
 
 const cx = classNames.bind(styles);
 
-function ProfileHeader({ user, followUser }) {
+function ProfileHeader({ user, followUser, onClick }) {
     const [currentUser, setCurrentUser] = useState(false);
     const [check, setCheck] = useState(false);
     const [checkTick, setCheckTick] = useState(false);
@@ -63,6 +63,9 @@ function ProfileHeader({ user, followUser }) {
 
     const handlerHideUpdateProfile = () => {
         setShow(false);
+        setTimeout(() => {
+            window.location.reload()
+        },1000)
     }
 
     return (

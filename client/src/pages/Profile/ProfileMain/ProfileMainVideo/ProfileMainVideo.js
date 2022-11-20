@@ -13,6 +13,7 @@ const cx = classNames.bind(styles);
 
 function ProfileMainVideo({ followUser }) {
     const [arrVideo, setArrVideo] = useState([]);
+    const [check, setCheck] = useState([]);
     const [show, setShow] = useState(false);
     const { nickname } = useParams();
 
@@ -35,13 +36,45 @@ function ProfileMainVideo({ followUser }) {
         } catch (error) {}
     }, [nickname]);
 
+    useEffect(() => {
+        try {
+            axios
+                .get(`${configBaseURL}/api/users/get-liked-video`, configHeader)
+                .then((result) => {
+                    if(result) {
+                        setCheck(result.data)
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    },[]);
+
+    const renderData = () => {
+        try {
+            axios
+                .get(`${configBaseURL}/api/video/get-list-video-user/${nickname}`, configHeader)
+                .then((result) => {
+                    if(result) {
+                    setArrVideo(result.data);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {}
+    }
+
     return (
         <div className={cx('grid-video-container')}>
             <div className={cx('grid-video-list')}>
                 {show ? (
                     <>
                         {arrVideo.map((item, index) => {
-                            return <ItemVideo data={item} key={index} followUser={followUser}/>;
+                            return <ItemVideo data={item} key={index} followUser={followUser} check={check} onClick={renderData}/>;
                         })}
                     </>
                 ) : (

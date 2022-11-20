@@ -52,6 +52,7 @@ const getCurrentUser = async (req, res) => {
   } catch (error) {
     //gửi mã lỗi về client để biết refresh token
     res.status(400).send(error);
+    console.log(error);
   }
 };
 
@@ -222,20 +223,155 @@ const updateProfile = async (req, res) => {
       if (err) {
         console.log(err);
       } else {
+        const currentUser = await userModel.findOne({ _id: req.body.user })
+        let image
+
+        if(req.body.myImage === undefined) {
+          image = currentUser.avatar
+        }
+
+        if(req.file?.filename) {
+          image = `http://localhost:5000/public/images/${req.file.filename}`
+        }
+
         await userModel.updateOne(
           { _id: req.body.user },
           {
             nickname: req.body.nickname,
             name: req.body.name,
             description: req.body.desc,
-            avatar: `http://localhost:5000/public/images/${req.file.filename}`,
+            avatar: image,
           }
         );
+
+        const user = await userModel
+          .findOne({ _id: req.body.user })
+          .populate("account");
+
+        const jwtToken = jwt.sign(
+          {
+            _id: user.account.id,
+            email: user.account.email,
+            role: user.account.role,
+            nickname: user.nickname,
+            iduser: user.id,
+            avatar: user.avatar,
+          },
+          process.env.SECRECT_JWT,
+          {
+            expiresIn: 36000,
+          }
+        );
+
+        res.status(200).send({
+          accessToken: jwtToken,
+        });
       }
     });
-    res.send("Update thành công!");
-  } catch (error) {}
+  } catch (error) {
+    res.send(error);
+  }
 };
+
+////Phần của Linh///////////////////////////////////////
+// admin thay đổi trạng thái tick cho người dùng
+const changeStatusTick = async (req, res) => {
+  try {
+    const id = req.params.id;
+    let user = await userModel.findById({ _id: id });
+    await userModel
+      .findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            tick: !user.tick,
+          },
+        },
+        { new: true },
+        (err, doc) => {
+          if (err) {
+            res
+              .status(500)
+              .send({ message: "Đã có lỗi xảy ra khi update dữ liệu!" });
+          }
+          return res.status(200).send({ message: "Update thành công!" });
+        }
+      )
+      .clone();
+  } catch (err) {
+    return res.status(500).json({ message: `Đã có lỗi xảy ra: ${err}` });
+  }
+};
+
+// delete user
+const deleteUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await userModel.findById({
+      _id: id,
+    });
+    if (!user) {
+      return res.status(404).send({ message: "user does not exist" });
+    } else {
+      await accountModel.deleteOne({ _id: user.account }).clone();
+      await userModel.deleteOne({ _id: id }, function (err, result) {
+        if (err) {
+          return res.status(500).send({ message: `Error: ${err}` });
+        } else {
+          return res.status(200).send({ message: "Delete successfully" });
+        }
+      }).clone();
+    }
+  } catch (err) {
+    return res.status(500).json({ message: `Internal Server Error: ${err}` });
+  }
+};
+// update music
+const updateUser = async (req, res) => {
+  const { nickname, name, description } = req.body;
+  try {
+    const id = req.params.id;
+    const user = await userModel.findById({
+      _id: id,
+    });
+    await userModel.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          name: name,
+          nickname: nickname,
+          description: description,
+          avatar: !!req.files?.length ? `http://localhost:5000/public/images/${req.files[0].filename}` : user.avatar
+        },
+      },
+      { new: true },
+      (err, doc) => {
+        if (err) {
+          console.log("Something wrong when updating data!");
+        }
+        return res.status(200).send({ message: "Update thành công!" });
+      }
+    ).clone();
+  } catch (error) {
+    return res.status(500).json({ message: `Internal Server Error: ${error}` });
+  }
+};
+//  get detail info
+const getDetailUser = async (req, res) => {
+  try{
+    const id = req.params.id;
+    const user = await userModel.findById({
+      _id: id,
+    });
+    if (!user) {
+      return res.status(404).send({ message: "user does not exist" });
+    }
+    return res.status(200).send(user);
+  }
+  catch(err){
+    return res.status(500).json({ message: `Internal Server Error: ${err}` });
+  }
+}
 
 module.exports = {
   getListUser: getListUser,
@@ -248,4 +384,9 @@ module.exports = {
   getLikedVideo: getLikedVideo,
   searchUser: searchUser,
   updateProfile: updateProfile,
+  //Phần của Linh
+  changeStatusTick: changeStatusTick,
+  deleteUser: deleteUser,
+  getDetailUser: getDetailUser,
+  updateUser: updateUser
 };

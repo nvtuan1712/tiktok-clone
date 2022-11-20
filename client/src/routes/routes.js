@@ -20,6 +20,13 @@ import RegisterPhoneAndEmail from '~/pages/RegisterPhoneAndEmail';
 import ForgetPassword from '~/pages/ForgetPassword';
 import DashBoard from '~/pages/DashBoard'
 import Video from '~/pages/Video'
+import ManagerAccount from '~/pages/DashBoard/ManagerAccount/ManageAccount';
+import ManageTrendy from '~/pages/DashBoard/ManagerTrendy/ManagerTrendy';
+import ManagerMusics from '~/pages/DashBoard/ManageMusics/ManageMusics';
+import ManagerUser from '~/pages/DashBoard/ManagerUser/ManageUser';
+import { ManageReport } from '~/pages/DashBoard/ManageReport/ManageReport';
+import ManageTotal from '~/pages/DashBoard/ManageTotal/ManageTotal';
+import ManagerVideos from '~/pages/DashBoard/ManageVideo/ManageVideo';
 
 //Public routes
 const publicRoutes = [
@@ -40,6 +47,42 @@ const publicRoutes = [
     { path: config.routes.dashboard, component: DashBoard, layout: null },
 ];
 
-const privateRoutes = [];
+const privateRoutes = [
+    {
+        path: config.routes.manageAccount,
+        component: ManagerAccount,
+        layout: null,
+    },
+    {
+        path: config.routes.manageTrendy,
+        component: ManageTrendy,
+        layout: null,
+    },
+    {
+        path: config.routes.manageMusic,
+        component: ManagerMusics,
+        layout: null,
+    },
+    {
+        path: config.routes.manageUser,
+        component: ManagerUser,
+        layout: null,
+    },
+    {
+        path: config.routes.manageReport,
+        component: ManageReport,
+        layout: null,
+    },
+    {
+        path: config.routes.manageTotal,
+        component: ManageTotal,
+        layout: null,
+    },
+    {
+        path: config.routes.manageVideo,
+        component: ManagerVideos,
+        layout: null,
+    },
+];
 
 export { publicRoutes, privateRoutes };

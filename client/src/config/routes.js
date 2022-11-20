@@ -12,7 +12,14 @@ const routes = {
     register: '/register',
     registerPhoneAndEmail: '/register/phone-or-email',
     forgetPassword: '/login/forget-password',
-    dashboard: '/admin/dashboard'
+    dashboard: '/admin/dashboard',
+    manageUser: '/admin/dashboard/manageUser',
+    manageAccount: '/admin/dashboard/manageAccount',
+    manageMusic: '/admin/dashboard/manageMusic',
+    manageTrendy: '/admin/dashboard/manageTrendy',
+    manageReport: '/admin/dashboard/manageReport',
+    manageTotal: '/admin/dashboard/manageTotal',
+    manageVideo: '/admin/dashboard/manageVideo',
 }
 
 export default routes;

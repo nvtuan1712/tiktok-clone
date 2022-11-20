@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import { useEffect, useRef, useState } from 'react';
 import { configBaseURL } from '~/common/common';
 import { CloseModal, EditAvatar } from '~/components/Icons';
+import jwt_decode from 'jwt-decode';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './ModalUpdateProfile.module.scss';
@@ -79,13 +80,17 @@ function ModalUpdateProfile({ data, onClick }) {
 
         if (inputNickName.current.value !== '' && inputDesc.current.value !== '' && inputName.current.value !== '') {
             btnSubmit.current.classList.remove(cx('disabled'));
-        } else if(inputName.current.value === '' || inputDesc.current.value  === '' || inputNickName.current.value === '') {
+        } else if (
+            inputName.current.value === '' ||
+            inputDesc.current.value === '' ||
+            inputNickName.current.value === ''
+        ) {
             btnSubmit.current.classList.add(cx('disabled'));
         }
     };
 
     const handleUpdateProfile = async () => {
-        if(valueNickName !== '' && valueName !== '' && valueDesc !== '') {
+        if (valueNickName !== '' && valueName !== '' && valueDesc !== '') {
             const form = new FormData();
             form.append('myImage', inputImage.current.files[0]);
             form.append('nickname', valueNickName);
@@ -93,7 +98,7 @@ function ModalUpdateProfile({ data, onClick }) {
             form.append('desc', valueDesc);
             form.append('user', localStorage.getItem('idUser'));
             try {
-                await axios({
+                const response = await axios({
                     method: 'post',
                     url: `${configBaseURL}/api/users/update`,
                     data: form,
@@ -101,7 +106,34 @@ function ModalUpdateProfile({ data, onClick }) {
                         'Content-Type': `multipart/form-data; boundary=${form._boundary}`,
                     },
                 });
-                setShow(true)
+                console.log(response);
+                
+                if (response.status === 200) {
+                    const accessToken = response.data.accessToken;
+                    //decode lay ra thong tin payload
+                    const payloadDecoded = jwt_decode(accessToken);
+                    const idAccount = payloadDecoded._id;
+                    const nickName = payloadDecoded.nickname;
+                    const idUser = payloadDecoded.iduser;
+                    const avatar = payloadDecoded.avatar;
+                    //save accessToken to client
+                    localStorage.setItem('accessToken', accessToken);
+                    localStorage.setItem('idAccount', idAccount);
+                    localStorage.setItem('nickName', nickName);
+                    localStorage.setItem('idUser', idUser);
+                    localStorage.setItem('avatar', avatar);
+
+                    const nextURL = `http://localhost:3000/${localStorage.getItem('nickName')}`;
+                    const nextTitle = 'My new page title';
+                    const nextState = { additionalInformation: 'Updated the URL with JS' };
+
+                    // This will replace the current entry in the browser's history, without reloading
+                    window.history.replaceState(nextState, nextTitle, nextURL);
+                }
+                setShow(true);
+                setTimeout(() => {
+                    setShow(false)
+                },3000)
             } catch (error) {
                 console.log(error);
             }
@@ -182,7 +214,7 @@ function ModalUpdateProfile({ data, onClick }) {
                                                 onChange={handleCountCharacterCaption}
                                                 placeholder="Tên"
                                                 className={cx('input-text')}
-                                                />
+                                            />
                                             <div className={cx('text-count')}>
                                                 <span>{checkCountName}</span>/40
                                             </div>
@@ -198,17 +230,32 @@ function ModalUpdateProfile({ data, onClick }) {
                                                 onChange={handleCountCharacterCaption}
                                                 className={cx('input-text-area')}
                                                 placeholder="Tiểu sử"
-                                                ></textarea>
+                                            ></textarea>
                                             <div className={cx('text-count')}>
                                                 <span>{checkCountDesc}</span>/80
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {show && <div style={{ color: 'red', fontSize: '14px', textAlign: 'center', marginTop: '16px' }}><strong>Cập nhật thông tin tài khoản thành công!</strong></div>}
+                                {show && (
+                                    <div
+                                        style={{
+                                            color: 'red',
+                                            fontSize: '14px',
+                                            textAlign: 'center',
+                                            marginTop: '16px',
+                                        }}
+                                    >
+                                        <strong>Cập nhật thông tin tài khoản thành công!</strong>
+                                    </div>
+                                )}
                                 <div className={cx('footer-container')}>
                                     <button className={cx('btn')}>Hủy</button>
-                                    <button className={cx('btn', 'disabled')} onClick={handleUpdateProfile} ref={btnSubmit}>
+                                    <button
+                                        className={cx('btn', 'disabled')}
+                                        onClick={handleUpdateProfile}
+                                        ref={btnSubmit}
+                                    >
                                         Lưu
                                     </button>
                                 </div>

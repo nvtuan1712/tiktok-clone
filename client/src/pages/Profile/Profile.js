@@ -58,7 +58,7 @@ function Profile() {
                 console.log(error);
             }
         }
-    },[nickname, check])
+    },[check, nickname])
 
     //lấy người người dùng follow của người dùng đang đăng nhập
     useEffect(() => {
@@ -80,7 +80,7 @@ function Profile() {
     return (
         <div className={cx('profile-layout')}>
             <div className={cx('profile-content')}>
-                {time && <ProfileHeader user={user} followUser={followingAccounts}/>}
+                {time && <ProfileHeader user={user} followUser={followingAccounts} />}
                 {time && <ProfileMain followUser={followingAccounts}/>}
             </div>
         </div>

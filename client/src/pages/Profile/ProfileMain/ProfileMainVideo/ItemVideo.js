@@ -9,7 +9,7 @@ import styles from '~/pages/Profile/Profile.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ItemVideo({ data, followUser }) {
+function ItemVideo({ data, followUser, check, onClick }) {
     const [show, setShow] = useState(false)
     const video = useRef()
 
@@ -22,6 +22,7 @@ function ItemVideo({ data, followUser }) {
         
         // This will replace the current entry in the browser's history, without reloading
         window.history.replaceState(nextState, nextTitle, nextURL);
+        onClick()
     }
 
     const test = (e) => {
@@ -45,7 +46,7 @@ function ItemVideo({ data, followUser }) {
 
     return (
         <>
-            {show && <Video data={data} onClick={handleHide} followUser={followUser} />}
+            {show && <Video data={data} onClick={handleHide} followUser={followUser} check={check}/>}
             <div className={cx('item-container')}>
                 <div className={cx('item-video')}>
                     <div style={{ paddingTop: '132.653%' }}>

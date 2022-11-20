@@ -11,6 +11,7 @@
     border-radius: 4px;
     transition: background-color ease-in-out 200ms;
     cursor: pointer;
+    height: 40px;
 
     &.active {
         color: var(--priamry);
@@ -33,7 +34,12 @@
     margin-left: 8px;
     margin-top: 6px;
 }
-
+.icon {
+    .MuiSvgIcon-root{
+        width: 1.5em;
+        height: 1.5rem;
+    }
+}
 .icon, .active-icon {
     display: flex;
 }

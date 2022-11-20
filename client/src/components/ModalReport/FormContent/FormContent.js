@@ -94,7 +94,6 @@ function FormContentFooter() {
     const handleSubmitRP = (e) => {
         e.preventDefault();
         const itemContent = document.getElementsByTagName('li')
-        console.log(itemContent);
     }
 
     return (

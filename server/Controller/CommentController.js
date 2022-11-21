@@ -30,7 +30,7 @@ const getListComment = async (req, res) => {
             path: 'comment',
             populate: { path: 'author' }
         })
-        res.send(listComment)
+        res.send(listComment.reverse())
     } catch (error) {
         res.status(404).send(error);
     }

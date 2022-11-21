@@ -342,7 +342,7 @@ const getReportVideo = async (req, res) => {
     const result = {
       total: videos.length,
       totalWatch: videos
-        .map((item) => item.comment_count)
+        .map((item) => item.watch_count)
         .reduce((prev, next) => prev + next),
       totalHeartCount: videos
         .map((item) => item.heart_count)

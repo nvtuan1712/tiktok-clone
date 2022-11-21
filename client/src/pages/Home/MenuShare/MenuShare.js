@@ -23,7 +23,7 @@ import styles from './MenuShare.module.scss';
 
 const cx = classNames.bind(styles);
 
-function MenuShare({ children }) {
+function MenuShare({ children, data, onClickRender }) {
     const shareArr = [
         {
             icon: <Emble />,
@@ -51,7 +51,7 @@ function MenuShare({ children }) {
             isConcat: [],
         },
     ];
-    
+
     const arrayShare1 = [
         {
             icon: <Twitter />,
@@ -83,7 +83,6 @@ function MenuShare({ children }) {
         },
     ];
 
-
     const [arrayShare, setArrayShare] = useState(shareArr);
 
     const concatArrShare = () => {
@@ -92,6 +91,8 @@ function MenuShare({ children }) {
 
             return (
                 <ItemMenuShare
+                    onClickRender={onClickRender}
+                    data={data}
                     key={index}
                     text={item.text}
                     icon={item.icon}
@@ -119,13 +120,7 @@ function MenuShare({ children }) {
 
     return (
         <>
-            <Tippy
-                interactive
-                render={renderListShare}
-                offset={[90, 4]}
-                delay={[0, 500]}
-                onHide={resetShareMenu}
-            >
+            <Tippy interactive render={renderListShare} offset={[90, 4]} delay={[0, 500]} onHide={resetShareMenu}>
                 {children}
             </Tippy>
         </>

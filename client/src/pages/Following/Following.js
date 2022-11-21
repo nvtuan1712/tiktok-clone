@@ -1,6 +1,6 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import classNames from 'classnames/bind';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 
 //Thư viện internor sau(thư viện bên trong dự án)
@@ -19,6 +19,7 @@ function Home() {
     const [show, setShow] = useState(false);
     const [show2, setShow2] = useState(false);
     const [check, setCheck] = useState([]);
+    const toastNotice = useRef();
 
     useEffect(() => {
         document.title = 'Đang follow - Xem video từ những nhà sáng tạo mà bạn follow | TikTok';
@@ -107,6 +108,12 @@ function Home() {
     }, [followingAccounts.length]);
 
     const renderData = () => {
+        toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
+            'hideToast',
+        )} ease 1s 4s forwards`;
+        setTimeout(() => {
+            toastNotice.current.style.animation = 'none';
+        }, 5000);
         try {
             axios
                 .get(`${configBaseURL}/api/video/get-list-video-login-follow`, configHeader)
@@ -123,6 +130,13 @@ function Home() {
 
     return (
         <div className={cx('main-container')}>
+            <div className={cx('toast')} ref={toastNotice}>
+                <div className={cx('toast-notice')}>
+                    <div className={cx('toast-notice-content')}>
+                        <div>Coppy URL thành công!</div>
+                    </div>
+                </div>
+            </div>
             {show ? (
                 <>
                     {show2 && followingAccounts.length > 0 ? (

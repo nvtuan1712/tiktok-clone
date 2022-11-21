@@ -85,9 +85,11 @@ function Header({ className, children }) {
                                     <span className={cx('upload-text')}>Tải lên</span>
                                 </div>
                             </Link>
-                            <Button primary className={cx('btn-login')}>
-                                Đăng nhập
-                            </Button>
+                            <Link to={config.routes.login}>
+                                <Button primary className={cx('btn-login')}>
+                                    Đăng nhập
+                                </Button>
+                            </Link>
                         </>
                     )}
                     <Menu

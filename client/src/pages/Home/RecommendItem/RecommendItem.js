@@ -168,7 +168,7 @@ function RecommendItem({ data, index, followUser, check, onClick }) {
                     <div className={cx('video-action-item-container')}>
                         <LikeVideo data={data} check={check} onClick={onClick}/>
                         <CommentVideo data={data} onClick={test}/>
-                        <ShareVideo data={data} />
+                        <ShareVideo data={data}  onClick={onClick}/>
                     </div>
                 </div>
             </div>
@@ -247,9 +247,9 @@ function CommentVideo({ data, onClick }) {
     );
 }
 
-function ShareVideo({ data }) {
+function ShareVideo({ data, onClick }) {
     return (
-        <MenuShare className={cx('share-container')}>
+        <MenuShare className={cx('share-container')} data={data} onClickRender={onClick}>
             <button className={cx('btn-action-item')}>
                 <span className={cx('share-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
                     <Share />

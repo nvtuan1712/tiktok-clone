@@ -23,7 +23,7 @@ import styles from '~/pages/Profile/Profile.module.scss';
 
 const cx = classNames.bind(styles);
 
-function MenuShareProfile({ children }) {
+function MenuShareProfile({ children, onClickShowToast }) {
     const shareArr = [
         {
             icon: <Emble />,
@@ -92,6 +92,7 @@ function MenuShareProfile({ children }) {
 
             return (
                 <ItemMenuShareProfile
+                    onClickShowToast={onClickShowToast}
                     key={index}
                     text={item.text}
                     icon={item.icon}

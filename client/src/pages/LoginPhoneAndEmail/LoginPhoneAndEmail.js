@@ -77,13 +77,9 @@ function LoginByEmail({ onClick }) {
     };
 
     const handleBlurPass = () => {
-        var passformat = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
         if (inputPass.current.value === '') {
             setShowErrorPass(true);
             setTextErrorPass('Mật khẩu không được để trống!');
-        } else if (!inputPass.current.value.match(passformat)) {
-            setShowErrorPass(true);
-            setTextErrorPass('Mật khẩu phải có ít nhất 1 chữ số, 1 chữ cái thường, 1 chữ cái hoa và lớn hơn 8 ký tự!');
         } else {
             setShowErrorPass(false);
             setShowErrorPass('');
@@ -136,48 +132,50 @@ function SubmitInfo({ email1, password1, change }) {
     const [showErrorText, setShowErrorText] = useState('email');
 
     const handleLogin = async (e) => {
-        try {
-            e.preventDefault();
-            //lấy value trên form
-            const email = email1.current.value;
-            const password = password1.current.value;
-
-            //gửi value từ form client đến server
-            const respone = await axios.post(`${configBaseURL}/api/auth/login/phone-or-email`, {
-                email: email,
-                password: password,
-            });
-
-            if (respone.status === 200) {
-                setShowError(false)
-                const accessToken = respone.data.accessToken;
-                //decode lay ra thong tin payload
-                const payloadDecoded = jwt_decode(accessToken);
-                const idAccount = payloadDecoded._id;
-                const nickName = payloadDecoded.nickname;
-                const idUser = payloadDecoded.iduser;
-                const avatar = payloadDecoded.avatar;
-
-                if (payloadDecoded.role === 'user') {
-                    window.location.href = config.routes.home;
-                } else {
-                    window.location.href = config.routes.dashboard;
+        if(email1.current.value !== '' && password1.current.value !== '') {
+            try {
+                e.preventDefault();
+                //lấy value trên form
+                const email = email1.current.value;
+                const password = password1.current.value;
+    
+                //gửi value từ form client đến server
+                const respone = await axios.post(`${configBaseURL}/api/auth/login/phone-or-email`, {
+                    email: email,
+                    password: password,
+                });
+    
+                if (respone.status === 200) {
+                    setShowError(false)
+                    const accessToken = respone.data.accessToken;
+                    //decode lay ra thong tin payload
+                    const payloadDecoded = jwt_decode(accessToken);
+                    const idAccount = payloadDecoded._id;
+                    const nickName = payloadDecoded.nickname;
+                    const idUser = payloadDecoded.iduser;
+                    const avatar = payloadDecoded.avatar;
+    
+                    if (payloadDecoded.role === 'user') {
+                        window.location.href = config.routes.home;
+                    } else {
+                        window.location.href = config.routes.dashboard;
+                    }
+    
+                    //save accessToken to client
+                    localStorage.setItem('accessToken', accessToken);
+                    localStorage.setItem('idAccount', idAccount);
+                    localStorage.setItem('nickName', nickName);
+                    localStorage.setItem('idUser', idUser);
+                    localStorage.setItem('avatar', avatar);
                 }
-
-                //save accessToken to client
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('idAccount', idAccount);
-                localStorage.setItem('nickName', nickName);
-                localStorage.setItem('idUser', idUser);
-                localStorage.setItem('avatar', avatar);
-            }
-        } catch (error) {
-            if (error.response.status === 400) {
-                if(error.response.data === 'Invalid Email'){
-                    setShowError(true)
-                } else {
-                    setShowError(true)
-                    setShowErrorText('mật khẩu')
+            } catch (error) {
+                if (error.response.status === 400) {
+                    if(error.response.data === 'Invalid Email'){
+                        setShowError(true)
+                    } else {
+                        setShowError(true)
+                        setShowErrorText('mật khẩu')
+                    }
                 }
             }
         }

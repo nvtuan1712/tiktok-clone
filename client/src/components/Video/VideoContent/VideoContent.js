@@ -6,17 +6,19 @@ import { Link, useParams } from 'react-router-dom';
 import { configBaseURL, configHeader } from '~/common/common';
 import { Comment, Heart, LikedVideo, MoreAction, Music } from '~/components/Icons';
 import config from '~/config';
+import SekeletonLoadingForList from '~/layouts/components/SekeletonLoading/SeleketonLoadingForList/SekeletonLoadingForList';
 import ItemComment from './ItemComment';
+import MenuMoreActions from './MenuMoreActions';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './VideoContent.module.scss';
 
 const cx = classNames.bind(styles);
 
-function VideoContent({ data, followUser, check, onClick }) {
+function VideoContent({ data, followUser, check, onClick, onClickShowToast }) {
     return (
         <div className={cx('container')}>
-            <VideoInfo data={data} followUser={followUser} />
+            <VideoInfo data={data} followUser={followUser} onClick={onClick} onClickShowToast={onClickShowToast}/>
             <MainContent data={data} check={check} onClick={onClick} />
             <CommentList data={data} onClick={onClick} />
         </div>
@@ -24,7 +26,7 @@ function VideoContent({ data, followUser, check, onClick }) {
 }
 
 //Video Info
-function VideoInfo({ data, followUser }) {
+function VideoInfo({ data, followUser, onClick, onClickShowToast }) {
     const [check, setCheck] = useState(false);
     const [checkCurrent, setCheckCurrent] = useState(false);
     const [time, setTime] = useState(false);
@@ -97,7 +99,7 @@ function VideoInfo({ data, followUser }) {
             {time && (
                 <>
                     {checkCurrent ? (
-                        <MoreAction />
+                        <MenuMoreActions data={data} onClick={onClick} onClickShowToast={onClickShowToast}><div><MoreAction /></div></MenuMoreActions>
                     ) : (
                         <>
                             {check ? (
@@ -133,10 +135,8 @@ function MainContent({ data, check, onClick }) {
             toastNotice.current.style.animation = 'none';
         }, 5000);
         try {
-            await axios.post(`${configBaseURL}/api/video/increase-share/${data.id}`)
-        } catch (error) {
-            
-        }
+            await axios.post(`${configBaseURL}/api/video/increase-share/${data.id}`);
+        } catch (error) {}
         onClick();
     };
 
@@ -149,7 +149,6 @@ function MainContent({ data, check, onClick }) {
             });
         }
     }, [check, data.id]);
-    console.log(check);
 
     const handlerLikeVideo = async () => {
         try {
@@ -260,7 +259,6 @@ function CommentList({ data, onClick }) {
         } catch (error) {}
     }, [data.id]);
 
-
     const handleChangeColor = () => {
         if (input.current.value !== '') {
             commentBtn.current.classList.add(cx('active'));
@@ -270,7 +268,7 @@ function CommentList({ data, onClick }) {
     };
 
     const handlePostComment = async () => {
-        if (localStorage.getItem('accessToken')) {
+        if (localStorage.getItem('accessToken') && input.current.value !== '') {
             try {
                 await axios.post(`${configBaseURL}/api/comment/post/${data.id}`, {
                     content: input.current.value,
@@ -281,18 +279,21 @@ function CommentList({ data, onClick }) {
                     setDataComment(response.data[0].comment);
                 }
             } catch (error) {}
+            input.current.value = '';
             onClick();
-            input.current.value = ''
         }
     };
 
     return (
         <>
             <div className={cx('comment-list-container')}>
-                {show &&
-                    dataComment.map((item, index) => {
-                        return <ItemComment data={item} key={index} />;
-                    })}
+                {show
+                    ? dataComment.reverse().map((item, index) => {
+                          return <ItemComment data={item} key={index} />;
+                      })
+                    : dataComment.map(() => {
+                          return <SekeletonLoadingForList />;
+                      })}
             </div>
             <div className={cx('bottom-comment-container')}>
                 <div className={cx('comment-container')}>

@@ -1,7 +1,7 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import axios from 'axios';
 import classNames from 'classnames/bind';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { configBaseURL, configHeader } from '~/common/common';
 import SekeletonLoadingForHome from '~/layouts/components/SekeletonLoading/SeleketonLoadingForHome/SeleketonLoadingForHome';
 
@@ -16,6 +16,7 @@ function Home() {
     const [check, setCheck] = useState([]);
     const [followingAccounts, setFollowingAccount] = useState([]);
     const [show, setShow] = useState(false);
+    const toastNotice = useRef();
 
     useEffect(() => {
         document.title = 'Xem các video thịnh hành dành cho bạn | TikTok';
@@ -102,6 +103,12 @@ function Home() {
 
 
     const renderData = () => {
+        toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
+            'hideToast',
+        )} ease 1s 4s forwards`;
+        setTimeout(() => {
+            toastNotice.current.style.animation = 'none';
+        }, 5000);
         try {
             axios
                 .get(`${configBaseURL}/api/video/get-list-video-login`, configHeader)
@@ -118,6 +125,13 @@ function Home() {
 
     return (
         <div className={cx('main-container')}>
+            <div className={cx('toast')} ref={toastNotice}>
+                <div className={cx('toast-notice')}>
+                    <div className={cx('toast-notice-content')}>
+                        <div>Coppy URL thành công!</div>
+                    </div>
+                </div>
+            </div>
             <div>
                 {show ? (
                     <>

@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import styles from './Profile.module.scss';
 import ProfileHeader from './ProfileHeader';
 import ProfileMain from './ProfileMain';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import {useParams} from "react-router-dom";
 import { configBaseURL, configHeader } from '~/common/common'
@@ -19,6 +19,7 @@ function Profile() {
     const [followingAccounts, setFollowingAccount] = useState([]);  
     const [time, setTime] = useState(false)
     const {nickname} = useParams();
+    const toastNotice = useRef();
     const check = localStorage.getItem('accessToken')
 
     //lấy người dùng khi đăng nhập và khi không
@@ -76,11 +77,27 @@ function Profile() {
                 console.log(error);
             }
         }, []);
-
+    
+    const showToast = () => {
+        toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
+            'hideToast',
+        )} ease 1s 4s forwards`;
+        setTimeout(() => {
+            toastNotice.current.style.animation = 'none';
+        }, 5000);
+    }
+    
     return (
         <div className={cx('profile-layout')}>
+            <div className={cx('toast')} ref={toastNotice}>
+                <div className={cx('toast-notice')}>
+                    <div className={cx('toast-notice-content')}>
+                        <div>Coppy URL thành công!</div>
+                    </div>
+                </div>
+            </div>
             <div className={cx('profile-content')}>
-                {time && <ProfileHeader user={user} followUser={followingAccounts} />}
+                {time && <ProfileHeader user={user} followUser={followingAccounts} onClickShowToast={showToast}/>}
                 {time && <ProfileMain followUser={followingAccounts}/>}
             </div>
         </div>

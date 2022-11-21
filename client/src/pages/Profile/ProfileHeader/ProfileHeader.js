@@ -14,7 +14,7 @@ import ModalUpdateProfile from '../ModalUpdateProfile';
 
 const cx = classNames.bind(styles);
 
-function ProfileHeader({ user, followUser, onClick }) {
+function ProfileHeader({ user, followUser, onClickShowToast }) {
     const [currentUser, setCurrentUser] = useState(false);
     const [check, setCheck] = useState(false);
     const [checkTick, setCheckTick] = useState(false);
@@ -135,7 +135,7 @@ function ProfileHeader({ user, followUser, onClick }) {
                 ) : (
                     <h2 className={cx('desc')}>{user.data.description}</h2>
                 )}
-                <MenuShareProfile>
+                <MenuShareProfile onClickShowToast={onClickShowToast}>
                     <div className={cx('share-actions')}>
                         <ShareProfile />
                     </div>

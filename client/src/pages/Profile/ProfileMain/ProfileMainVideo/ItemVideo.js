@@ -46,7 +46,7 @@ function ItemVideo({ data, followUser, check, onClick }) {
 
     return (
         <>
-            {show && <Video data={data} onClick={handleHide} followUser={followUser} check={check}/>}
+            {show && <Video data={data} onClick={handleHide} followUser={followUser} check={check} onClickRender={onClick} />}
             <div className={cx('item-container')}>
                 <div className={cx('item-video')}>
                     <div style={{ paddingTop: '132.653%' }}>

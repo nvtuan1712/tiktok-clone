@@ -8,7 +8,7 @@ import styles from './TagMainVideo.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ItemVideo({ data, metadata, onClick }) {
+function ItemVideo({ data, metadata, onClick, check }) {
     const [show, setShow] = useState(false);
     const video = useRef();
 
@@ -44,7 +44,7 @@ function ItemVideo({ data, metadata, onClick }) {
 
     return (
         <>
-            {show && <Video data={data} onClick={handleHide} followUser={metadata} />}
+            {show && <Video data={data} onClick={handleHide} followUser={metadata} check={check} onClickRender={onClick}/>}
             <div className={cx('item-container')}>
                 <div className={cx('item-video')}>
                     <div style={{ paddingTop: '132.653%' }}>

@@ -5,7 +5,7 @@ import styles from './TagMainVideo.module.scss';
 import ItemVideo from './ItemVideo';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { configBaseURL } from '~/common/common';
+import { configBaseURL, configHeader } from '~/common/common';
 import { useParams } from 'react-router-dom';
 import SekeletonLoadingForVideo from '~/layouts/components/SekeletonLoading/SekeletonForVideo/SekeletonLoadingForVideo';
 
@@ -13,6 +13,7 @@ const cx = classNames.bind(styles);
 
 function TagMainVideo({ metadata, onClick }) {
     const [data, setData] = useState([]);
+    const [check, setCheck] = useState([]);
     const [show, setShow] = useState(false);
     const { name } = useParams();
 
@@ -33,6 +34,23 @@ function TagMainVideo({ metadata, onClick }) {
         } catch (error) {}
     }, [name]);
 
+    useEffect(() => {
+        try {
+            axios
+                .get(`${configBaseURL}/api/users/get-liked-video`, configHeader)
+                .then((result) => {
+                    if(result) {
+                        setCheck(result.data)
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    },[]);
+
     return (
         <div className={cx('grid-video-container')}>
             {data.length > 0 ? (
@@ -40,7 +58,7 @@ function TagMainVideo({ metadata, onClick }) {
                     {show ? (
                         <>
                             {data.map((item, index) => {
-                                return <ItemVideo data={item} key={index} metadata={metadata}  onClick={onClick}/>;
+                                return <ItemVideo data={item} key={index} metadata={metadata} check={check} onClick={onClick}/>;
                             })}
                         </>
                     ) : (

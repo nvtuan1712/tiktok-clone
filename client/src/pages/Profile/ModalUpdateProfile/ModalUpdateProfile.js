@@ -106,7 +106,6 @@ function ModalUpdateProfile({ data, onClick }) {
                         'Content-Type': `multipart/form-data; boundary=${form._boundary}`,
                     },
                 });
-                console.log(response);
                 
                 if (response.status === 200) {
                     const accessToken = response.data.accessToken;

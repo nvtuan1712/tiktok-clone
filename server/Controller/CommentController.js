@@ -30,7 +30,26 @@ const getListComment = async (req, res) => {
             path: 'comment',
             populate: { path: 'author' }
         })
-        res.send(listComment.reverse())
+        res.send(listComment)
+    } catch (error) {
+        res.status(404).send(error);
+    }
+}
+
+const deleteComment = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const idVideo = req.params.idVideo;
+        const currentVideo = await videoModel.findOne({ _id: idVideo })
+
+        await commentModel.deleteOne({ _id: id})
+
+        await videoModel
+        .updateOne(
+            { _id: idVideo },
+            { $set: { comment_count: currentVideo.comment_count - 1 } }
+        )
+        res.status(200).send('Xóa thành công!')
     } catch (error) {
         res.status(404).send(error);
     }
@@ -39,4 +58,5 @@ const getListComment = async (req, res) => {
 module.exports = {
     postComment: postComment,
     getListComment: getListComment,
+    deleteComment: deleteComment,
 }

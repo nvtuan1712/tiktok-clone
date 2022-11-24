@@ -2,23 +2,20 @@
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import { LikeComment, MoreAction } from '~/components/Icons';
+import MenuMoreActionsComment from './MenuMoreActionsComment';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './VideoContent.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ItemComment({ data }) {
+function ItemComment({ data, onClick, onClickRenderComment, metadata }) {
     return (
         <div className={cx('comment-item-container')}>
             <div className={cx('comment-content-container')}>
                 <Link to={`/${data.author.nickname}`} className={cx('style-userlink-avatar')}>
                     <span className={cx('avatar-span')}>
-                        <img
-                            src={data.author.avatar}
-                            alt="avatar"
-                            loading="lazy"
-                        />
+                        <img src={data.author.avatar} alt="avatar" loading="lazy" />
                     </span>
                 </Link>
                 <div className={cx('content-cm-container')}>
@@ -32,10 +29,16 @@ function ItemComment({ data }) {
                 </div>
                 <div className={cx('action-container')}>
                     <div className={cx('more-container')}>
-                        <div><MoreAction className={cx('more-icon')}/></div>
+                        <MenuMoreActionsComment data={data} onClickRenderComment={onClickRenderComment} onClick={onClick} metadata={metadata}>
+                            <div>
+                                <MoreAction className={cx('more-icon')}/>
+                            </div>
+                        </MenuMoreActionsComment>
                     </div>
                     <div className={cx('like-wrapper')}>
-                        <div><LikeComment/></div>
+                        <div>
+                            <LikeComment />
+                        </div>
                         <span>{data.heart_count}</span>
                     </div>
                 </div>

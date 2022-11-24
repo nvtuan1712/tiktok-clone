@@ -274,22 +274,34 @@ function CommentList({ data, onClick }) {
                     content: input.current.value,
                     iduser: localStorage.getItem('idUser'),
                 });
-                const response = await axios.get(`${configBaseURL}/api/comment/get-list-comment/${data.id}`);
-                if (response) {
-                    setDataComment(response.data[0].comment);
-                }
             } catch (error) {}
             input.current.value = '';
             onClick();
+            renderData()
         }
     };
+
+    const renderData = () => {
+        try {
+            axios
+                .get(`${configBaseURL}/api/comment/get-list-comment/${data.id}`)
+                .then((result) => {
+                    if (result) {
+                        setDataComment(result.data[0].comment);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {}
+    }
 
     return (
         <>
             <div className={cx('comment-list-container')}>
                 {show
                     ? dataComment.reverse().map((item, index) => {
-                          return <ItemComment data={item} key={index} />;
+                          return <ItemComment data={item} key={index} onClickRenderComment={renderData} onClick={onClick} metadata={data}/>;
                       })
                     : dataComment.map(() => {
                           return <SekeletonLoadingForList />;

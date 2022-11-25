@@ -278,6 +278,8 @@ function CommentList({ data, onClick }) {
             input.current.value = '';
             onClick();
             renderData()
+        } else {
+            window.location.href = config.routes.login
         }
     };
 

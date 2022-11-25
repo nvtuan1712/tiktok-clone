@@ -1,5 +1,6 @@
 const commentModel = require('../Models/CommentModel')
 const videoModel = require('../Models/VideoModel')
+const userModel = require('../Models/UserModel')
 
 const postComment = async (req, res) => {
     try {
@@ -55,8 +56,67 @@ const deleteComment = async (req, res) => {
     }
 }
 
+const likeComment = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const nickname = req.params.nickname;
+        const currentComment = await commentModel.findOne({ _id: id });
+        await commentModel
+        .updateOne(
+            { _id: id },
+            { $set: { heart_count: currentComment.heart_count + 1 } }
+        )
+
+        await userModel
+        .updateOne(
+            { nickname: nickname },
+            { $push: { likedComment: id } }
+        )
+
+        res.status(200).send('Yêu thích thành công!')
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}
+
+const unLikeComment = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const nickname = req.params.nickname;
+        const currentComment = await commentModel.findOne({ _id: id });
+        await commentModel
+        .updateOne(
+            { _id: id },
+            { $set: { heart_count: currentComment.heart_count - 1 } }
+        )
+
+        await userModel
+        .updateOne(
+            { nickname: nickname },
+            { $pull: { likedComment: id } }
+        )
+
+        res.status(200).send('Hủy yêu thích thành công!')
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}
+
+const getListLikeComment = async (req, res) => {
+    try {
+        const nickname = req.params.nickname;
+        const listComment = await userModel.find({ nickname: nickname})
+        res.status(200).send(listComment);
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}
+
 module.exports = {
     postComment: postComment,
     getListComment: getListComment,
     deleteComment: deleteComment,
+    likeComment: likeComment,
+    unLikeComment: unLikeComment,
+    getListLikeComment: getListLikeComment,
 }

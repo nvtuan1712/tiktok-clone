@@ -25,15 +25,17 @@ function MenuMoreActions({ children, data, onClick, onClickRenderComment, metada
     ];
 
     const handelDeleteComment = async () => {
-        try {
-            await axios.post(`${configBaseURL}/api/comment/delete/${metadata.id}/${data.id}`)
-        } catch (error) {
-            console.log(error);
+        if(localStorage.getItem('accessToken')) {
+            try {
+                await axios.post(`${configBaseURL}/api/comment/delete/${metadata.id}/${data.id}`)
+            } catch (error) {
+                console.log(error);
+            }
+            setTimeout(() => {
+                onClick()
+                onClickRenderComment()
+            }, 500)
         }
-        setTimeout(() => {
-            onClick()
-            onClickRenderComment()
-        }, 500)
     }
 
     const arr = () => {

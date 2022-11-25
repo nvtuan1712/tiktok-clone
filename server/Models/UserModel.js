@@ -31,6 +31,9 @@ const UserSchema = new mongoose.Schema({
   liked: [{
     type: mongoose.Schema.Types.ObjectId, ref: 'Video'
   }],
+  likedComment: [{
+    type: mongoose.Schema.Types.ObjectId, ref: 'Comment'
+  }],
   description: {
     type: String,
     default: '',

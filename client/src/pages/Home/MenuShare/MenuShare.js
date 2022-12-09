@@ -19,7 +19,8 @@ import {
 } from '~/components/Icons';
 import ItemMenuShare from './ItemMenuShare';
 import styles from './MenuShare.module.scss';
-// import { Wrapper as PopperWrapper } from '~/components/Popper';
+import axios from 'axios';
+import { configBaseURL } from '~/common/common';
 
 const cx = classNames.bind(styles);
 
@@ -36,6 +37,7 @@ function MenuShare({ children, data, onClickRender }) {
         {
             icon: <ShareFaceBook />,
             text: 'Chia sẻ với Facebook',
+            isConcat1: [],
         },
         {
             icon: <ShareWhatsApp />,
@@ -88,6 +90,7 @@ function MenuShare({ children, data, onClickRender }) {
     const concatArrShare = () => {
         return arrayShare.map((item, index) => {
             const isParent = !!item.isConcat;
+            const isParent1 = !!item.isConcat1;
 
             return (
                 <ItemMenuShare
@@ -97,10 +100,15 @@ function MenuShare({ children, data, onClickRender }) {
                     text={item.text}
                     icon={item.icon}
                     className={cx('share-text')}
-                    onclick={() => {
+                    onclick={async () => {
                         if (isParent) {
                             setArrayShare(arrayShare.slice(0, 5).concat(arrayShare1));
-                        } else {
+                        }
+                        if(isParent1) {
+                            window.open("https://www.facebook.com/sharer/sharer.php?u=example.org", '_blank').focus()
+                            try {
+                                await axios.post(`${configBaseURL}/api/video/increase-share/${data.id}`);
+                            } catch (error) {}
                         }
                     }}
                 />

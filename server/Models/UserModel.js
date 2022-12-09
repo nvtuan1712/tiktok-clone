@@ -34,6 +34,12 @@ const UserSchema = new mongoose.Schema({
   likedComment: [{
     type: mongoose.Schema.Types.ObjectId, ref: 'Comment'
   }],
+  favorites: [{
+    type: String,
+  }],
+  isNewUser: {
+    type: Boolean,
+  },
   description: {
     type: String,
     default: '',

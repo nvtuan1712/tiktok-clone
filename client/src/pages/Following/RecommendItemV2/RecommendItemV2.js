@@ -15,6 +15,7 @@ const cx = classNames.bind(styles);
 function RecommendItem({ data }) {
     const [checkFollow, setCheckFollow] = useState(false);
     const iduser = useRef();
+    const video = useRef();
 
     const handleFollow = async (e) => {
         e.preventDefault();
@@ -29,8 +30,7 @@ function RecommendItem({ data }) {
             };
             try {
                 //
-                await axios
-                    .post('http://localhost:5000/api/users/follow-user', configHeader1)
+                await axios.post('http://localhost:5000/api/users/follow-user', configHeader1);
             } catch (error) {
                 console.log(error);
             }
@@ -39,7 +39,7 @@ function RecommendItem({ data }) {
         }
     };
 
-    const handleUnFollow = async() => {
+    const handleUnFollow = async () => {
         const configHeader1 = {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -50,18 +50,26 @@ function RecommendItem({ data }) {
         setCheckFollow(false);
         try {
             //
-            await axios.post('http://localhost:5000/api/users/unfollow-user', configHeader1)
+            await axios.post('http://localhost:5000/api/users/unfollow-user', configHeader1);
         } catch (error) {
             console.log(error);
         }
-    }
+    };
+
+    const handlerVideoPlay = () => {
+        video.current.play();
+    };
+
+    const handlerVideoPause = () => {
+        video.current.pause();
+    };
 
     return (
-        <div className={cx('DUser-card')}>
+        <div className={cx('DUser-card')} onMouseMove={handlerVideoPlay} onMouseOut={handlerVideoPause}>
             <Link target="_blank" to={`/${data.author.nickname}`} className={cx('AUser-card')}>
                 <div className={cx('video-container')}>
                     <div className={cx('player-wrapper')}>
-                        <video muted className={cx('video')} src={data.video}></video>
+                        <video muted className={cx('video')} src={data.video} ref={video}></video>
                     </div>
                 </div>
                 <div className={cx('info-container')}>
@@ -71,7 +79,9 @@ function RecommendItem({ data }) {
                     <h5 className={cx('user-name')}>{data.author.name}</h5>
                     <h6 className={cx('user-nickname')}>
                         <span>{data.author.nickname}</span>
-                        <div style={{marginLeft: '4px', marginTop: '4px'}}>{data.author.tick ? <CheckProfile className={cx('tick')}/> : null}</div>
+                        <div style={{ marginLeft: '4px', marginTop: '4px' }}>
+                            {data.author.tick ? <CheckProfile className={cx('tick')} /> : null}
+                        </div>
                     </h6>
                     <h6 style={{ display: 'none' }} ref={iduser}>
                         {data.author.id}

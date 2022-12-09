@@ -121,6 +121,8 @@ function Menu({ children, hideOnClick = false, onChange = defaultFn, setState, s
                             localStorage.removeItem('idAccount')
                             localStorage.removeItem('nickName')
                             localStorage.removeItem('idUser')
+                            localStorage.removeItem('isNewUser')
+                            localStorage.removeItem('avatar')
                             window.location.href = config.routes.home
                             setState(false)
                         }

@@ -91,12 +91,12 @@ function Home() {
                             setTimeout(() => {
                                 setShow2(true);
                             }, 1000);
+                            const authors = result.data.map((o) => o.author.id);
+                            const filtered = result.data.filter(
+                                ({ author }, index) => !authors.includes(author.id, index + 1),
+                            );
+                            setData(filtered);
                         }
-                        const authors = result.data.map((o) => o.author.id);
-                        const filtered = result.data.filter(
-                            ({ author }, index) => !authors.includes(author.id, index + 1),
-                        );
-                        setData(filtered);
                     })
                     .catch((err) => {
                         console.log(err);

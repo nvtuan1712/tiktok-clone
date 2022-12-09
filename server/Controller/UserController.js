@@ -273,6 +273,21 @@ const updateProfile = async (req, res) => {
   }
 };
 
+//update ưa thích người dùng và chuyển isNameUser sang false
+const updateFavoritesAndIsNewUser = async(req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await userModel
+      .updateOne(
+        { _id: id },
+        { $set: { favorites: req.body.favorites, isNewUser: false } }
+      )
+      res.status(200).send('update successfully')
+    } catch (error) {
+      res.status(404).send(error);
+    }
+}
+
 ////Phần của Linh///////////////////////////////////////
 // admin thay đổi trạng thái tick cho người dùng
 const changeStatusTick = async (req, res) => {
@@ -326,7 +341,7 @@ const deleteUser = async (req, res) => {
     return res.status(500).json({ message: `Internal Server Error: ${err}` });
   }
 };
-// update music
+// update user
 const updateUser = async (req, res) => {
   const { nickname, name, description } = req.body;
   try {
@@ -384,6 +399,7 @@ module.exports = {
   getLikedVideo: getLikedVideo,
   searchUser: searchUser,
   updateProfile: updateProfile,
+  updateFavoritesAndIsNewUser: updateFavoritesAndIsNewUser,
   //Phần của Linh
   changeStatusTick: changeStatusTick,
   deleteUser: deleteUser,

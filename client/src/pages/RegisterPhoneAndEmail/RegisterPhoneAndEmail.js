@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { ArrowBack, ArrowDown, PassIcon, PassIconShow } from '~/components/Icons';
 import config from '~/config';
 import { ArrDate, ArrMonth, ArrYear } from './ArrOptionsDate';
-import { configBaseURL } from '~/common/common'
+import { configBaseURL } from '~/common/common';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './RegisterPhoneAndEmail.module.scss';
@@ -215,7 +215,10 @@ function RegisterByEmail() {
         } else if (!inputPhone.current.value.match(phoneformat)) {
             setShowErrorPhone(true);
             setTextErrorPhone('Số điện thoại sai định dạng!');
-        } else {
+        } else if(inputPhone.current.value.length < 10) {
+            setShowErrorPhone(true);
+            setTextErrorPhone('Số điện thoại phải có tối thiểu 10 chữ số')
+        }else {
             setShowErrorPhone(false);
             setShowErrorPhone('');
         }
@@ -329,42 +332,47 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
     const [showError, setShowError] = useState(false);
 
     const handleRegister = async (e) => {
-        try {
-            e.preventDefault();
-            //lấy value trên form
-            const day = document.querySelector('#day');
-            const month = document.querySelector('#month');
-            const year = document.querySelector('#year');
-            const email = email1.current.value;
-            const password = pass.current.value;
-            const phone = phone1.current.value;
-            const birthday = `${day.innerText}/${month.innerText}/${year.innerText}`;
-            const role = 'user';
+        if (
+            email1.current.value !== '' &&
+            pass.current.value !== '' &&
+            pass1.current.value !== '' &&
+            phone1.current.value !== ''
+        ) {
+            try {
+                e.preventDefault();
+                //lấy value trên form
+                const day = document.querySelector('#day');
+                const month = document.querySelector('#month');
+                const year = document.querySelector('#year');
+                const email = email1.current.value;
+                const password = pass.current.value;
+                const phone = phone1.current.value;
+                const birthday = `${day.innerText}/${month.innerText}/${year.innerText}`;
+                const role = 'user';
 
-            //gửi value từ form client đến server
-            const respone = await axios.post(`${configBaseURL}/api/auth/register/phone-or-email`, {
-                email: email,
-                password: password,
-                phone: phone,
-                birthday: birthday,
-                role: role,
-            });
-            console.log(respone);
+                //gửi value từ form client đến server
+                const respone = await axios.post(`${configBaseURL}/api/auth/register/phone-or-email`, {
+                    email: email,
+                    password: password,
+                    phone: phone,
+                    birthday: birthday,
+                    role: role,
+                });
 
-            if (respone.status === 200) {
-                setNotiRegisterSuccess(true);
-                setShowError(false)
-                email1.current.value = '';
-                phone1.current.value = '';
-                pass.current.value = '';
-                email1.current.value = '';
-                pass1.current.value = '';
-            }
-        } catch (error) {
-            if(error.response.status === 400) {
-                if(error.response.data === 'Email already exists!') {
-                    setShowError(true);
-                    setNotiRegisterSuccess(false)
+                if (respone.status === 200) {
+                    setNotiRegisterSuccess(true);
+                    setShowError(false);
+                    email1.current.value = '';
+                    phone1.current.value = '';
+                    pass.current.value = '';
+                    pass1.current.value = '';
+                }
+            } catch (error) {
+                if (error.response.status === 400) {
+                    if (error.response.data === 'Email already exists!') {
+                        setShowError(true);
+                        setNotiRegisterSuccess(false);
+                    }
                 }
             }
         }

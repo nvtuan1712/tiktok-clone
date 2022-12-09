@@ -24,11 +24,9 @@ const uploadVideo = async (req, res) => {
   // console.log(req);
   try {
     upload(req, res, (err) => {
-      console.log(req);
       if (err) {
         console.log(err);
       } else {
-        console.log(req);
         let private = false;
         let music = req.body.music;
         if (req.body.selection === "Riêng tư") {
@@ -133,7 +131,7 @@ const getMusicVideo = async (req, res) => {
   }
 };
 
-//lấy ra video của những người không follow
+//lấy ra video khi không đăng nhập
 const getRandomVideo = async (req, res) => {
   try {
     const listVideo = await videoModel
@@ -147,13 +145,14 @@ const getRandomVideo = async (req, res) => {
   }
 };
 
-//lấy ra video của những người không follow nhưng có đăng nhập
+//lấy ra video của những người không follow và có đăng nhập
 const getRandomVideoLogin = async (req, res) => {
   const bearerHeader = req.headers["idaccount"];
   const idAccount = bearerHeader.split(" ")[1];
   const user = await userModel
-    .findOne({ account: idAccount })
-    .populate("fllowing");
+  .findOne({ account: idAccount })
+  .populate("fllowing");
+  const arr = user.favorites
   try {
     const arrFllowing = [];
     user.fllowing.forEach((item) => {
@@ -164,7 +163,18 @@ const getRandomVideoLogin = async (req, res) => {
       .populate("author")
       .populate("music")
       .populate("trendy");
-    res.status(200).send(listVideo);
+    const userVideo = await videoModel
+    .find({ author: user._id})
+    .populate("author")
+    .populate("music")
+    .populate("trendy");
+    const check = listVideo.filter((item) => {
+      const result = arr.find((item1) => {
+        return item.trendy.category === item1
+      })
+      return result
+    })
+    res.status(200).send(check.concat(userVideo));
   } catch (error) {
     res.status(404).send(error);
     console.log(error);

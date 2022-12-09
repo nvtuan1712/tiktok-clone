@@ -13,7 +13,6 @@ import axios from 'axios';
 import { configBaseURL, configHeader } from '~/common/common';
 import config from '~/config';
 
-
 const cx = classNames.bind(styles);
 
 function RecommendItem({ data, followUser, check, onClick }) {
@@ -63,7 +62,10 @@ function RecommendItem({ data, followUser, check, onClick }) {
                         </Link>
                     </div>
                     <div className={cx('desc')}>
-                        <span className={cx('span-text')}>{data.description}</span>
+                        <span className={cx('span-text')}>{data.description}</span>{' '}
+                        <Link className={cx('tag-link')} to={`/tag/${data.trendy.name}`}>
+                            #{data.trendy.name}
+                        </Link>
                     </div>
                     <h4 className={cx('h4link')}>
                         <Link to={`/music/${data.music.name}-${data.music.id}`}>
@@ -75,7 +77,15 @@ function RecommendItem({ data, followUser, check, onClick }) {
                     </h4>
                 </div>
                 {/* video container */}
-                {show && <Video data={data} onClick={handleHide} followUser={followUser} check={check} onClickRender={onClick}/>}
+                {show && (
+                    <Video
+                        data={data}
+                        onClick={handleHide}
+                        followUser={followUser}
+                        check={check}
+                        onClickRender={onClick}
+                    />
+                )}
                 <div className={cx('video-wrapper')}>
                     <div className={cx('video-card-container')}>
                         <canvas width="56.25" height="100" className={cx('canvas-video-player')}></canvas>
@@ -114,14 +124,14 @@ function LikeVideo({ data, check, onClick }) {
     const [change, setChange] = useState();
 
     useEffect(() => {
-        if(check[0].liked.length > 0) {
+        if (check[0].liked.length > 0) {
             check[0].liked.forEach((item) => {
-                if(data.id === item.id) {
-                    setChange(true)
+                if (data.id === item.id) {
+                    setChange(true);
                 }
-            })
+            });
         }
-    },[check, data.id])
+    }, [check, data.id]);
 
     const handlerLikeVideo = async () => {
         try {
@@ -130,7 +140,7 @@ function LikeVideo({ data, check, onClick }) {
             console.log(error);
         }
         setChange(true);
-        onClick()
+        onClick();
     };
 
     const handlerUnLikeVideo = async () => {
@@ -138,7 +148,7 @@ function LikeVideo({ data, check, onClick }) {
             await axios.post(`${configBaseURL}/api/video/unliked/${data.id}`, configHeader);
         } catch (error) {}
         setChange(false);
-        onClick()
+        onClick();
     };
 
     return (

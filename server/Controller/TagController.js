@@ -53,7 +53,7 @@ const getTrendy = async (req, res) => {
 // thêm mới tag
 const createTrendy = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, category } = req.body;
     const trendy = await TagModel.findOne({ name: name });
     console.log("trendy", trendy);
     if (trendy) {
@@ -64,6 +64,7 @@ const createTrendy = async (req, res) => {
       thumbnail: `http://localhost:5000/public/images/${req.files[0].filename}`,
       description,
       watch_count: 0,
+      category,
     });
     await trendyRecord.save();
     return res.status(200).json({ message: "Thêm thành công!" });

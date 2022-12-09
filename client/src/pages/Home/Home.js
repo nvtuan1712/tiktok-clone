@@ -48,11 +48,15 @@ function Home() {
                 axios
                     .get(`${configBaseURL}/api/video/get-list-video-login`, configHeader)
                     .then((result) => {
-                        setData(result.data);
                         if (result) {
                             setTimeout(() => {
                                 setShow(true);
                             }, 1000);
+                            const idvideo = result.data.map((o) => o.id);
+                            const filtered = result.data.filter(
+                                ({ id }, index) => !idvideo.includes(id, index + 1),
+                            );
+                            setData(filtered);
                         }
                     })
                     .catch((err) => {

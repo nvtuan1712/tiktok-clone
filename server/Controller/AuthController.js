@@ -28,12 +28,13 @@ const register = async (req, res) => {
       account: account._id ,
       avatar: `http://localhost:${process.env.PORT}/public/images/avatar.png`,
       nickname: `user${phone}`,
-      name: '',
+      name: `user${phone}`,
       follower_count: 0,
       following_count: 0,
       heart_count: 0,
       description: '',
       tick: false,
+      isNewUser: true,
     })
     await user.save();
 
@@ -68,6 +69,7 @@ const login = async (req, res) => {
       nickname: user.nickname,
       iduser: user.id,
       avatar: user.avatar,
+      isNewUser: user.isNewUser,
     },
     process.env.SECRECT_JWT,
     {

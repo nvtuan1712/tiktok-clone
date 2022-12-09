@@ -17,6 +17,7 @@ router.post(
 
 //Phần của Tuấn
 router.post('/update', userController.updateProfile)
+router.post('/:id/update-favorites', userController.updateFavoritesAndIsNewUser)
 router.get('/search', userController.searchUser)
 router.get('/get-liked-video', userController.getLikedVideo)
 router.get('/get-list', userController.getListUser)

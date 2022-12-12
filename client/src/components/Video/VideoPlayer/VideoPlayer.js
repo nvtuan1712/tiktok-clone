@@ -20,7 +20,7 @@ function VideoPlayer({ data, onClick }) {
             <VideoWrapper data={data} />
             <ButtonClose onClick={onClick}/>
             <LogoVideo className={cx('style-logo')} />
-            <Report />
+            <Report data={data}/>
         </div>
     );
 }
@@ -63,7 +63,7 @@ function ButtonClose({ onClick }) {
 }
 
 //report
-function Report() {
+function Report({ data }) {
     const [showReport, setShowReport] = useState(false);
 
     const showModalReport = () => {
@@ -80,7 +80,7 @@ function Report() {
                 <VideoReport className={cx('style')} />
                 Báo cáo
             </div>
-            {showReport ? <ModalReport onClick={hideModalReport} /> : <></>}
+            {showReport ? <ModalReport onClick={hideModalReport} data={data}/> : <></>}
         </>
     );
 }

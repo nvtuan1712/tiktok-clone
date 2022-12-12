@@ -275,6 +275,7 @@
 }
 
 .disabled {
+    user-select: none;
     cursor: not-allowed;
         color: rgba(22, 24, 35, 0.34);
         background-color: rgba(235, 235, 235, 1);

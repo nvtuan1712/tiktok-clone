@@ -162,7 +162,7 @@ function RecommendItem({ data, index, followUser, check, onClick }) {
                                 </div>
                             </div>
                             <div className={cx('video-control-bottom')}></div>
-                            <ReportForm />
+                            <ReportForm data={data}/>
                         </div>
                     </div>
                     <div className={cx('video-action-item-container')}>
@@ -260,7 +260,7 @@ function ShareVideo({ data, onClick }) {
     );
 }
 
-function ReportForm() {
+function ReportForm({ data }) {
     const [showReport, setShowReport] = useState(false);
 
     const showModalReport = () => {
@@ -277,7 +277,7 @@ function ReportForm() {
                 <VideoReport className={cx('icon-flag')} />
                 <span>Báo cáo</span>
             </div>
-            {showReport ? <ModalReport onClick={hideModalReport} /> : <></>}
+            {showReport ? <ModalReport onClick={hideModalReport} data={data}/> : <></>}
         </>
     );
 }

@@ -7,7 +7,7 @@ import styles from './ModalReport.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ModalReport({ onClick }) {
+function ModalReport({ onClick, data }) {
     return (
         <div className={cx('container')}>
             <div className={cx('wrapper')}>
@@ -15,7 +15,7 @@ function ModalReport({ onClick }) {
                     <div className={cx('form')}>
                         <section>
                             <form className={cx('form-report')}>
-                                    <FormContent onClick={onClick}/>
+                                    <FormContent onClick={onClick} data={data}/>
                             </form>
                         </section>
                     </div>

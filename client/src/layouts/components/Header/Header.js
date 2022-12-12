@@ -58,19 +58,19 @@ function Header({ className, children }) {
                 <div className={cx('actions')}>
                     {current ? (
                         <>
-                            <Tippy delay={[0, 100]} content="Upload video" placement="bottom" offset={[0, 0]}>
+                            <Tippy delay={[0, 100]} content="Upload video" placement="bottom" offset={[0, 0]} zIndex={10000}>
                                 <Link to={config.routes.upload}>
                                     <button className={cx('action-btn')}>
                                         <UploadIcon />
                                     </button>
                                 </Link>
                             </Tippy>
-                            <Tippy delay={[0, 100]} content="Message" placement="bottom" offset={[0, 0]}>
+                            <Tippy delay={[0, 100]} content="Message" placement="bottom" offset={[0, 0]} zIndex={10000}>
                                 <button className={cx('action-btn')}>
                                     <MessageIcon />
                                 </button>
                             </Tippy>
-                            <Tippy delay={[0, 100]} content="Inbox" placement="bottom" offset={[0, 0]}>
+                            <Tippy delay={[0, 100]} content="Inbox" placement="bottom" offset={[0, 0]} zIndex={10000}>
                                 <button className={cx('action-btn')}>
                                     <InboxIcon />
                                     <span className={cx('badge')}>12</span>

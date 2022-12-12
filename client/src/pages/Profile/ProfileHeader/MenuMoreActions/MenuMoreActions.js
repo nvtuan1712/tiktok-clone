@@ -7,7 +7,7 @@ import { ProfileBlock, ProfileReport } from '~/components/Icons';
 import styles from '~/pages/Profile/Profile.module.scss';
 const cx = classNames.bind(styles);
 
-function MenuMoreActions({ children }) {
+function MenuMoreActions({ children, onClick }) {
     const moreActionArr = [
         {
             icon: <ProfileReport />,
@@ -24,7 +24,7 @@ function MenuMoreActions({ children }) {
             return (
                 <div key={index} className={cx('action-container')}>
                     {item.text === 'Báo cáo' ? (
-                        <div className={cx('action-item1')}>
+                        <div className={cx('action-item1')} onClick={onClick}>
                             {item.icon}
                             <p className={cx('action-text')}>{item.text}</p>
                         </div>

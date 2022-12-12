@@ -1,6 +1,9 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import classNames from 'classnames/bind';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import { configBaseURL } from '~/common/common';
+
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './FormContent.module.scss';
@@ -10,7 +13,7 @@ import { CloseModal } from '~/components/Icons';
 
 const cx = classNames.bind(styles);
 
-function FormContent({ onClick }) {
+function FormContent({ onClick, data }) {
     const [history, setHistory] = useState([reportArr]);
     const [check, setCheck] = useState(true);
 
@@ -83,22 +86,47 @@ function FormContent({ onClick }) {
                     </ul>
                 )}
 
-                {check === false && <FormContentFooter/>}
+                {check === false && <FormContentFooter data={data} onClick={onClick}/>}
             </div>
         </>
     );
 }
 
-function FormContentFooter() {
+function FormContentFooter({ data, onClick }) {
+    const [show, setShow] = useState(false)
+    const btn = useRef()
+    let arr = []
 
-    const handleSubmitRP = (e) => {
+    useEffect(() => {
+        setTimeout(() => {
+            if(show) {
+                btn.current.classList.add(cx('disabled'))
+            } else {
+                btn.current.classList.remove(cx('disabled'))
+            }
+        },1)
+    },[show])
+
+    const handleSubmitRP = async(e) => {
         e.preventDefault();
-        const itemContent = document.getElementsByTagName('li')
+        const itemContent = document.querySelectorAll('li')
+        itemContent.forEach((item) => {
+            arr.push(item.innerText)
+        })
+        
+        const response = await axios.post(`${configBaseURL}/api/${localStorage.getItem('idUser')}/report/${data.id}`, {
+            contentReport: arr
+        })
+
+        if(response) {
+            setShow(true);
+        }
     }
 
     return (
         <div className={cx('footer')}>
-            <button onClick={handleSubmitRP}>Gửi</button>
+            {show? <span>Báo cáo thành công,chúng tôi sẽ xem xét nội dung của đối tượng báo cáo!</span>: null}
+            <button onClick={handleSubmitRP} ref={btn}>Gửi</button>
         </div>
     );
 }

@@ -135,7 +135,7 @@ const getMusicVideo = async (req, res) => {
 const getRandomVideo = async (req, res) => {
   try {
     const listVideo = await videoModel
-      .find()
+      .find({ isPrivate: { $nin: true } })
       .populate("author")
       .populate("music")
       .populate("trendy");
@@ -159,12 +159,12 @@ const getRandomVideoLogin = async (req, res) => {
       arrFllowing.push(item.id);
     });
     const listVideo = await videoModel
-      .find({ author: { $nin: arrFllowing } })
+      .find({ author: { $nin: arrFllowing }})
       .populate("author")
       .populate("music")
       .populate("trendy");
     const userVideo = await videoModel
-    .find({ author: user._id})
+    .find({ author: user._id, isPrivate: { $nin: true } })
     .populate("author")
     .populate("music")
     .populate("trendy");

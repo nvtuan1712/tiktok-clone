@@ -1,16 +1,18 @@
 //Thư viện externor trước(thư viện bên ngoài)
 import classNames from 'classnames/bind';
-// import { useRef } from 'react';
-import Button from '~/components/Button';
-import { MoreAction, ShareProfile, EditProfile, CheckProfile } from '~/components/Icons';
+import { useEffect, useState } from 'react';
 
 //Thư viện internor sau(thư viện bên trong dự án)
+import { MoreAction, ShareProfile, EditProfile, CheckProfile } from '~/components/Icons';
+import Button from '~/components/Button';
 import styles from '../Profile.module.scss';
 import MenuMoreActions from './MenuMoreActions';
 import MenuShareProfile from './MenuShareProfile';
-import { useEffect, useState } from 'react';
 import SekeletonLoadingForTagAndMusicV2 from '~/layouts/components/SekeletonLoading/SekeletonLoadingForTagAndMusicV2/SekeletonLoadingForTagAndMusicV2';
 import ModalUpdateProfile from '../ModalUpdateProfile';
+import config from '~/config';
+import axios from 'axios';
+import ModalReport from '~/components/ModalReport';
 
 const cx = classNames.bind(styles);
 
@@ -68,8 +70,51 @@ function ProfileHeader({ user, followUser, onClickShowToast }) {
         },1000)
     }
 
+    const handleFollow = async () => {
+        if(localStorage.getItem('accessToken')) {
+            setCheck(true);
+        try {
+            //
+            await axios.post('http://localhost:5000/api/users/follow-user', configHeader1)
+        } catch (error) {
+            console.log(error);
+        }
+        } else {
+            window.location = config.routes.login
+        }
+    };
+
+    const configHeader1 = {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            IdAccount: `Bearer ${localStorage.getItem('idAccount')}`,
+            IdUser: `Bearer ${user.id}`,
+        },
+    };
+
+    const handleUnFollow = async() => {
+        setCheck(false);
+        try {
+            //
+            await axios.post('http://localhost:5000/api/users/unfollow-user', configHeader1)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const [showModal, setShowModal] = useState(false)
+
+    const handlerShowModalReport = () => {
+        setShowModal(true)
+    }
+
+    const handlerHideModalReport = () => {
+        setShowModal(false)
+    }
+
     return (
         <>
+            {showModal && <ModalReport onClick={handlerHideModalReport} />}
             {show && <ModalUpdateProfile data={user} onClick={handlerHideUpdateProfile}/>}
             {loading ? (<div className={cx('profile-content-header')}>
                 <div className={cx('profile-info')}>
@@ -96,7 +141,7 @@ function ProfileHeader({ user, followUser, onClickShowToast }) {
                         ) : (
                             <>
                                 {check ? (
-                                    <div className={cx('follow-container')}>
+                                    <div className={cx('follow-container')} onClick={handleUnFollow}>
                                     <div className={cx('follow-btn-wrapper')}>
                                         <Button text >
                                             Đang follow
@@ -104,7 +149,7 @@ function ProfileHeader({ user, followUser, onClickShowToast }) {
                                     </div>
                                 </div>
                                 ) : (
-                                    <div className={cx('follow-container')}>
+                                    <div className={cx('follow-container')} onClick={handleFollow}>
                                         <div className={cx('follow-btn-wrapper')}>
                                             <Button primary className={cx('follow-btn')}>
                                                 Follow
@@ -143,7 +188,7 @@ function ProfileHeader({ user, followUser, onClickShowToast }) {
                 {currentUser ? (
                     <></>
                 ) : (
-                    <MenuMoreActions>
+                    <MenuMoreActions onClick={handlerShowModalReport}>
                         <div className={cx('more-actions')}>
                             <MoreAction />
                         </div>

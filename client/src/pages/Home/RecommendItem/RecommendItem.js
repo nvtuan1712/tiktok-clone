@@ -16,7 +16,7 @@ import config from '~/config';
 
 const cx = classNames.bind(styles);
 
-function RecommendItem({ data, index, followUser, check, onClick }) {
+function RecommendItem({ data, index, followUser, check, onClick, onClickShowToast }) {
     const [show, setShow] = useState(false);
     const [checkFollow, setCheckFollow] = useState(false);
     const [current, setCurrent] = useState(false);
@@ -168,7 +168,7 @@ function RecommendItem({ data, index, followUser, check, onClick }) {
                     <div className={cx('video-action-item-container')}>
                         <LikeVideo data={data} check={check} onClick={onClick}/>
                         <CommentVideo data={data} onClick={test}/>
-                        <ShareVideo data={data}  onClick={onClick}/>
+                        <ShareVideo data={data}  onClick={onClick} onClickShowToast={onClickShowToast}/>
                     </div>
                 </div>
             </div>
@@ -247,9 +247,9 @@ function CommentVideo({ data, onClick }) {
     );
 }
 
-function ShareVideo({ data, onClick }) {
+function ShareVideo({ data, onClick, onClickShowToast }) {
     return (
-        <MenuShare className={cx('share-container')} data={data} onClickRender={onClick}>
+        <MenuShare className={cx('share-container')} data={data} onClickRender={onClick} onClickShowToast={onClickShowToast}>
             <button className={cx('btn-action-item')}>
                 <span className={cx('share-icon')} style={{ color: 'rgb(22, 24, 35)' }}>
                     <Share />

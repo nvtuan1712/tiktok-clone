@@ -16,6 +16,20 @@ export const search = async (q, type = 'less') => {
     }
 };
 
+export const searchVideo = async (q, type = 'less') => {
+    try {
+        const res = await axios.get(`${configBaseURL}/api/video/search`, {
+            params: {
+                q,
+                type,
+            },
+        });
+        return res.data;
+    } catch (error) {
+
+    }
+};
+
 export const searchTrendy = async ( q ) => {
     try {
         const res = await axios.get(`${configBaseURL}/api/trendy/get-list-trendy-upload`, {

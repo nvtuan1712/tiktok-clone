@@ -20,6 +20,7 @@ function ModalUpdateProfile({ data, onClick }) {
     const [valueDesc, setValueDesc] = useState('');
     const [image, setImage] = useState();
     const [show, setShow] = useState(false);
+    const [show1, setShow1] = useState(false);
     const inputImage = useRef();
     const inputNickName = useRef();
     const inputName = useRef();
@@ -89,8 +90,9 @@ function ModalUpdateProfile({ data, onClick }) {
         }
     };
 
-    const handleUpdateProfile = async () => {
+    const handleUpdateProfile = async (e) => {
         if (valueNickName !== '' && valueName !== '' && valueDesc !== '') {
+            e.preventDefault();
             const form = new FormData();
             form.append('myImage', inputImage.current.files[0]);
             form.append('nickname', valueNickName);
@@ -130,14 +132,28 @@ function ModalUpdateProfile({ data, onClick }) {
                     window.history.replaceState(nextState, nextTitle, nextURL);
                 }
                 setShow(true);
-                setTimeout(() => {
-                    setShow(false)
-                },3000)
+                setShow1(false)
+                // setTimeout(() => {
+                //     setShow(false)
+                // },3000)
             } catch (error) {
-                console.log(error);
+                if(error.response.data === 'Nickname already exists!') {
+                    setShow1(true)
+                    setShow(false)
+                }
             }
         }
+        else {
+            e.preventDefault();
+        }
     };
+
+    const handleCancel = () => {
+        inputNickName.current.value = ''
+        inputName.current.value = ''
+        inputDesc.current.value = ''
+        setImage(false)
+    }
 
     return (
         <div className={cx('wrapper')}>
@@ -248,8 +264,20 @@ function ModalUpdateProfile({ data, onClick }) {
                                         <strong>Cập nhật thông tin tài khoản thành công!</strong>
                                     </div>
                                 )}
+                                {show1 && (
+                                    <div
+                                        style={{
+                                            color: 'red',
+                                            fontSize: '14px',
+                                            textAlign: 'center',
+                                            marginTop: '16px',
+                                        }}
+                                    >
+                                        <strong>Nickname này đã được sử dụng,mời chọn Nickname khác!</strong>
+                                    </div>
+                                )}
                                 <div className={cx('footer-container')}>
-                                    <button className={cx('btn')}>Hủy</button>
+                                    <button className={cx('btn')} onClick={handleCancel}>Hủy</button>
                                     <button
                                         className={cx('btn', 'disabled')}
                                         onClick={handleUpdateProfile}

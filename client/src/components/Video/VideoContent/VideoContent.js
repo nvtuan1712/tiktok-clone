@@ -9,6 +9,8 @@ import config from '~/config';
 import SekeletonLoadingForList from '~/layouts/components/SekeletonLoading/SeleketonLoadingForList/SekeletonLoadingForList';
 import ItemComment from './ItemComment';
 import MenuMoreActions from './MenuMoreActions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 //Thư viện internor sau(thư viện bên trong dự án)
 import styles from './VideoContent.module.scss';
@@ -18,7 +20,7 @@ const cx = classNames.bind(styles);
 function VideoContent({ data, followUser, check, onClick, onClickShowToast }) {
     return (
         <div className={cx('container')}>
-            <VideoInfo data={data} followUser={followUser} onClick={onClick} onClickShowToast={onClickShowToast}/>
+            <VideoInfo data={data} followUser={followUser} onClick={onClick} onClickShowToast={onClickShowToast} />
             <MainContent data={data} check={check} onClick={onClick} />
             <CommentList data={data} onClick={onClick} />
         </div>
@@ -41,17 +43,19 @@ function VideoInfo({ data, followUser, onClick, onClickShowToast }) {
     };
 
     useEffect(() => {
-        followUser.forEach((account) => {
-            if (nick === account.nickname) {
-                setCheck(true);
+        if (localStorage.getItem('accessToken')) {
+            followUser.forEach((account) => {
+                if (nick === account.nickname) {
+                    setCheck(true);
+                }
+            });
+            if (nick === localStorage.getItem('nickName')) {
+                setCheckCurrent(true);
             }
-        });
-        if (nick === localStorage.getItem('nickName')) {
-            setCheckCurrent(true);
+            setTimeout(() => {
+                setTime(true);
+            }, 1);
         }
-        setTimeout(() => {
-            setTime(true);
-        }, 1);
     }, [nick, followUser]);
 
     const handleFollow = async () => {
@@ -89,6 +93,7 @@ function VideoInfo({ data, followUser, onClick, onClickShowToast }) {
             </Link>
             <Link to={`/${nickname}`} className={cx('link-info')}>
                 <span className={cx('span-id')}>{data.author.nickname}</span>
+                {data.tick ? <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} /> : null}
                 <br></br>
                 <span className={cx('span-other-info')}>
                     {data.author.name}
@@ -99,7 +104,11 @@ function VideoInfo({ data, followUser, onClick, onClickShowToast }) {
             {time && (
                 <>
                     {checkCurrent ? (
-                        <MenuMoreActions data={data} onClick={onClick} onClickShowToast={onClickShowToast}><div><MoreAction /></div></MenuMoreActions>
+                        <MenuMoreActions data={data} onClick={onClick} onClickShowToast={onClickShowToast}>
+                            <div>
+                                <MoreAction />
+                            </div>
+                        </MenuMoreActions>
                     ) : (
                         <>
                             {check ? (
@@ -141,12 +150,14 @@ function MainContent({ data, check, onClick }) {
     };
 
     useEffect(() => {
-        if (check[0].liked.length > 0) {
-            check[0].liked.forEach((item) => {
-                if (data.id === item.id) {
-                    setChange(true);
-                }
-            });
+        if (localStorage.getItem('accessToken')) {
+            if (check[0].liked.length > 0) {
+                check[0].liked.forEach((item) => {
+                    if (data.id === item.id) {
+                        setChange(true);
+                    }
+                });
+            }
         }
     }, [check, data.id]);
 
@@ -277,9 +288,9 @@ function CommentList({ data, onClick }) {
             } catch (error) {}
             input.current.value = '';
             onClick();
-            renderData()
+            renderData();
         } else {
-            window.location.href = config.routes.login
+            window.location.href = config.routes.login;
         }
     };
 
@@ -296,14 +307,22 @@ function CommentList({ data, onClick }) {
                     console.log(err);
                 });
         } catch (error) {}
-    }
+    };
 
     return (
         <>
             <div className={cx('comment-list-container')}>
                 {show
                     ? dataComment.reverse().map((item, index) => {
-                          return <ItemComment data={item} key={index} onClickRenderComment={renderData} onClick={onClick} metadata={data}/>;
+                          return (
+                              <ItemComment
+                                  data={item}
+                                  key={index}
+                                  onClickRenderComment={renderData}
+                                  onClick={onClick}
+                                  metadata={data}
+                              />
+                          );
                       })
                     : dataComment.map(() => {
                           return <SekeletonLoadingForList />;

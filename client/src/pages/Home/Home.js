@@ -107,17 +107,17 @@ function Home() {
 
 
     const renderData = () => {
-        toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
-            'hideToast',
-        )} ease 1s 4s forwards`;
-        setTimeout(() => {
-            toastNotice.current.style.animation = 'none';
-        }, 5000);
         try {
             axios
                 .get(`${configBaseURL}/api/video/get-list-video-login`, configHeader)
                 .then((result) => {
-                    setData(result.data);
+                    if (result) {
+                        const idvideo = result.data.map((o) => o.id);
+                        const filtered = result.data.filter(
+                            ({ id }, index) => !idvideo.includes(id, index + 1),
+                        );
+                        setData(filtered);
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
@@ -125,6 +125,15 @@ function Home() {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const showToast = () => {
+        toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
+            'hideToast',
+        )} ease 1s 4s forwards`;
+        setTimeout(() => {
+            toastNotice.current.style.animation = 'none';
+        }, 5000);
     }
 
     return (
@@ -141,7 +150,7 @@ function Home() {
                     <>
                         {data.reverse().map((item, index) => {
                             return (
-                                <RecommendItem data={item} key={index} index={index} followUser={followingAccounts} check={check} onClick={renderData}/>
+                                <RecommendItem data={item} key={index} index={index} followUser={followingAccounts} check={check} onClick={renderData} onClickShowToast={showToast}/>
                             );
                         })}
                     </>

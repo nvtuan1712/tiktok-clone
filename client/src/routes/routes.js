@@ -20,6 +20,7 @@ import RegisterPhoneAndEmail from '~/pages/RegisterPhoneAndEmail';
 import ForgetPassword from '~/pages/ForgetPassword';
 import DashBoard from '~/pages/DashBoard'
 import Video from '~/pages/Video'
+import Search from '~/pages/Search'
 import ManagerAccount from '~/pages/DashBoard/ManagerAccount/ManageAccount';
 import ManageTrendy from '~/pages/DashBoard/ManagerTrendy/ManagerTrendy';
 import ManagerMusics from '~/pages/DashBoard/ManageMusics/ManageMusics';
@@ -32,6 +33,7 @@ import ManagerVideos from '~/pages/DashBoard/ManageVideo/ManageVideo';
 const publicRoutes = [
     { path: config.routes.home, component: Home },
     { path: config.routes.following, component: Following },
+    { path: config.routes.search, component: Search },
     { path: config.routes.video, component: Video, layout: 'div'},
     { path: config.routes.live, component: Live, layout: DefaultLayoutv2},
     { path: config.routes.profile, component: Profile,layout: DefaultLayoutv2 },

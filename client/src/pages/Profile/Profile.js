@@ -22,6 +22,10 @@ function Profile() {
     const toastNotice = useRef();
     const check = localStorage.getItem('accessToken')
 
+    useEffect(() => {
+        
+    },[])
+
     //lấy người dùng khi đăng nhập và khi không
     useEffect(() => {
         if(check) {

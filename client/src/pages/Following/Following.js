@@ -108,12 +108,6 @@ function Home() {
     }, [followingAccounts.length]);
 
     const renderData = () => {
-        toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
-            'hideToast',
-        )} ease 1s 4s forwards`;
-        setTimeout(() => {
-            toastNotice.current.style.animation = 'none';
-        }, 5000);
         try {
             axios
                 .get(`${configBaseURL}/api/video/get-list-video-login-follow`, configHeader)
@@ -126,6 +120,15 @@ function Home() {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const showToast = () => {
+        toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
+            'hideToast',
+        )} ease 1s 4s forwards`;
+        setTimeout(() => {
+            toastNotice.current.style.animation = 'none';
+        }, 5000);
     }
 
     return (
@@ -144,7 +147,7 @@ function Home() {
                             {followingAccounts.length > 0 ? (
                                 <>
                                     {data.reverse().map((item, index) => {
-                                        return <RecommendItem data={item} key={index} followUser={followingAccounts} check={check} onClick={renderData} />;
+                                        return <RecommendItem data={item} key={index} followUser={followingAccounts} check={check} onClick={renderData} onClickShowToast={showToast}/>;
                                     })}
                                 </>
                             ) : (

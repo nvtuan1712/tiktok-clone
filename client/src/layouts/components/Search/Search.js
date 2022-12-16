@@ -10,6 +10,7 @@ import AccountItem from '~/components/AccountItem';
 import styles from './Search.module.scss';
 import { useDebounce } from '~/hooks';
 import { SearchIcon } from '~/components/Icons';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -18,6 +19,7 @@ function Search() {
     const [searchResult, setSearchResult] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
+    const btnSearch = document.querySelector('#seacrhbtn')
 
     const debouncedValue = useDebounce(searchValue, 500);
 
@@ -72,9 +74,10 @@ function Search() {
                     <div className={cx('search-result')} tabIndex="-1" {...attrs}>
                         <PopperWrapper>
                             <h4 className={cx('search-title')}>Accounts</h4>
-                            {searchResult.map((result) => (
+                            {searchResult.slice(0, 3).map((result) => (
                                 <AccountItem key={result.id} data={result} />
                             ))}
+                            <h4 className={cx('search-all')} onClick={() => {btnSearch.click()}} ><Link to={`/search/q=${debouncedValue}`} >Xem tất cả kết quả cho "{debouncedValue}"</Link></h4>
                         </PopperWrapper>
                     </div>
                 )}
@@ -85,6 +88,7 @@ function Search() {
                         ref={inputRef}
                         value={searchValue}
                         placeholder="Tìm kiếm tài khoản và video"
+                        id="search"
                         spellCheck={false}
                         onChange={handleChange}
                         onFocus={() => setShowResult(true)}

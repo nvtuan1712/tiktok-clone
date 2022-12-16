@@ -6,13 +6,14 @@ import styles from './MenuShare.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ItemMenuShare({ icon, text, onclick, data, onClickRender }) {
+function ItemMenuShare({ icon, text, onclick, data, onClickRender, onClickShowToast }) {
     const handleCoppyURL = async () => {
         const URL = `http://localhost:3000/${data.author.nickname}/video/${data.id}`;
         navigator.clipboard.writeText(URL);
         try {
             await axios.post(`${configBaseURL}/api/video/increase-share/${data.id}`);
         } catch (error) {}
+        onClickShowToast()
         onClickRender();
     };
     return (

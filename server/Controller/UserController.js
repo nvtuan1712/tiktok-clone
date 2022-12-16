@@ -191,7 +191,7 @@ const searchUser = async (req, res) => {
     if (req.query.q !== "") {
       const char = req.query.q;
       const listUser = await userModel.find({
-        name: { $regex: "^" + char, $options: "i" },
+        nickname: { $regex: "^" + char, $options: "i" },
       });
       res.send(listUser);
     } else {
@@ -223,7 +223,19 @@ const updateProfile = async (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        const currentUser = await userModel.findOne({ _id: req.body.user })
+        const listUser = await userModel.find()
+        let check = false
+
+        //check xem có bị trùng nickname hay không
+        listUser.forEach(item => {
+          if(item.nickname === req.body.nickname) {
+            check = true;
+            return res.status(400).send('Nickname already exists!')
+          }
+        })
+
+        if(check === false) {
+          const currentUser = await userModel.findOne({ _id: req.body.user })
         let image
 
         if(req.body.myImage === undefined) {
@@ -263,13 +275,14 @@ const updateProfile = async (req, res) => {
           }
         );
 
-        res.status(200).send({
+        return res.status(200).send({
           accessToken: jwtToken,
         });
+        }
       }
     });
   } catch (error) {
-    res.send(error);
+    return res.send(error);
   }
 };
 

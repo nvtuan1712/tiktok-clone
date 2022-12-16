@@ -174,6 +174,24 @@ function RegisterByEmail() {
     const inputPhone = useRef();
     const inputPass = useRef();
     const inputPass1 = useRef();
+    const errorEmail = useRef();
+    const errorPhone = useRef();
+    const errorPass = useRef();
+    const errorPass1 = useRef();
+    const [changeColor, setChangeColor] = useState(true);
+
+    const handleRemoveDis = () => {
+        if (
+            inputEmail.current.value !== '' &&
+            inputPass.current.value !== '' &&
+            inputPhone.current.value !== '' &&
+            inputPass1.current.value !== ''
+        ) {
+            setChangeColor(false);
+        } else {
+            setChangeColor(true);
+        }
+    };
 
     const show = () => {
         setShowPass(!showPass);
@@ -215,10 +233,10 @@ function RegisterByEmail() {
         } else if (!inputPhone.current.value.match(phoneformat)) {
             setShowErrorPhone(true);
             setTextErrorPhone('Số điện thoại sai định dạng!');
-        } else if(inputPhone.current.value.length < 10) {
+        } else if (inputPhone.current.value.length < 10) {
             setShowErrorPhone(true);
-            setTextErrorPhone('Số điện thoại phải có tối thiểu 10 chữ số')
-        }else {
+            setTextErrorPhone('Số điện thoại phải có tối thiểu 10 chữ số');
+        } else {
             setShowErrorPhone(false);
             setShowErrorPhone('');
         }
@@ -251,21 +269,6 @@ function RegisterByEmail() {
         }
     };
 
-    const [changeColor, setChangeColor] = useState(true);
-
-    const handleRemoveDis = () => {
-        if (
-            inputEmail.current.value !== '' &&
-            inputPass.current.value !== '' &&
-            inputPhone.current.value !== '' &&
-            inputPass1.current.value !== ''
-        ) {
-            setChangeColor(false);
-        } else {
-            setChangeColor(true);
-        }
-    };
-
     return (
         <>
             <div className={cx('des')}>Email</div>
@@ -278,7 +281,7 @@ function RegisterByEmail() {
                     onKeyUp={handleRemoveDis}
                 />
             </div>
-            {showErrorEmail && <span style={{ color: 'red', fontSize: '14px' }}>{textErrorEmail}</span>}
+            <span style={{ color: 'red', fontSize: '14px' }} ref={errorEmail} >{showErrorEmail && textErrorEmail}</span>
             <div className={cx('div-container')}>
                 <input
                     type="phone"
@@ -288,7 +291,7 @@ function RegisterByEmail() {
                     onKeyUp={handleRemoveDis}
                 />
             </div>
-            {showErrorPhone && <span style={{ color: 'red', fontSize: '14px' }}>{textErrorPhone}</span>}
+            <span style={{ color: 'red', fontSize: '14px' }} ref={errorPhone}>{showErrorPhone && textErrorPhone}</span>
             <div className={cx('div-container')}>
                 <input
                     type="password"
@@ -301,7 +304,7 @@ function RegisterByEmail() {
                     <div className={cx('pass-icon')}>{showPass ? <PassIconShow /> : <PassIcon />}</div>
                 </div>
             </div>
-            {showErrorPass && <span style={{ color: 'red', fontSize: '14px' }}>{textErrorPass}</span>}
+            <span style={{ color: 'red', fontSize: '14px' }} ref={errorPass}>{showErrorPass && textErrorPass}</span>
             <div className={cx('div-container')}>
                 <input
                     type="password"
@@ -314,29 +317,40 @@ function RegisterByEmail() {
                     <div className={cx('pass-icon')}>{showPass1 ? <PassIconShow /> : <PassIcon />}</div>
                 </div>
             </div>
-            {showErrorCFPass && <span style={{ color: 'red', fontSize: '14px' }}>{textErrorCFPass}</span>}
+            <span style={{ color: 'red', fontSize: '14px' }} ref={errorPass1}>{showErrorCFPass && textErrorCFPass}</span>
             <SubmitInfo
                 email1={inputEmail}
                 pass={inputPass}
                 phone1={inputPhone}
-                change={changeColor}
                 pass1={inputPass1}
+                erroremail={errorEmail}
+                errorphone={errorPhone}
+                errorpass={errorPass}
+                errorpass1={errorPass1}
+                change={changeColor}
             />
         </>
     );
 }
 
 //Nút gửi thông tin đăng ký
-function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
+function SubmitInfo({ email1, pass, phone1, change, pass1, erroremail, errorphone, errorpass, errorpass1 }) {
     const [notiRegisterSuccess, setNotiRegisterSuccess] = useState(false);
     const [showError, setShowError] = useState(false);
+    const [showError1, setShowError1] = useState(false);
+    const [showError2, setShowError2] = useState(false);
+    const [showError3, setShowError3] = useState(false);
 
     const handleRegister = async (e) => {
         if (
             email1.current.value !== '' &&
             pass.current.value !== '' &&
             pass1.current.value !== '' &&
-            phone1.current.value !== ''
+            phone1.current.value !== '' &&
+            erroremail.current.innerText === '' &&
+            errorphone.current.innerText === '' &&
+            errorpass.current.innerText === '' &&
+            errorpass1.current.innerText === '' 
         ) {
             try {
                 e.preventDefault();
@@ -362,19 +376,44 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
                 if (respone.status === 200) {
                     setNotiRegisterSuccess(true);
                     setShowError(false);
+                    setShowError1(false);
+                    setShowError2(false);
+                    setShowError3(false);
                     email1.current.value = '';
                     phone1.current.value = '';
                     pass.current.value = '';
                     pass1.current.value = '';
                 }
             } catch (error) {
-                if (error.response.status === 400) {
-                    if (error.response.data === 'Email already exists!') {
-                        setShowError(true);
-                        setNotiRegisterSuccess(false);
-                    }
+                if (error.response.data === 'Email already exists!') {
+                    setShowError(true);
+                    setNotiRegisterSuccess(false);
+                    setShowError1(false);
+                    setShowError2(false);
+                    setShowError3(false);
+                } else if (error.response.data === 'Empty Birthday!') {
+                    setShowError1(true);
+                    setNotiRegisterSuccess(false);
+                    setShowError(false);
+                    setShowError2(false);
+                    setShowError3(false);
+                } else if (error.response.data === 'Underage!') {
+                    setShowError2(true);
+                    setNotiRegisterSuccess(false);
+                    setShowError(false);
+                    setShowError1(false);
+                    setShowError3(false);
+                } else if (error.response.data === 'Phone already exists!') {
+                    setShowError3(true);
+                    setNotiRegisterSuccess(false);
+                    setShowError(false);
+                    setShowError1(false);
+                    setShowError2(false);
                 }
             }
+        } 
+        else {
+            e.preventDefault();
         }
     };
 
@@ -387,11 +426,17 @@ function SubmitInfo({ email1, pass, phone1, change, pass1 }) {
             ) : (
                 <></>
             )}
+
             {showError ? (
                 <span style={{ color: 'red', fontWeight: '600' }}>Email này đã được sử dụng,mời nhập email khác!</span>
             ) : (
                 <></>
             )}
+
+            {showError1 ? <span style={{ color: 'red', fontWeight: '600' }}>Ngày sinh k được để trống!</span> : <></>}
+            {showError2 ? <span style={{ color: 'red', fontWeight: '600' }}>Chưa đủ 18 tuổi!</span> : <></>}
+            {showError3 ? <span style={{ color: 'red', fontWeight: '600' }}>SĐT này đã được sử dụng,mời nhập sđt khác!</span> : <></>}
+
             <button className={cx('style-button')} onClick={handleRegister} disabled={change} id="submitBtn">
                 Đăng ký
             </button>

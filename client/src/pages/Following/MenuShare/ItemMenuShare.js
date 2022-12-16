@@ -6,21 +6,16 @@ import styles from './MenuShare.module.scss';
 
 const cx = classNames.bind(styles);
 
-function ItemMenuShare({ icon, text, onclick, data, onClickRender }) {
+function ItemMenuShare({ icon, text, onclick, data, onClickRender, onClickShowToast }) {
     const handleCoppyURL = async () => {
         const URL = `http://localhost:3000/${data.author.nickname}/video/${data.id}`
         navigator.clipboard.writeText(URL);
-        // toastNotice.current.style.animation = `${cx('showToast')} ease .5s forwards, ${cx(
-        //     'hideToast',
-        // )} ease 1s 4s forwards`;
-        // setTimeout(() => {
-        //     toastNotice.current.style.animation = 'none';
-        // }, 5000);
         try {
             await axios.post(`${configBaseURL}/api/video/increase-share/${data.id}`)
         } catch (error) {
             
         }
+        onClickShowToast()
         onClickRender()
     };
 

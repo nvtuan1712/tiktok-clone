@@ -6,8 +6,8 @@ import styles from './SekeletonLoadingForFollowing.module.scss';
 
 const cx = classNames.bind(styles);
 
-function SekeletonLoadingForFllowing() {
-    return <div className={cx('container', 'sekeleton')}></div>;
+function SekeletonLoadingForFllowing({ className }) {
+    return <div className={cx('container', 'sekeleton', className)}></div>;
 }
 
 export default SekeletonLoadingForFllowing;

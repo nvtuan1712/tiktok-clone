@@ -159,7 +159,7 @@ const getRandomVideoLogin = async (req, res) => {
       arrFllowing.push(item.id);
     });
     const listVideo = await videoModel
-      .find({ author: { $nin: arrFllowing }})
+      .find({ author: { $nin: arrFllowing }, isPrivate: { $nin: true } })
       .populate("author")
       .populate("music")
       .populate("trendy");
@@ -295,6 +295,22 @@ const increaseShare = async (req, res) => {
   }
 };
 
+//tìm kiếm video
+const searchVideo = async (req, res) => {
+  try {
+    if (req.query.q !== "") {
+      const char = req.query.q;
+      const listVideo = await videoModel.find({
+        description: { $regex: "^" + char, $options: "i" },
+      }).populate('author').populate('trendy')
+      res.send(listVideo);
+    } else {
+      res.send("No character");
+    }
+  } catch (error) {
+    res.send(error);
+  }
+};
 
 /////////////////Phần của Linh//////////////
 // get list videos
@@ -413,6 +429,7 @@ module.exports = {
   unLikeVideo: unLikeVideo,
   increaseView: increaseView,
   increaseShare: increaseShare,
+  searchVideo: searchVideo,
   //Phần của Linh
   getReportVideo: getReportVideo,
   getListVideos: getListVideos,

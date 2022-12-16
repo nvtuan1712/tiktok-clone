@@ -4,6 +4,7 @@ const routes = {
     profile: '/:nickname',
     video: '/:nickname/video/:id',
     upload: '/upload',
+    search: '/search/q:param',
     live: '/live',
     music: '/music/:name-:id',
     tag: '/tag/:name',

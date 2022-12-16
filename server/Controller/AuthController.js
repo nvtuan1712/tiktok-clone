@@ -1,17 +1,42 @@
-
 const AccountModel = require("../Models/AccountModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/UserModel");
-const TagModel = require("../Models/TagModel")
-const MusicModel = require("../Models/MusicModel")
-
+const TagModel = require("../Models/TagModel");
+const MusicModel = require("../Models/MusicModel");
 
 //xử lý đăng ký
 const register = async (req, res) => {
   try {
     //get info from client to req.body
     const { email, password, phone, birthday, role } = req.body;
+
+    //check độ tuổi
+    const currentYear = new Date().getFullYear();
+    const birthdayYear = birthday.slice(6,11)
+    if(currentYear - birthdayYear < 18) {
+      return res.status(400).send("Underage!");
+    }
+
+    //check nesu ngày sinh rỗng
+    if (birthday === "Ngày/Tháng/Năm") {
+      return res.status(400).send("Empty Birthday!");
+    }
+
+    const emailExits = await AccountModel.find();
+    //check email trùng
+    emailExits.forEach((item) => {
+      if (email === item.email) {
+        return res.status(400).send("Email already exists!");
+      }
+    });
+
+    //check trùng sđt
+    emailExits.forEach((item) => {
+      if (phone === item.phone) {
+        return res.status(400).send("Phone already exists!");
+      }
+    });
 
     //creat data to db
     const accountModel = new AccountModel({
@@ -23,7 +48,7 @@ const register = async (req, res) => {
     });
     await accountModel.save();
     const account = await accountModel.save();
-    
+
     const user = new UserModel({
       account: account._id ,
       avatar: `http://localhost:${process.env.PORT}/public/images/avatar.png`,
@@ -40,10 +65,9 @@ const register = async (req, res) => {
 
     return res.status(200).send("Register success!");
   } catch (error) {
-    return res.status(400).send('Email already exists!')
+    return res.status(400).send("Error!");
   }
 };
-
 
 //xử lý đăng nhập
 const login = async (req, res) => {
@@ -59,7 +83,7 @@ const login = async (req, res) => {
     return res.status(400).send("Invalid Password");
   }
 
-  const user = await UserModel.findOne({ account: account._id })
+  const user = await UserModel.findOne({ account: account._id });
 
   const jwtToken = jwt.sign(
     {
@@ -81,7 +105,6 @@ const login = async (req, res) => {
     accessToken: jwtToken,
   });
 };
-
 
 //xử lý đăng xuất
 

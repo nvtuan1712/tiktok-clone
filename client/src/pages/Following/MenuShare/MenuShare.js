@@ -25,7 +25,7 @@ import { configBaseURL } from '~/common/common';
 
 const cx = classNames.bind(styles);
 
-function MenuShare({ children, data, onClickRender }) {
+function MenuShare({ children, data, onClickRender, onClickShowToast }) {
     const shareArr = [
         {
             icon: <Emble />,
@@ -97,6 +97,7 @@ function MenuShare({ children, data, onClickRender }) {
             return (
                 <ItemMenuShare
                     onClickRender={onClickRender}
+                    onClickShowToast={onClickShowToast}
                     data={data}
                     key={index}
                     text={item.text}
